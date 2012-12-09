@@ -1,5 +1,14 @@
+"""
+This script has a few random functions for working with circles
+and calculating measurements for gears.
+
+Specifically, it can be used to estimate the radius of a circle when
+you know the distance between two consecutive points on the circle,
+and you know that there needs to be an integer (rather than
+floating point) number of points.
+"""
 import numpy as np
-from numpy import sin, cos, pi, arange, arcsin
+from numpy import sin, cos, pi, arange
 import pylab
 
 
@@ -41,7 +50,9 @@ def side_length(n_teeth, r):
     assuming that the given num_points are all equidistant on a circle
     r is radius
     """
-    return 2. * r * sin(1. / n_teeth)
+    raise NotImplementedError("Haven't checked this is correct")
+    #return 2. * r * sin(1. / n_teeth)
+    return 2. * r * sin(np.pi)
 
 
 def n_teeth(side_length, r):
@@ -50,12 +61,15 @@ def n_teeth(side_length, r):
     side_length is a straight line between two points and not arc length.
     r is radius
     """
-    return ((2 * np.pi) / (np.arcsin(side_length / (2. * r))))
-    #return 1. / (2. * arcsin(side_length / (2. * r)))
+    return ((np.pi) / (np.arcsin(side_length / (2. * r))))
 
 
 def gradient_descent(side_length, r, alpha=1., n_iter=2000):
-    """There's certainly a more direct way of solving this,
+    """Estimate the radius, r, of a circle if you know the side_length,
+    and also know that the number of points (or teeth in a gear) must
+    be an integer.
+
+    There's certainly a more direct way of solving this,
     but this func is probably the quickest answer"""
     cost_func = lambda est_n_teeth, target: \
         ((est_n_teeth - target) / float(target)) ** 2
@@ -66,48 +80,33 @@ def gradient_descent(side_length, r, alpha=1., n_iter=2000):
         sign = -1. * (est_n_teeth - target) / abs(est_n_teeth - target)
         r = r + r * sign * alpha * cost_func(est_n_teeth, target)
         est_n_teeth = n_teeth(side_length, r)
-        #pylab.show()
-        #pylab.plot(r, est_n_teeth, 'ro')
     return r
 
 if __name__ == '__main__':
-
-    side = (4.45 + 1.6)
+    shaft_size = ((6.45 - 1.2) / 2.)
+    ball_size = 4.45
+    tooth_height = ball_size * .5
+    link_length = 1.6
+    side = ball_size + link_length
     est_r = 20.
     r = gradient_descent(side, est_r, alpha=10.)
     teeth = n_teeth(side, r)
-    tooth_height = 4.45 * .75
-    inner_radius = ((6.45 - 1.2) / 2.)
-    base = r - inner_radius
-    dedendum = (1/2.) * tooth_height
-    addendum = (1/2.) * tooth_height
-    outer_radius = r - addendum
+
     print 'side_length:', side
+    print '  ball size:', ball_size
+    print '  link_length:', link_length
     print 'radius:', r
+    print 'shaft size:', shaft_size
     print 'teeth:', teeth
     print 'tooth_height:', tooth_height
     print
-    print """
-    blender settings:
-        nteeth: {teeth}
-        radius: {outer_radius}
-        width: 10
-        base: {base}
-        dedendum: {dedendum}
-        addendum: {addendum}
-        """.format(**locals())
 
-    6.05
-    19.8176341821
-    41.0020173326
-    3.3375
-
-    #print '---'
-    #x, y = make_circle(r, np.round(teeth))
-    ##pylab.ioff()
-    ##pylab.plot(x, y, 'ro')
-    ##pylab.show()
-    #dists =  euclidean_dist(x, y)
-    #print dists
-    #assert np.equal.reduce(dists)
+    print '---\ntesting the math'
+    x, y = make_circle(r, np.round(teeth))
+    #pylab.ioff()
+    #pylab.plot(x, y, 'ro')
+    #pylab.show()
+    dists = euclidean_dist(x, y)
+    print dists[0], '==?', ball_size + link_length
+    assert np.equal.reduce(dists)
     #print 'check passed'
