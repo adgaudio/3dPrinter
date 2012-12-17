@@ -47,18 +47,18 @@ module bead_ring() {
 }
 module make_gear() {
   difference() {
-    /*union() {*/
-      /*cylinder(h=h, r=r, center=true);*/
-      /*translate([0,0,-1*(h-cover_height)])*/
-        /*cylinder(h=cover_height, r=r+ball_radius, center=true);*/
-      /*translate([0,0,1*(h-cover_height)])*/
-        /*cylinder(h=cover_height, r=r+ball_radius, center=true);*/
-    /*}*/
+    union() {
+      cylinder(h=h, r=r, center=true);
+      translate([0,0,-.9*(h-cover_height)])
+        cylinder(h=cover_height, r=r+ball_radius, center=true);
+      translate([0,0,.9*(h-cover_height)])
+        cylinder(h=cover_height, r=r+ball_radius, center=true);
+    }
 
-    cylinder(h=h, r=r, center=true);
-    cylinder (
+    /*cylinder(h=h, r=r, center=true);*/
+    # cylinder (
         r=shaft_radius,
-        h=h + 2.1 * cover_height,
+        h=h + 4 * cover_height,
         center=true);
     # bead_ring();
   }
