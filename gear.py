@@ -85,7 +85,7 @@ def gradient_descent(side_length, r, alpha=1., n_iter=2000):
 if __name__ == '__main__':
     shaft_radius = 5.5
     ball_size = 4.5
-    link_length = 1.5
+    link_length = 1.4
     side = ball_size + link_length
     est_r = 20.
     r = gradient_descent(side, est_r, alpha=10.)
