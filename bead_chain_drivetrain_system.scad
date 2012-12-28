@@ -159,6 +159,7 @@ module make_gears_with_horseshoes() {
 /////////////////////////////////
 // Plates and body
 ////////////////////////////////
+//NOTE: I by mistake swapped x and y axes, so rotate everything at end
 x_plate_wiggle_room = 0;
 y_plate_wiggle_room = 0;
 z_plate_wiggle_room = 0;
@@ -166,9 +167,9 @@ x_plate = x_offset * 2;
 y_plate = y_offset * 4 + 4 * r_horseshoe + 2 * (horseshoe_handle_radius) - w_horseshoe; // This may not be parametric
 d_plate = 2;
 z_plate_offset = l_motor_shaft + .5 * h_g + z_plate_wiggle_room;
+inset = default_boltsize + 2;
 
 module plate_base(center=true) {
-  inset = default_boltsize + 2;
   difference() {
     cube([x_plate, y_plate, d_plate], center=center);
     // Corner bolt holes
@@ -231,8 +232,31 @@ module plates() {
     make_bottom_plate();
 }
 
+module plate_spacer() {
+  difference() {
+    cylinder(r=default_boltsize+2, h=z_plate_offset, center=true);
+    cylinder(r=default_boltsize, h=z_plate_offset*2, center=true);
+  }
+}
+
+module plate_spacers() {
+    translate([5/8*x_plate/2 - inset, 7/8*y_plate/2 - inset, -d_plate])
+      plate_spacer();
+    translate([x_plate/-2 + inset, y_plate/2 - inset, -d_plate])
+      plate_spacer();
+    translate([x_plate/2 - inset, y_plate/-2 + inset, -d_plate])
+      plate_spacer();
+    translate([5/8*x_plate/-2 + inset, 7/8*y_plate/-2 + inset, -d_plate])
+      plate_spacer();
+    translate([-5*x_plate/(2*8), 0, -d_plate])
+      plate_spacer();
+    translate([5*x_plate/(2*8), 0, -d_plate])
+      plate_spacer();
+}
+
 make_gears_with_horseshoes();
 rotate([0, 0, 90])plates();
+rotate([0, 0, 90])plate_spacers();
 
 /*translate([.15*x_plate, 0, -.25 * h_g])cylinder(r=.2, h=l_motor_shaft+.5*h_g, center=true);*/
 /*translate([0, 0, 0]) make_gears();*/
