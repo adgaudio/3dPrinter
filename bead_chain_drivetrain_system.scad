@@ -120,7 +120,6 @@ z_offset = -.5 * l_motor_shaft;
 x_handle_offset = -1 * r_horseshoe - .5 * (horseshoe_handle_radius-w_horseshoe);
 
 
-
 module horseshoe_base(center=true) {
   difference() {
     union() {
@@ -173,28 +172,28 @@ module plate_base(center=true) {
   difference() {
     cube([x_plate, y_plate, d_plate], center=center);
     // Corner bolt holes
-    translate([5/8*x_plate/2 - inset, 7/8*y_plate/2 - inset, 0])
+    translate([5/8*x_plate/2 - inset, y_plate/2 - inset, 0])
       bolt(m=default_boltsize, h=2*d_plate, center=center);
     translate([x_plate/-2 + inset, y_plate/2 - inset, 0])
       bolt(m=default_boltsize, h=2*d_plate, center=center);
     translate([x_plate/2 - inset, y_plate/-2 + inset, 0])
       bolt(m=default_boltsize, h=2*d_plate, center=center);
-    translate([5/8*x_plate/-2 + inset, 7/8*y_plate/-2 + inset, 0])
+    translate([5/8*x_plate/-2 + inset, y_plate/-2 + inset, 0])
       bolt(m=default_boltsize, h=2*d_plate, center=center);
     // Center bolt holes
-    translate([-5*x_plate/(2*8), 0, 0])
+    translate([-y_offset - r_g + (default_boltsize+3), 0, 0])
       bolt(m=default_boltsize, h=2*d_plate, center=center);  // # add 5th and 6th holes
-    translate([5*x_plate/(2*8), 0, 0])
+    translate([y_offset + r_g - (default_boltsize+3), 0, 0])
       bolt(m=default_boltsize, h=2*d_plate, center=center);
     // Sliding holes for horseshoe handle
     hull() {
-      translate([-.25 * x_gear_offset , 14.5/16 * y_plate/2, 0])
+      translate([-.25 * x_gear_offset , y_plate/2 - inset, 0])
         bolt(m=default_boltsize, h=2*d_plate, center=center);
       translate([-.25 * x_gear_offset , 11/16 * y_plate/2, 0])
         bolt(m=default_boltsize, h=2*d_plate, center=center);
     }
     hull() {
-      translate([.25 * x_gear_offset , -14.5/16 * y_plate/2, 0])
+      translate([.25 * x_gear_offset , -1*(y_plate/2 - inset), 0])
         bolt(m=default_boltsize, h=2*d_plate, center=center);
       translate([.25 * x_gear_offset , -11/16 * y_plate/2, 0])
         bolt(m=default_boltsize, h=2*d_plate, center=center);
@@ -215,14 +214,15 @@ module make_top_plate(center=true) {
   plate_base();
 }
 module make_bottom_plate(center=true) {
+  rail_height = h_horseshoe;
   union() {
     plate_base();
-    translate([6/8 * x_plate/2, 1/2 * y_plate/2, d_plate])
+    translate([y_offset + r_g, 1/2 * y_plate/2, (d_plate + rail_height)/2])
       rotate([0, 0, 90])
-      cube([50, 2, 2], center=center);
-    translate([-6/8 * x_plate/2, -1/2 * y_plate/2, d_plate])
+      cube([2*r_g, 2, rail_height], center=center);
+    translate([-y_offset - r_g, -1/2 * y_plate/2, (d_plate + rail_height)/2])
       rotate([0, 0, 90])
-      cube([50, 2, 2], center=center);
+      cube([2*r_g, 2, rail_height], center=center);
   }
 }
 module plates() {
@@ -240,23 +240,20 @@ module plate_spacer() {
 }
 
 module plate_spacers() {
-    translate([5/8*x_plate/2 - inset, 7/8*y_plate/2 - inset, -d_plate])
+    translate([5/8*x_plate/2 - inset, y_plate/2 - inset, -d_plate])
       plate_spacer();
     translate([x_plate/-2 + inset, y_plate/2 - inset, -d_plate])
       plate_spacer();
     translate([x_plate/2 - inset, y_plate/-2 + inset, -d_plate])
       plate_spacer();
-    translate([5/8*x_plate/-2 + inset, 7/8*y_plate/-2 + inset, -d_plate])
+    translate([5/8*x_plate/-2 + inset, y_plate/-2 + inset, -d_plate])
       plate_spacer();
-    translate([-5*x_plate/(2*8), 0, -d_plate])
+    translate([y_offset + r_g - (default_boltsize+3), 0, -d_plate])
       plate_spacer();
-    translate([5*x_plate/(2*8), 0, -d_plate])
+    translate([-y_offset - r_g + (default_boltsize+3), 0, -d_plate])
       plate_spacer();
 }
 
 make_gears_with_horseshoes();
 rotate([0, 0, 90])plates();
 rotate([0, 0, 90])plate_spacers();
-
-/*translate([.15*x_plate, 0, -.25 * h_g])cylinder(r=.2, h=l_motor_shaft+.5*h_g, center=true);*/
-/*translate([0, 0, 0]) make_gears();*/
