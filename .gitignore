@@ -1,4 +1,7 @@
 *.pyc
 *.gcode
+*.stl
+*.jpg
+*.png
 old
 
