@@ -4,12 +4,13 @@ git clone git://github.com/arduino/Arduino.git
 
 echo "get marlin firmware"
 git clone git@github.com:ErikZalm/Marlin.git
-(cd Marlin ; git checkout Marlin_v1 ) echo see github for readme
+(cd Marlin ; git checkout Marlin_v1 )
+echo "see github for readme"
 
 echo "get slic3r"
 (mkdir slic3r ; cd slic3r ;
- wget http://dl.slic3r.org/linux/slic3r-linux-x86_64-0-9-3.tar.gz ;
- tar xvzf slic3r-linux-x86_64-0-9-3.tar.gz)
+ wget http://dl.slic3r.org/linux/slic3r-linux-x86_64-0-9-7.tar.gz ;
+ tar xvzf slic3r-linux-x86_64-0-9-7.tar.gz)
 
 #echo "get skeinforge"
 #(mkdir skeinforge ; cd skeinforge ;
@@ -19,7 +20,7 @@ echo "get slic3r"
 
 # to get replicatorg software (not complete)
 #(wget URL ; tar xvzf FILE ################################################3
-#git init ; git add * ; git commit -am "initial commit.")
+#git init ; git add * ; git co for a wmmit -am "initial commit.")
 # -- edit machines/Ultimachine.xml
 # -- set baudrate to 250000o
 
@@ -33,12 +34,12 @@ echo "After configuration, upload marlin firmware using arduino software"
 echo "-- in arduino IDE, open Marlin/Marlin/Marlin.pde"
 echo "-- upload to arduino board"
 echo ""
-echo "SECOND, After the firmware is calibrated, you will need to spend a lot of time"
+echo "SECOND, After the firmware is calibrated, you may want to spend some time"
 echo "adjusting Slic3r/Skeinforge settings.  Both Slic3r and Skeinforge do the "
 echo "same thing, so you must choose one of them to generate gcode from an stl file"
-echo "I recommend Slic3r over Skeinforge."
+echo "I recommend Slic3r over Skeinforge because it's simpler."
 echo ""
-echo "THIRD, You may want to learn how to use 3d modeling software like blender."
+echo "THIRD, You may want to learn how to use 3d modeling software like blender and openscad."
 echo ""
 echo "Have fun!"
 python Printrun/pronterface.py
@@ -52,7 +53,8 @@ python Printrun/pronterface.py
 #echo (cd pythonocc/src/contrib/geom-* && cmake . && make && make install)
 #echo (cd pythonocc/src/contrib/smesh-* && cmake . && make && make install)
 #echo (cd pythonocc/src && python setup.py build && python setup.py install)
-#echo " OR "
+
+#echo sudo apt-get install openscad
 #echo sudo apt-get install blender
 
 
