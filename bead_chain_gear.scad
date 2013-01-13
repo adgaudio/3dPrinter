@@ -4,16 +4,15 @@ bead_radius = 4.6/2; //6.05/2; //4.45/2;
 link_radius=.5;
 
 // Gear Dimensions
-cover_height=2;
-h_g = bead_radius * 2 * (1 + .25 + .2 );
 n_teeth = 21;
 r_g = 19.7940105953;
 r_motor_shaft = 5.5/2;
-l_motor_shaft = 10;  // TODO: get length of motor shaft
-r_bearing = 14.5; // TODO: bearings
-h_bearing = 20;
-x_gear_offset = 20;  // TODO
-y_gear_offset = 10;
+l_motor_shaft = 10;
+/*cover_height=2;*/
+r_bearing = 22/2;  // 608zz bearings
+d_bearing_inner = 8;
+h_bearing = 7;
+h_g = 2 + bead_radius * 2 * (1 + .25 + .2 );
 
 ///////////////////////////
 // Gears
@@ -72,14 +71,14 @@ module make_gear_for_motor() {
       gear_base();
       cylinder(h=l_motor_shaft, r=r_motor_shaft + 2, center=false);
     }
-    bolt(m=r_motor_shaft, h=l_motor_shaft * 200);
+    bolt(m=2*r_motor_shaft, h=l_motor_shaft * 200);
 } }
 
 module make_gear_for_608ZZ_bearing() {
   difference() {
     gear_base();
-    bolt(m=8, h=20*20);
-     translate([0,0,1])cylinder(r=r_bearing, h=h_bearing * 20, center=false);
+    bolt(m=d_bearing_inner, h=20*20);
+#     translate([0,0,1])cylinder(r=r_bearing, h=h_bearing, center=true);
   }
 }
 
