@@ -7,7 +7,8 @@ y_gear_offset = 10;  // y distance between gears
 // Horseshoe Dimensions
 h_horseshoe = h_g;
 w_horseshoe = 2 + bead_radius;
-r_horseshoe = r_g + w_horseshoe;
+r_horseshoe_wiggleroom = .75;
+r_horseshoe = r_horseshoe_wiggleroom + r_g + w_horseshoe;
 horseshoe_handle_radius = default_boltsize + 7;
 // Define the centers of the gears
 x_offset = r_g + .5 * x_gear_offset;
