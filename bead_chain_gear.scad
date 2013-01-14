@@ -26,9 +26,11 @@ module make_sphere_ring(r=r_g, r_tooth=bead_radius, n_teeth=n_teeth, $fn=15) {
       translate([r_g,0,0])
       hull() {
         sphere(r_tooth);
-        translate([-.5 * r_tooth,0,0])sphere(r_tooth);
-        translate([0,0,.25 * r_tooth])sphere(r_tooth);
-        translate([0,0,-.25 * r_tooth])sphere(r_tooth);
+        /*translate([-.5 * r_tooth,0,0])sphere(r_tooth);*/
+        translate([-.5 * r_tooth,0,.345])sphere(r_tooth);
+        translate([-.5 * r_tooth,0,.345])sphere(r_tooth);
+        translate([0,0,.575])sphere(r_tooth);
+        translate([0,0,.575])sphere(r_tooth);
       }
     }
   }
