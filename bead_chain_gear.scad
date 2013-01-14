@@ -9,8 +9,8 @@ r_g = 19.7940105953;
 r_motor_shaft = 7.3/2;
 l_motor_shaft = 10;
 /*cover_height=2;*/
-r_bearing = 22/2 + .2;  // 608zz bearings
-d_bearing_inner = 8;
+r_bearing = 22/2 + .6;  // 608zz bearings
+d_bearing_inner = 8 + 2;
 h_bearing = 7;
 h_g = 2 + bead_radius * 2 * (1 + .25 + .2 );
 
