@@ -6,7 +6,7 @@ link_radius=.5;
 // Gear Dimensions
 n_teeth = 21;
 r_g = 19.7940105953;
-r_motor_shaft = 7.2/2;
+r_motor_shaft = 7.3/2;
 l_motor_shaft = 10;
 /*cover_height=2;*/
 r_bearing = 22/2 + .2;  // 608zz bearings
