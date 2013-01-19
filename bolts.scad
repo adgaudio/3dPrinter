@@ -1,4 +1,4 @@
-default_boltsize = 3.3;  // TODO: verify that this is properly applied everywhere
+default_boltsize = 3.6;  // TODO: verify that this is properly applied everywhere
 
 ///////////////////////////
 // Bolt + nut

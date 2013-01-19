@@ -6,7 +6,7 @@ link_radius=.5;
 // Gear Dimensions
 n_teeth = 21;
 r_g = 19.7940105953;
-r_motor_shaft = 7.3/2;
+r_motor_shaft = 7.4/2;
 l_motor_shaft = 10;
 /*cover_height=2;*/
 r_bearing = 22/2 + .6;  // 608zz bearings
@@ -74,6 +74,7 @@ module make_gear_for_motor() {
       cylinder(h=l_motor_shaft, r=r_motor_shaft + 4, center=false);
     }
     bolt(m=2*r_motor_shaft, h=l_motor_shaft * 200);
+#   translate([0, 0, min(h_g/2, l_motor_shaft) + default_boltsize/2 + 1])rotate([0, 90, 90])bolt(m=default_boltsize, h=r_motor_shaft + 4, center=false);
 } }
 
 module make_gear_for_608ZZ_bearing() {

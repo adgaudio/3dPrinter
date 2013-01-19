@@ -103,13 +103,17 @@ module plate_base(center=true) {
     }
     // Holes for gears
     translate([x_offset, y_offset, 0])
-      bolt(m=default_boltsize, h=2*d_plate, center=center);  // # add 5th and 6th holes
+      bolt(m=2*(r_motor_shaft + 2), h=2*d_plate, center=center);  // # add 5th and 6th holes
     translate([-x_offset, -y_offset, 0])
       bolt(m=d_bearing_inner, h=2*d_plate, center=center);
     // Holes for motor mount
     translate([x_offset, y_offset + d_motor_screw_holes/2, 0])
       bolt(m=default_boltsize, h=2*d_plate, center=center);
     translate([x_offset, y_offset - d_motor_screw_holes/2, 0])
+      bolt(m=default_boltsize, h=2*d_plate, center=center);
+    translate([-x_offset, -(y_offset + d_motor_screw_holes/2), 0])
+      bolt(m=default_boltsize, h=2*d_plate, center=center);
+    translate([-x_offset, -(y_offset - d_motor_screw_holes/2), 0])
       bolt(m=default_boltsize, h=2*d_plate, center=center);
   }
 }
