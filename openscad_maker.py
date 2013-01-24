@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Exports each openscad module/function that has "//make me" defined
 """
 import argparse
