@@ -3,17 +3,18 @@ include <bead_chain_gear.scad>;
 
 x_gear_offset = 20;  // x distance between gears
 y_gear_offset = 10;  // y distance between gears
+z_height = max(l_motor_shaft, h_g) + 5;
 
+// Define the centers of the gears
+x_offset = r_g + .5 * x_gear_offset;
+y_offset = .5 * y_gear_offset;
+z_offset = -.5*(z_height - max(l_motor_shaft, h_g));
 // Horseshoe Dimensions
-h_horseshoe = h_g;
+h_horseshoe = z_height;
 w_horseshoe = 2 + bead_radius;
 r_horseshoe_wiggleroom = .75;
 r_horseshoe = r_horseshoe_wiggleroom + r_g + w_horseshoe;
 horseshoe_handle_radius = default_boltsize + 7;
-// Define the centers of the gears
-x_offset = r_g + .5 * x_gear_offset;
-y_offset = .5 * y_gear_offset;
-z_offset = -.5 * l_motor_shaft;
 x_handle_offset = -1 * r_horseshoe - .5 * (horseshoe_handle_radius-w_horseshoe);
 
 // Plate Dimensions
@@ -23,8 +24,11 @@ x_plate = 2 * (x_offset + r_horseshoe + horseshoe_handle_radius);
 y_plate = 2 * (y_offset + max(r_horseshoe, d_motor_screw_holes/2+inset));
 d_plate = 2;
 z_plate_offset = l_motor_shaft + .5 * h_g;
+rail_height = z_height;
 
+// Spacer Dimensions
 r_spacer = default_boltsize+2;
+h_spacer = z_height;
 
 ////////////////////////////
 // Horseshoes
@@ -117,11 +121,7 @@ module plate_base(center=true) {
       bolt(m=default_boltsize, h=2*d_plate, center=center);
   }
 }
-module make_top_plate(center=true) {
-  plate_base();
-}
 module make_bottom_plate(center=true) {
-  rail_height = h_horseshoe;
   union() {
     plate_base();
     translate([-x_offset, y_offset + r_g, (d_plate + rail_height)/2])
@@ -129,6 +129,9 @@ module make_bottom_plate(center=true) {
     translate([x_offset, -y_offset - r_g, (d_plate + rail_height)/2])
       cube([2*r_g, 2, rail_height], center=center);
   }
+}
+module make_top_plate(center=true) {
+  plate_base();
 }
 module plates() {
   translate([0, 0, -.25 * h_g + .5 * (z_plate_offset + d_plate)])
@@ -139,8 +142,8 @@ module plates() {
 
 module plate_spacer() {
   difference() {
-    cylinder(r=r_spacer, h=z_plate_offset, center=true);
-    cylinder(r=default_boltsize, h=z_plate_offset*2, center=true);
+    cylinder(r=r_spacer, h=h_spacer, center=true);
+    cylinder(r=default_boltsize, h=h_spacer, center=true);
   }
 }
 
