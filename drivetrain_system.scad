@@ -45,7 +45,7 @@ module horseshoe_base(center=true) {
     }
     cylinder(r=r_horseshoe + bead_radius - w_horseshoe, h=2*h_horseshoe, center=center);
     translate([.5*r_horseshoe, 0, 0])
-      cube([r_horseshoe, 2*r_horseshoe, 2*h_horseshoe], center=center);
+      cube([r_horseshoe + 2*default_boltsize, 2*r_horseshoe, 2*h_horseshoe], center=center);
 
     translate([x_handle_offset, 0, 0])
       bolt(default_boltsize, h=100, center=center);
