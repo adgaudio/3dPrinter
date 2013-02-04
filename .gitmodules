@@ -1,9 +1,0 @@
-[submodule "Slic3r_settings_config"]
-	path = Slic3r_settings_config
-	url = git@github.com:adgaudio/Slic3r_settings_config.git
-[submodule "Marlin"]
-	path = Marlin
-	url = git@github.com:adgaudio/Marlin.git
-[submodule "Printrun"]
-	path = Printrun
-	url = https://github.com/kliment/Printrun.git
