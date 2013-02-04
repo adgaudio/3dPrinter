@@ -39,8 +39,7 @@ def export(fp, ftype, modules, block=True):
     if block:
         for tcmd, p in ps.items():
             p.wait()
-            if not int(p.returncode):
-                print 'Failed: %s, %s' % (tcmd, p.returncode)
+            print 'Finished: %s, %s' % (tcmd, p.returncode)
 
 
 def arg_parser():
