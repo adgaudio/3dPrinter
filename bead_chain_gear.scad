@@ -80,7 +80,8 @@ module make_gear_for_motor() {
 module make_gear_for_608ZZ_bearing() {
   difference() {
     gear_base();
-    bolt(m=d_bearing_inner, h=20*20);
-    translate([0,0,1])cylinder(r=r_bearing, h=h_bearing, center=true);
+    /*bolt(m=d_bearing_inner, h=20*20);*/
+    /*translate([0, 0, 1])cylinder(r=r_bearing, h=h_g, center=true);*/
+    cylinder(r=r_bearing, h=h_g, center=true);
   }
 }
