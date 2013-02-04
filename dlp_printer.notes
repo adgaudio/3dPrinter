@@ -1,0 +1,35 @@
+Designing a DLP (stereolithography) printer.
+
+electronics:
+  - 2 nema 17 stepper motors
+  - 2 stepper drivers
+  - 
+
+frame:
+  - z axis:
+    - rods:
+    - nut
+    - 
+  - vat holder with tilt mechanism:
+    - eccentric turny thing
+    - 
+  - frame:
+    - uv filters: http://www.edmundoptics.com/optics/optical-filters/longpass-edge-filters/flexible-thin-film-uv-filters/1873
+    - aluminum extrusions
+
+projector:
+  - ?
+
+build platform:
+  - fat ass glass? mounted on ??
+  - some sort of coating?
+
+vat:
+  - bottom: clear glass bottom rather than acrylic (acrylic can absorb uv)
+    - http://howardglassco.thomasnet.com/viewitems/schott-b270-drawn-crown-glass/schott-b270-drawn-crown-glass-2?&forward=1
+  - pdms: slygard 184 http://www.dowcorning.com/applications/search/default.aspx?r=131en
+  - walls:
+
+resin:
+  - resin: Bucktown Polymers or Spotamaterials.
+  - dye: Opaque Yellow Castin’ Craft dye from Environmental Technologies Inc – eti-usa.com
