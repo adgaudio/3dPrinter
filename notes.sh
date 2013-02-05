@@ -9,8 +9,9 @@ echo "see github for readme"
 
 echo "get slic3r"
 (mkdir slic3r ; cd slic3r ;
- wget http://dl.slic3r.org/linux/slic3r-linux-x86_64-0-9-7.tar.gz ;
- tar xvzf slic3r-linux-x86_64-0-9-7.tar.gz)
+ version="0-9-8" ;
+ wget "http://dl.slic3r.org/linux/slic3r-linux-x86_64-${version}.tar.gz" ;
+ tar xvzf "slic3r-linux-x86_64-${version}.tar.gz")
 
 #echo "get skeinforge"
 #(mkdir skeinforge ; cd skeinforge ;
