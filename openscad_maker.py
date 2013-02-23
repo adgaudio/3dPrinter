@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 """Exports each openscad module/function that has "//make me" defined
+TODO: currently doesn't support args or kwargs when rendering the openscad
+module.
 """
 import argparse
 import atexit
