@@ -1,8 +1,8 @@
 Designing a DLP (stereolithography) printer.
 
 electronics:
-  - 2 nema 17 stepper motors
-  - 2 stepper drivers
+  - 2 nema 23 stepper motors
+  - 2 pololu stepper drivers
   - 
 
 frame:
@@ -14,21 +14,37 @@ frame:
     - eccentric turny thing
     - 
   - frame:
-    - uv filters: http://www.edmundoptics.com/optics/optical-filters/longpass-edge-filters/flexible-thin-film-uv-filters/1873
+    - <maybe> uv filters: http://www.edmundoptics.com/optics/optical-filters/longpass-edge-filters/flexible-thin-film-uv-filters/1873
+    - <or> uv window film: mhttp://www.amazon.com/Gila-LES361-Control-Residential-Platinum/dp/B000KKM8EG/ref=sr_1_1?ie=UTF8&qid=1361744130&sr=8-1&keywords=uv+film
     - aluminum extrusions
 
 projector:
   - ?
 
 build platform:
-  - fat ass glass? mounted on ??
+  - fat ass glass?
+  - mounted on ??
+  - connection to frame ??
   - some sort of coating?
 
-vat:
+vat(s):
   - bottom: clear glass bottom rather than acrylic (acrylic can absorb uv)
     - http://howardglassco.thomasnet.com/viewitems/schott-b270-drawn-crown-glass/schott-b270-drawn-crown-glass-2?&forward=1
+  - different desired dimensions:
+    - 6x6x2:  6x6 pane, four 6x2 panes
+    - 12x12*2
+    - 4x4x2.5
+    - 1x1x1
+
+
+
+x12x2 inches, roughly
+
+  
+  - walls: more class from howard glass
   - pdms: slygard 184 http://www.dowcorning.com/applications/search/default.aspx?r=131en
-  - walls:
+    - going to try 100% pure aquarium silicone sealant first
+  - DAP silicone sealant
 
 resin:
   - resin: Bucktown Polymers or Spotamaterials.
