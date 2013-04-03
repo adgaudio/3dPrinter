@@ -117,11 +117,15 @@ module 2Dhinge(r_o, r_i, y_offset, x_offset, thickness) {
   difference() {
     union() {
       for (mirror = [-1, 1], sign=[-1, 1]) {
-        translate([x_offset, mirror * (y_offset + sign * thickness), 0])rotate([90, 0, 0])
-          hinge_connector(r_o, r_i, thickness);
+        translate([x_offset, mirror * (y_offset + sign * thickness), 0])
+          rotate([90, 0, 0])
+            hinge_connector(r_o, r_i, thickness);
         translate([-2*(r_o-x_offset/2), mirror * (y_offset), thickness + sign*thickness])
           translate([0, 0, -r_o+thickness/2])rotate([0, 180, 0])
             hinge_connector(r_o, r_i, thickness);
+
+      translate([-1*(r_o -x_offset), mirror*y_offset, 0])
+        cube([r_o+2*x_offset, 2*r_o, 2*r_o], center=true);
       }
     }
     for (mirror = [-1, 1], sign=[-1, 1]) {
