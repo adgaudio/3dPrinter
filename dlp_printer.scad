@@ -112,6 +112,7 @@ module vat(r_o, r_i, h, z_holder, w_holder, angle_holder,
 }
 
 module 2Dhinge(r_o, r_i, y_offset, x_offset, thickness) {
+  // TODO: get rid of x_offset, because it shouldnt be here!
 
   difference() {
     union() {
@@ -143,6 +144,27 @@ module hinge_connector(r_o, r_i, thickness) {
   }
 }
 
+
+module hinge_mount() {
+  difference() {
+    union() {
+      for (mirror = [-1, 1]) {
+        translate([0, vat_hinge_y_offset * mirror, 0])
+          hinge_connector(vat_hinge_r_o, r_608zz, vat_hinge_thickness);
+      }
+      translate([-2*vat_hinge_r_o, 0, -.5*vat_hinge_thickness])
+        cube([2*vat_hinge_r_o, 2*(vat_hinge_r_o + vat_hinge_y_offset), 2*vat_hinge_thickness], center=true);
+    }
+    // bolt holes
+    for (x_sign = [-1, 1], y_sign = [-1, 0, 1]) {
+      translate([-2*vat_hinge_r_o - (vat_hinge_r_o - 5) * x_sign,
+                 y_sign * (vat_hinge_r_o + vat_hinge_y_offset - 5),
+                 -1.5*vat_hinge_thickness])
+        cylinder(r=m3_bolt_radius, h=2*vat_hinge_thickness);
+    }
+  }
+}
+
 translate([vat_r_o + vat_holder_width + 10, 0, vat_h])rotate([0, 0, 180])rotate([0, -vat_holder_angle, 0])
   eccentric_roller_shaft(
     r_o=eccentric_roller_r, r_i=r_motor_shaft, r_i2=r_608zz, h=roller_h, r_i2_offset=eccentric_roller_offset,
@@ -160,9 +182,7 @@ translate([-20 + -vat_r_i - vat_hinge_r_o - vat_hinge_x_offset, 0, -vat_hinge_r_
           y_offset=vat_hinge_y_offset, x_offset=vat_hinge_x_offset,
           thickness=vat_hinge_thickness);
 
-  for (mirror = [-1, 1]) {
-    translate([-20 + -2*vat_hinge_r_o + vat_hinge_x_offset, vat_hinge_y_offset * mirror, -vat_hinge_thickness/2])
-      hinge_connector(vat_hinge_r_o, r_608zz, vat_hinge_thickness);
-  }
+    translate([-20 + -2*vat_hinge_r_o + vat_hinge_x_offset, 0, -vat_hinge_thickness/2])
+      hinge_mount(vat_hinge_r_o, r_608zz, vat_hinge_thickness);
 }
 
