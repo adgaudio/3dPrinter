@@ -1,6 +1,6 @@
 include <bolts.scad>;
 
-module _two_bearings(z, r_o=r_bearing, r_i=r_bearing_hole, h=h_bearing) {
+module _two_bearings(z, r_o=r_608zz, r_i=r_608zz_hole, h=h_608zz) {
   union() {
     translate([0,0,(h+z)/2])cylinder(r=r_o, h=h, center=true);
     translate([0,0,(-h-z)/2])cylinder(r=r_o, h=h, center=true);
@@ -8,7 +8,7 @@ module _two_bearings(z, r_o=r_bearing, r_i=r_bearing_hole, h=h_bearing) {
   }
 }
 
-module roller(r, h, r_bearing, r_bearing_hole, r_rod) {
+module roller(r, h, r_608zz, r_608zz_hole, r_rod) {
   difference() {
     cylinder(r=r, h=h, center=true);
     _two_bearings(1);
@@ -17,13 +17,6 @@ module roller(r, h, r_bearing, r_bearing_hole, r_rod) {
   }
 }
 
-module eccentric_roller(r_o, r_i, h, center_offset=1) {
-  difference() {
-    cylinder(r=r_o, h=h, center=true);
-    translate([center_offset, 0, 0])
-      cylinder(r=r_i, h=h, center=true);
-  }
-}
 module eccentric_cube(xyz, center_offsetxyz) {
   difference() {
     cube(xyz, center=true);
@@ -33,19 +26,16 @@ module eccentric_cube(xyz, center_offsetxyz) {
   }
 }
 
+roller_r = 22;
+roller_h = 16;
+r_608zz = 22/2 + .6;
+r_608zz_hole = 8/2;
+h_608zz = 7;
+roller_r_rod = 8;
 
-/*$fn=100;*/
+$fn=40;
 
-r_bearing = 22/2 + .6;
-r_bearing_hole = 8/2;
-h_bearing = 7;
-
-roller_r_rod = 8/2;
-roller_r = r_bearing + roller_r_rod + 1;
-roller_h = 2*h_bearing + 1;
-
-
-/*$fn=10;*/
-roller(roller_r, roller_h, r_bearing, r_bearing_hole, roller_r_rod);
-translate([2*roller_r + 5, 0, 0])
-eccentric_roller(r_o=roller_r, r_i=default_boltsize/2, h=roller_h);
+eccentric_cube([30, 54, 10], [0, 10, 0]);
+translate([2*roller_r + 5, 0, 0]) {
+roller(roller_r, roller_h, r_608zz, r_608zz_hole, roller_r_rod);
+}
