@@ -5,6 +5,7 @@ module.
 """
 import argparse
 import atexit
+from os.path import abspath
 import re
 import sys
 import subprocess
@@ -34,7 +35,7 @@ def export(fp, ftype, modules, block=True):
         _, tfp = tempfile.mkstemp(prefix='openscad_%s_' % module, suffix='.scad')
         atexit.register(lambda tfp: subprocess.Popen('rm %s' % tfp, shell=True), tfp)
         with open(tfp, 'w') as tfd:
-            tfd.write(template.format(fp=fp, module=module))
+            tfd.write(template.format(fp=abspath(fp), module=module))
         tcmd = cmd.format(module=module, ftype=ftype, tfp=tfp)
         p = subprocess.Popen(shlex.split(tcmd))
         ps[tcmd] = p
