@@ -1,5 +1,11 @@
 
 module motor_mount() {
+  module base() {
+    cube([motor_x, motor_y, motor_mount_z], center=true);
+    translate([motor_x/2 + mount_x_offset/2, 0, -z_slanted/2])
+      cube([mount_x_offset, motor_y, motor_mount_z + z_slanted], center=true);
+    // attachment
+  }
   z_slanted = tan(vat_holder_angle) * motor_x;
   mount_x_offset = sin(vat_holder_angle)*z_slanted;
   difference() {
@@ -14,9 +20,7 @@ module motor_mount() {
       }
       // Base
       translate([mount_x_offset, 0, z_slanted+motor_mount_z/2]) {
-        cube([motor_x, motor_y, motor_mount_z], center=true);
-        translate([motor_x/2 + mount_x_offset/2, 0, -z_slanted/2])
-          cube([mount_x_offset, motor_y, motor_mount_z + z_slanted], center=true);
+        base();
       }
     }
 
@@ -24,8 +28,8 @@ module motor_mount() {
     for (mirror1 = [-1, 1], mirror2 = [-1, 1]) {
      translate([mount_x_offset/2, 0, 0])
       rotate([0, vat_holder_angle, 0])
-        translate([mirror1 * (motor_x - motor_mount_inset - motor_mount_bolt_size)/2,
-                   mirror2 * (motor_y - motor_mount_inset - motor_mount_bolt_size)/2,
+        translate([mirror1 * (motor_x - 2*motor_mount_inset - motor_mount_bolt_size)/2,
+                   mirror2 * (motor_y - 2*motor_mount_inset - motor_mount_bolt_size)/2,
                    0])
           cylinder(r=motor_mount_bolt_size, h=3*(motor_mount_z + motor_mount_z));
     }
