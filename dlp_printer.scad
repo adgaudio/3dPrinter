@@ -64,8 +64,14 @@ module _eccentric_roller(r_o, r_i, r_i2, h, r_i2_offset) {
   }
 }
 
-module eccentric_roller_shaft(r_o, r_i, r_i2, h, r_i2_offset,
-                              r_o_shaft, h_shaft) {
+module eccentric_roller_shaft() {
+  r_o=eccentric_roller_r;
+  r_i=r_motor_shaft;
+  r_i2=r_608zz;
+  h=roller_h;
+  r_i2_offset=eccentric_roller_offset;
+  r_o_shaft=eccentric_roller_r_o_shaft;
+  h_shaft=h_motor_shaft;
   _eccentric_roller(r_o, r_i, r_i2, h, r_i2_offset);
 
   translate([0, 0, (h+h_shaft) / 2])
@@ -73,9 +79,20 @@ module eccentric_roller_shaft(r_o, r_i, r_i2, h, r_i2_offset,
 }
 
 
-module vat(r_o, r_i, h, z_holder, w_holder, angle_holder,
-           r_o_hinge, r_i_hinge, thickness_hinge, y_offset_hinge,
-           r_m8_bolt) {
+module vat() {
+  r_o=vat_r_o;
+  r_i=vat_r_i;
+  h=vat_h;
+  z_holder=vat_z_holder;
+  w_holder=vat_holder_width;
+  angle_holder=vat_holder_angle;
+  r_o_hinge=vat_hinge_r_o;
+  r_i_hinge=r_608zz;
+  thickness_hinge=vat_hinge_thickness;
+  y_offset_hinge=vat_hinge_y_offset;
+  x_offset_hinge=vat_hinge_x_offset;
+  r_m8_bolt=m8_bolt_radius;
+
 
   module _vat_hinge() {
     // hinge
@@ -116,18 +133,23 @@ module vat(r_o, r_i, h, z_holder, w_holder, angle_holder,
   }
 }
 
-module 2Dhinge(r_o, r_i, y_offset, x_offset, thickness) {
+module 2Dhinge() {
   // TODO: get rid of x_offset, because it shouldnt be here!
+  r_o=vat_hinge_r_o;
+  r_i=r_608zz;
+  y_offset=vat_hinge_y_offset;
+  x_offset=vat_hinge_x_offset;
+  thickness=vat_hinge_thickness;
 
   difference() {
     union() {
       for (mirror = [-1, 1], sign=[-1, 1]) {
         translate([x_offset, mirror * (y_offset + sign * thickness), 0])
           rotate([90, 0, 0])
-            hinge_connector(r_o, r_i, thickness);
+            _hinge_connector(r_o, r_i, thickness);
         translate([-2*(r_o-x_offset/2), mirror * (y_offset), thickness + sign*thickness])
           translate([0, 0, -r_o+thickness/2])rotate([0, 180, 0])
-            hinge_connector(r_o, r_i, thickness);
+            _hinge_connector(r_o, r_i, thickness);
 
       translate([-1*(r_o -x_offset), mirror*y_offset, 0])
         cube([r_o+2*x_offset, 2*r_o, 2*r_o], center=true);
@@ -142,7 +164,7 @@ module 2Dhinge(r_o, r_i, y_offset, x_offset, thickness) {
   }
 }
 
-module hinge_connector(r_o, r_i, thickness) {
+module _hinge_connector(r_o, r_i, thickness) {
   difference() {
     hull() {
       cylinder(r=r_o, h=thickness, center=true);
@@ -159,7 +181,7 @@ module hinge_mount() {
     union() {
       for (mirror = [-1, 1]) {
         translate([0, vat_hinge_y_offset * mirror, 0])
-          hinge_connector(vat_hinge_r_o, r_608zz, vat_hinge_thickness);
+          _hinge_connector(vat_hinge_r_o, r_608zz, vat_hinge_thickness);
       }
       translate([-2*vat_hinge_r_o, 0, -.5*vat_hinge_thickness])
         cube([2*vat_hinge_r_o, 2*(vat_hinge_r_o + vat_hinge_y_offset), 2*vat_hinge_thickness], center=true);
@@ -206,8 +228,6 @@ roller_r_rod = 8/2;
 roller_r = r_608zz + roller_r_rod + 1;
 roller_h = 2*h_608zz + 1;
 
-
-
 vat_r_o = 70;
 vat_r_i = vat_r_o - 3;
 vat_h = 30; // TODO
@@ -228,28 +248,19 @@ translate([vat_r_o + vat_holder_width + 10, 0, vat_h]) {
 
 // Motor Gear
   rotate([0, 0, 180])rotate([0, -vat_holder_angle, 0])
-  eccentric_roller_shaft(
-    r_o=eccentric_roller_r, r_i=r_motor_shaft, r_i2=r_608zz, h=roller_h, r_i2_offset=eccentric_roller_offset,
-    r_o_shaft=eccentric_roller_r_o_shaft, h_shaft=h_motor_shaft);
+  eccentric_roller_shaft();
 }
 
 // Vat
-vat(r_o=vat_r_o, r_i=vat_r_i, h=vat_h,
-    z_holder=vat_z_holder, w_holder=vat_holder_width, angle_holder=vat_holder_angle,
-    r_o_hinge=vat_hinge_r_o, r_i_hinge=r_608zz,
-    thickness_hinge=vat_hinge_thickness, y_offset_hinge=vat_hinge_y_offset, x_offset_hinge=vat_hinge_x_offset,
-    r_m8_bolt=m8_bolt_radius
-    );
+vat();
 
 translate([-20 + -vat_r_i - vat_hinge_r_o - vat_hinge_x_offset, 0, -vat_hinge_r_o]) {
 // Hinge
-  2Dhinge(r_o=vat_hinge_r_o, r_i=r_608zz,
-          y_offset=vat_hinge_y_offset, x_offset=vat_hinge_x_offset,
-          thickness=vat_hinge_thickness);
+  2Dhinge();
 
 // Hinge holder
     translate([-20 + -2*vat_hinge_r_o + vat_hinge_x_offset, 0, -vat_hinge_thickness/2])
-      hinge_mount(vat_hinge_r_o, r_608zz, vat_hinge_thickness);
+      hinge_mount();
 }
 
 
