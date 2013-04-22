@@ -107,21 +107,7 @@ module blue() {
   w_nut = 6;
   h_nut = 3;
 
-  module _lamp_head_shell() {
-    translate([0, 0, h_oring])
-      difference() {
-        cylinder(
-            r1=r_o_oring_wall + wall_thickness,
-            r2=r_o_lamp_head + wall_thickness,
-            h=z_lense_offset + h_lense);
-        cylinder(
-            r1=r_o_oring_wall,
-            r2=r_o_lamp_head,
-            h=z_lense_offset + h_lense + cutout);
-    }
-  }
-
-  module _lamp_head_innards() {
+  module lamp_head() {
     // part that handle latches onto
     translate([0, 0, -z_handle_mnt]) {
       difference() {
@@ -202,12 +188,7 @@ module blue() {
     }
   }
 
-  module lamp_head() {
-    _lamp_head_innards();
-    _lamp_head_shell();
-  }
-
-  module blue_module() {
+  module led_module() {
     r_wire = 1;
     x_offset_wire = 5;
     // body
@@ -280,18 +261,31 @@ module blue() {
     }
   }
 
+  module print_lamp_head() { // make me
     rotate([180, 0, 0]) {
       lamp_head();
       }
+  }
 
-  /*for (sign1 = [-1, 1], sign2 = [-1, 1])*/
-    /*translate([sign1 * r_lense, sign2 * r_lense, z_lense_offset/2])*/
-      /*rotate([180, 0, 0])*/
-      /*blue_module();*/
+  module print_led_module() { // make me
+    for (sign1 = [-1, 1], sign2 = [-1, 1])
+      translate([sign1 * r_lense, sign2 * r_lense, z_lense_offset/2])
+        rotate([180, 0, 0])
+        led_module();
+  }
 
-  /*battery_pack();*/
-  /*rotate([180, 0, 0])*/
-  /*battery_pack_top_pad();*/
+  module print_battery_pack() { // make me
+    for (sign1 = [-1, 1], sign2 = [-1, 1])
+      translate([sign1 * 2*r_AA_battery, sign2 * 2*r_AA_battery, z_lense_offset/2])
+        battery_pack();
+  }
+  
+  module print_battery_pack_top_pad() { // make me
+    for (sign1 = [-1, 1], sign2 = [-1, 1])
+      translate([sign1 * 2*r_AA_battery, sign2 * 2*r_AA_battery, z_lense_offset/2])
+        rotate([180, 0, 0])
+          battery_pack_top_pad();
+  }
 }
 /*neon();*/
 blue();
