@@ -1,6 +1,7 @@
 use <lib/Thread_Library.scad>
 
 function euclidean(a, b) = sqrt(pow(a, 2) + pow(b, 2));
+cutout = 5; // extra dimensions to make clear difference() operations
 
 module neon() {
   neon_r_o = 29/2;
@@ -18,11 +19,11 @@ module neon() {
     $fn=50;
     difference() {
       cylinder(r=r_o1, h=h1+h_overlap);
-      cylinder(r=r_i1, h=h1+h_overlap);
+      cylinder(r=r_i1, h=h1+h_overlap + cutout);
     }
     translate([0, 0, h1])difference() {
       cylinder(r=r_o2, h=h2);
-      cylinder(r=r_o1, h=h2);
+      cylinder(r=r_o1, h=h2 + cutout);
     }
   }
 
@@ -41,17 +42,17 @@ module neon() {
 
       // part for wires
       translate([r_o, 0, 0])
-        cylinder(r=r_wireshaft, h=h);
+        cylinder(r=r_wireshaft, h=h+cutout);
       translate([-r_o, 0, 0])
-        cylinder(r=r_wireshaft, h=h);
+        cylinder(r=r_wireshaft, h=h+cutout);
 
       // part to attach into flashlight
       #translate([0, r_o - y_groovemount, 0])
-        cube([x_groovemount, y_groovemount, h]);
+        cube([x_groovemount, y_groovemount, h+cutout]);
       #rotate([0,0,angle])translate([0, -r_o, 0])
-        cube([x_groovemount, y_groovemount, h]);
+        cube([x_groovemount, y_groovemount, h+cutout]);
       #rotate([0,0,-angle])translate([0, -r_o, 0])
-        cube([x_groovemount, y_groovemount, h]);
+        cube([x_groovemount, y_groovemount, h+cutout]);
     }
   }
 
@@ -115,7 +116,7 @@ module blue() {
         cylinder(
             r1=r_o_oring_wall,
             r2=r_o_lamp_head,
-            h=z_lense_offset + h_lense);
+            h=z_lense_offset + h_lense + cutout);
     }
   }
 
@@ -145,10 +146,11 @@ module blue() {
     // oring holder
     difference() {
       union() {
-        translate([0, 0, h_oring_wall])cylinder(r=r_o_oring, h=h_oring - h_oring_wall);
+        translate([0, 0, h_oring_wall])
+          cylinder(r=r_o_oring, h=h_oring - h_oring_wall);
         cylinder(r=r_o_oring_wall, h=h_oring_wall, $fn=94);
       }
-      cylinder(r=r_i_oring_wall, h=h_oring+h_oring_wall);
+      cylinder(r=r_i_oring_wall, h=h_oring+h_oring_wall + cutout);
     }
 
     // lense and light module holder
@@ -164,7 +166,7 @@ module blue() {
         }
         for (sign1 = [-1, 1], sign2 = [-1, 1]) {
           translate([sign1 * r_lense, sign2 * r_lense, -z_lense_offset]) {
-            cylinder(r=r_lense, h=h_lense+z_lense_offset);
+            cylinder(r=r_lense, h=h_lense+z_lense_offset + cutout);
           }
         }
       }
@@ -176,17 +178,9 @@ module blue() {
           translate([0, 0, 0])
             // Call to external threaded rod making library
             trapezoidThreadNegativeSpace(
-               length=h_module_holder,
+               length=h_module_holder + cutout,
                pitch=pitch_module,
                pitchRadius=r_module);
-        }
-      }
-      }
-      for (sign1 = [-1, 1], sign2 = [-1, 1]) {
-        translate([sign1 * r_lense, sign2 * r_lense, h_lense_lip_offset]) {
-          difference() {
-            cylinder(r=r_lense, h=h_lense_lip);
-            cylinder(r=r_lense_lip, h=h_lense_lip);
           }
         }
       }
@@ -213,7 +207,7 @@ module blue() {
       // through-hole wire
       for (sign = [-1, 1])
       translate([sign * x_offset_wire, 0, 0])
-      cylinder(r=r_wire, h=h_module+pitch_module, $fn=8);
+      cylinder(r=r_wire, h=h_module+pitch_module + cutout, $fn=8);
     }
     // knob
     h_knob = 10;
@@ -254,7 +248,7 @@ module blue() {
         }
        _battery_cutouts();
       // bolt cutout
-      cylinder(r=r_bolt, h=h_bolt_cutout);
+      cylinder(r=r_bolt, h=h_bolt_cutout + cutout);
       //nut cutout
       translate([-w_nut/2, -w_nut/2, h_AA_battery])
         cube([2*r_AA_battery + w_nut/2, w_nut, h_nut]);
@@ -267,7 +261,7 @@ module blue() {
       cube([4*r_AA_battery, 4*r_AA_battery, h_pad]);
     _battery_cutouts();
     // bolt cutout
-    cylinder(r=r_bolt, h=h_bolt_cutout);
+    cylinder(r=r_bolt, h=h_bolt_cutout + cutout);
     }
   }
 
