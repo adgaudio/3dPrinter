@@ -84,6 +84,7 @@ module blue() {
 
   r_lense = 53/2;
   h_lense = 16;
+  r_lense_offset = 1; // distance from perimiter of lense to closest xy axis
   r_lense_lip = r_lense - 5;  // fit up to 2 glass lenses
   h_lense_lip = h_lense / 3;
   h_lense_lip_offset = h_lense / 3;
@@ -161,18 +162,22 @@ module blue() {
           translate([0, 0, -z_lense_offset])
             cylinder(r2=r_o_lamp_head, r1=r_o_oring, h=h_lense+z_lense_offset);
           // center circle
-          translate([0, 0, -z_lense_offset])
+          translate([r_lense_offset, r_lense_offset, -z_lense_offset])
             cylinder(r=r_lense, h=z_lense_offset);
         }
         for (sign1 = [-1, 1], sign2 = [-1, 1]) {
-          translate([sign1 * r_lense, sign2 * r_lense, -z_lense_offset]) {
+          translate([sign1 * (r_lense + r_lense_offset),
+                     sign2 * (r_lense + r_lense_offset),
+                     -z_lense_offset]) {
             cylinder(r=r_lense, h=h_lense+z_lense_offset + cutout);
           }
         }
       }
       // module holders
       for (sign1 = [-1, 1], sign2 = [-1, 1]) {
-        translate([sign1 * r_lense, sign2 * r_lense, -(h_module_holder)]) {
+        translate([sign1 * (r_lense + r_lense_offset),
+                   sign2 * (r_lense + r_lense_offset),
+                   -(h_module_holder)]) {
          difference() {
           cylinder(r=r_lense, h=h_module_holder);
           translate([0, 0, 0])
@@ -181,6 +186,16 @@ module blue() {
                length=h_module_holder + cutout,
                pitch=pitch_module,
                pitchRadius=r_module);
+          }
+        }
+      }
+      for (sign1 = [-1, 1], sign2 = [-1, 1]) {
+        translate([sign1 * (r_lense + r_lense_offset),
+                   sign2 * (r_lense + r_lense_offset),
+                   h_lense_lip_offset]) {
+          difference() {
+            cylinder(r=r_lense, h=h_lense_lip);
+            cylinder(r=r_lense_lip, h=h_lense_lip);
           }
         }
       }
