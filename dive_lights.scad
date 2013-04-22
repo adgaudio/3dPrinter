@@ -291,16 +291,16 @@ module print_led_module() { // make me
 
 module print_battery_pack() { // make me
   for (sign1 = [-1, 1], sign2 = [-1, 1])
-    translate([sign1 * (2*r_AA_battery + battery_offset,
-               sign1 * (2*r_AA_battery + battery_offset,
+    translate([sign1 * (2*r_AA_battery + battery_offset +15),
+               sign2 * (2*r_AA_battery + battery_offset +15),
                z_lense_offset/2])
       battery_pack();
 }
 
 module print_battery_pack_top_pad() { // make me
   for (sign1 = [-1, 1], sign2 = [-1, 1])
-    translate([sign1 * (2*r_AA_battery + battery_offset,
-               sign1 * (2*r_AA_battery + battery_offset,
+    translate([sign1 * (2*r_AA_battery + battery_offset +15),
+               sign2 * (2*r_AA_battery + battery_offset +15),
                z_lense_offset/2])
       rotate([180, 0, 0])
         battery_pack_top_pad();
