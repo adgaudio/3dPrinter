@@ -105,7 +105,7 @@ r_i_lamp_head = r_lense + euclidean(r_lense, r_lense);
 r_o_lamp_head = wall_thickness + r_i_lamp_head;
 
 h_AA_battery = 50.5;
-r_AA_battery = 14.5;  // TODO
+r_AA_battery = 14.5/2;
 h_pad = 10;
 h_inset = h_pad/2;
 h_bolt_cutout = h_AA_battery + h_pad;
