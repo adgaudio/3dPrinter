@@ -105,11 +105,11 @@ r_i_lamp_head = r_lense + euclidean(r_lense, r_lense);
 r_o_lamp_head = wall_thickness + r_i_lamp_head;
 
 h_AA_battery = 50.5;
-r_AA_battery = 14.5/2;
+r_AA_battery = 15/2;
 h_pad = 10;
 h_inset = h_pad/2;
 h_bolt_cutout = h_AA_battery + h_pad;
-r_bolt = 3.2;
+r_bolt = 3.2/2;
 w_nut = 6;
 h_nut = 3;
 battery_offset = .01;
@@ -245,16 +245,18 @@ module _battery_cutouts() {
 
 module battery_pack() {
   difference() {
-      union() {
-        // bottom pad
-        translate([-2*r_AA_battery + battery_offset,
-                   -2*r_AA_battery + battery_offset,
-                   0])
-          cube([4*r_AA_battery, 4*r_AA_battery, h_pad]);
-        // center pole
-        cylinder(r=2*r_AA_battery, h=h_AA_battery + h_pad/2);
-      }
-      _battery_cutouts();
+    union() {
+      // bottom pad
+      translate([-2*r_AA_battery + battery_offset,
+                 -2*r_AA_battery + battery_offset,
+                 0])
+        cube([4*r_AA_battery + battery_offset,
+              4*r_AA_battery + battery_offset,
+              h_pad]);
+      // center pole
+      cylinder(r=2*r_AA_battery, h=h_AA_battery + h_pad/2);
+    }
+    _battery_cutouts();
     // bolt cutout
     cylinder(r=r_bolt, h=h_bolt_cutout + cutout);
     //nut cutout
@@ -268,11 +270,12 @@ module battery_pack_top_pad() {
     translate([-(2*r_AA_battery + battery_offset),
                -(2*r_AA_battery + battery_offset),
                h_AA_battery])
-    cube([4*r_AA_battery, 4*r_AA_battery, h_pad]);
+      cube([4*r_AA_battery + battery_offset,
+            4*r_AA_battery + battery_offset,
+            h_pad]);
     _battery_cutouts();
     // bolt cutout
     cylinder(r=r_bolt, h=h_bolt_cutout + cutout);
-
   }
 }
 
