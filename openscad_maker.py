@@ -65,7 +65,7 @@ def arg_parser():
     parser = argparse.ArgumentParser(description='Export openscad modules simply and in parallel')
     parser.add_argument('fp', help="please supply a <file.scad>")
     parser.add_argument('--ftype', default='stl')
-    parser.add_argument('--modules', default=[], type=lambda x: x.split(','),
+    parser.add_argument('--modules', default=[], nargs='+', type=lambda x: (x, ''),
                         help='Comma separated list of modules to export to stl')
     return parser
 
