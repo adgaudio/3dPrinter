@@ -82,9 +82,11 @@ r_shaft = 7/2;
 z_crossbar = 4;
 z_crossbar_cavity = 2*r_shaft;
 
-r_o_oring = 96.5;
-r_o_oring_wall = r_o_oring - (6 - 2.5);
-r_i_oring_wall = r_o_oring_wall - 5;
+r_o_oring = 96.5/2;
+r_o_oring_wall = r_o_oring + (6 - 2.5);
+r_i_oring_wall = r_o_oring_wall - wall_thickness;
+r_o_oring_2nd_wall = r_o_oring_wall + 5;
+r_i_oring_2nd_wall = r_i_oring_wall + 5;
 h_oring = 11;
 h_oring_wall = 10;
 
@@ -94,12 +96,13 @@ r_lense_offset = 1; // distance from perimiter of lense to closest xy axis
 r_lense_lip = r_lense - 5;  // fit up to 2 glass lenses
 h_lense_lip = h_lense / 3;
 h_lense_lip_offset = h_lense / 3;
-z_lense_offset = 25;  // distance from top of oring to lenses
 
 pitch_module = 6;
 r_module = r_lense - pitch_module/2;
 h_module = 20;
 h_module_holder = 20;
+
+z_lense_offset = 25+h_module;  // distance from top of oring to lenses
 
 r_wire = 1.3;
 x_offset_wire = 5;
@@ -109,7 +112,7 @@ angle_offset_knob = 10;
 y_offset_knob = r_module / 2;
 thickness_knob = 3;
 
-r_i_lamp_head = r_lense + euclidean(r_lense, r_lense);
+r_i_lamp_head = euclidean(2*r_lense, 2*r_lense) - 10; // some bug somewhere for this
 r_o_lamp_head = wall_thickness + r_i_lamp_head;
 
 h_AA_battery = 50.5;
@@ -151,8 +154,13 @@ module lamp_head() {
   difference() {
     union() {
       translate([0, 0, h_oring_wall])
-        cylinder(r=r_o_oring, h=h_oring - h_oring_wall);
-      cylinder(r=r_o_oring_wall, h=h_oring_wall, $fn=94);
+        cylinder(r=max(r_o_oring_wall, r_o_lamp_head), h=wall_thickness);
+      cylinder(r=r_o_oring, h=h_oring_wall, $fn=94);
+      translate([0, 0, 0]) {
+      difference() {
+        cylinder(r=r_o_oring_2nd_wall, h=h_oring_wall);
+        cylinder(r=r_i_oring_2nd_wall, h=h_oring_wall);
+      }}
     }
     cylinder(r=r_i_oring_wall, h=h_oring+h_oring_wall + cutout);
   }
@@ -163,7 +171,8 @@ module lamp_head() {
       union() {
         // main lamp mass
         translate([0, 0, -z_lense_offset])
-          cylinder(r2=r_o_lamp_head, r1=r_o_oring, h=h_lense+z_lense_offset);
+          cylinder(r2=r_o_lamp_head, r1=max(r_o_oring, +r_o_lamp_head),
+                   h=h_lense+z_lense_offset);
         // center circle
         translate([r_lense_offset, r_lense_offset, -z_lense_offset])
           cylinder(r=r_lense, h=z_lense_offset);
@@ -180,7 +189,7 @@ module lamp_head() {
     for (sign1 = [-1, 1], sign2 = [-1, 1]) {
       translate([sign1 * (r_lense + r_lense_offset),
                   sign2 * (r_lense + r_lense_offset),
-                  -(h_module_holder)]) {
+                  -(h_module_holder/2)]) {
         difference() {
         cylinder(r=r_lense, h=h_module_holder);
         translate([0, 0, 0])
