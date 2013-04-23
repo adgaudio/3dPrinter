@@ -101,13 +101,22 @@ r_module = r_lense - pitch_module/2;
 h_module = 20;
 h_module_holder = 20;
 
+r_wire = 1.3;
+x_offset_wire = 5;
+h_knob = 10;
+y_knob = .3 * r_module;
+angle_offset_knob = 10;
+y_offset_knob = r_module / 2;
+thickness_knob = 3;
+
 r_i_lamp_head = r_lense + euclidean(r_lense, r_lense);
 r_o_lamp_head = wall_thickness + r_i_lamp_head;
 
 h_AA_battery = 50.5;
 r_AA_battery = 15/2;
 h_pad = 10;
-h_inset = h_pad/2;
+h_contact_slot = 3;
+h_battery_inset = h_pad/2;
 h_bolt_cutout = h_AA_battery + h_pad;
 r_bolt = 3.2/2;
 w_nut = 6;
@@ -197,8 +206,6 @@ module lamp_head() {
 }
 
 module led_module() {
-  r_wire = 1;
-  x_offset_wire = 5;
   // body
   difference() {
     intersection() {
@@ -214,14 +221,9 @@ module led_module() {
     cylinder(r=r_wire, h=h_module+pitch_module + cutout, $fn=8);
   }
   // knob
-  h_knob = 10;
-  y_knob = .3 * r_module;
-  angle_offset_knob = 10;
-  y_offset_knob = r_module / 2;
-  thickness_knob = 3;
   rotate([0, 180, 0]) {
 
-  for (sign = [-1, 1]) 
+  for (sign = [-1, 1])
   translate([0, sign * y_offset_knob, h_knob/2])
     translate([0, 0, -h_knob/2])
         cube([thickness_knob, y_knob, h_knob], center=true);
@@ -239,22 +241,47 @@ module _battery_cutouts() {
   for (sign1 = [-1, 1], sign2 = [-1, 1])
     translate([sign1 * (r_AA_battery + battery_offset),
                sign2 * (r_AA_battery + battery_offset),
-               h_pad/2])
-    battery();
+               h_battery_inset]) {
+      battery();
+
+      // slot for wire to contacts
+      translate([0, 0, -1/2*h_AA_battery])
+        cylinder(r=r_wire, h=h_AA_battery + h_AA_battery);
+    }
+
+  // slot for contacts
+  translate([0, 0, h_pad - h_battery_inset]) {
+    for (sign = [-1, 1]) {
+      translate([-battery_offset, sign * (r_AA_battery + battery_offset), 0])
+        cube([4*r_AA_battery,
+              r_AA_battery,
+              h_contact_slot], center=true);
+
+      translate([sign * r_AA_battery, -battery_offset, h_AA_battery])
+        cube([r_AA_battery,
+              4*r_AA_battery,
+              h_contact_slot], center=true);
+    }
+  }
+}
+
+
+module _battery_pad() {
+  translate([-(2*(r_AA_battery + battery_offset)),
+             -(2*(r_AA_battery + battery_offset)),
+             0])
+    cube([4*r_AA_battery + 2*battery_offset,
+          4*r_AA_battery + 2*battery_offset,
+          h_pad]);
 }
 
 module battery_pack() {
   difference() {
     union() {
       // bottom pad
-      translate([-2*r_AA_battery + battery_offset,
-                 -2*r_AA_battery + battery_offset,
-                 0])
-        cube([4*r_AA_battery + battery_offset,
-              4*r_AA_battery + battery_offset,
-              h_pad]);
+      _battery_pad();
       // center pole
-      cylinder(r=2*r_AA_battery, h=h_AA_battery + h_pad/2);
+      cylinder(r=2*r_AA_battery, h=h_AA_battery + h_battery_inset);
     }
     _battery_cutouts();
     // bolt cutout
@@ -267,12 +294,8 @@ module battery_pack() {
 
 module battery_pack_top_pad() {
   difference() {
-    translate([-(2*r_AA_battery + battery_offset),
-               -(2*r_AA_battery + battery_offset),
-               h_AA_battery])
-      cube([4*r_AA_battery + battery_offset,
-            4*r_AA_battery + battery_offset,
-            h_pad]);
+    translate([0, 0, h_AA_battery])
+      _battery_pad();
     _battery_cutouts();
     // bolt cutout
     cylinder(r=r_bolt, h=h_bolt_cutout + cutout);
