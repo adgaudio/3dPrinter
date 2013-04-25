@@ -176,7 +176,7 @@ module _led_module_holder() {
 module _shell(outer=true) {
   r1 = (outer==true ? r_lense + wall_thickness : r_lense);
   r2 = (outer==true ? r_o_oring_2nd_wall : r_i_oring_wall);
-  h = (outer==true ? h_shell-h_oring_wall : h_shell-h_oring_wall - wall_thickness);
+  h = (outer==true ? h_shell-h_oring_wall : h_shell-h_oring_wall);
 
   hull() {
     for (sign = [-1, 1])
@@ -199,12 +199,24 @@ module 2_lense_lamp_head() {
 
   // shell
   translate([0, 0, h_oring_wall]) difference() {
-    _shell();
+    union() {
+      _shell();
+      // face plate
+      hull() {
+        for (sign = [-1, 1]) {
+          translate([0, sign * (r_lense + r_lense_offset), h_shell+h_module_holder+h_lense_lip+wall_thickness]) {
+            cylinder(r=r_lense+wall_thickness, h=wall_thickness); // +1 is cutout
+          }
+        }
+      }
+    }
     _shell(false);
     // cutout lense holes
+    difference() {
       for (sign = [-1, 1]) {
         translate([0, sign * (r_lense + r_lense_offset), h_shell+wall_thickness]) {
           cylinder(r=r_lense, h=h_shell+h_lense_lip + cutout); // +1 is cutout
+        }
       }
     }
   }
