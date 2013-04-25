@@ -105,7 +105,8 @@ h_module_holder = 15;
 z_lense_offset = 2*wall_thickness + 2*h_module;  // distance from top of oring to lenses
 
 r_wire = 1.3;
-x_offset_wire = 5;
+x_offset_wire = 10;
+y_offset_wire = 5;
 h_knob = 10;
 y_knob = .3 * r_module;
 angle_offset_knob = 10;
@@ -295,9 +296,12 @@ module led_module() {
           pitchRadius=r_module);
     }
     // through-hole wire
-    for (sign = [-1, 1])
+    for (sign = [-1, 1], sign2 = [-1, 1])
     translate([sign * x_offset_wire, 0, 0])
+    translate([0, sign2 * y_offset_wire, 0])
     cylinder(r=r_wire, h=h_module+pitch_module + cutout, $fn=8);
+    /*translate([0, sign * y_offset_wire, 0])*/
+    /*cylinder(r=r_wire, h=h_module+pitch_module + cutout, $fn=8);*/
   }
   // knob
   rotate([0, 180, 0]) {
