@@ -93,9 +93,9 @@ h_oring_wall = 10;
 r_lense = 54/2;
 /*h_lense = 26;*/
 r_lense_offset = 2+max(x_crossbar, y_crossbar)/2; // distance from perimiter of lense to closest xy axis
-r_lense_lip = r_lense - 5;
+r_lense_lip = 46/2; // actual radius may be smaller than this
 h_lense_lip = 10; //h_lense / 3;
-h_lense_lip_offset = 0;  // fit up to 2 glass lenses
+h_lense_lip_offset = 0;  // fit up to 2 glass lenses. must be less than h_lense_lip
 
 pitch_module = 6;
 r_module = r_lense - pitch_module/2;
@@ -214,13 +214,12 @@ module 2_lense_lamp_head() {
                sign * (r_lense + r_lense_offset),
                h_shell+2*h_module_holder-wall_thickness]) {
       difference() {
-        cylinder(r=r_lense, h=h_lense_lip+wall_thickness);
+        cylinder(r=r_lense+wall_thickness, h=h_lense_lip+wall_thickness);
         translate([0, 0, -cutout/2])
-          cylinder(r=r_lense - max(r_lense_offset, wall_thickness),
+          cylinder(r=min(r_lense_lip, r_lense - wall_thickness),
                    h=h_lense_lip + wall_thickness + cutout);
         translate([0, 0, max(h_lense_lip_offset, wall_thickness)])
-          cylinder(r=r_lense - wall_thickness,
-                   h=100);
+          cylinder(r=r_lense, h=100);
       }
     }
   }
