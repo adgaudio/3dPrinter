@@ -116,7 +116,8 @@ r_i_lamp_head = euclidean(2*r_lense, 2*r_lense) - 10; // some bug somewhere for 
 r_o_lamp_head = wall_thickness + r_i_lamp_head;
 h_shell = z_lense_offset + h_oring - h_module_holder;
 
-h_AA_battery = 50.5;
+h_battery_extension = 10;
+h_AA_battery = 50.5 + h_battery_extension;
 r_AA_battery = 15.8/2;
 h_pad = 10;
 h_contact_slot = 3;
@@ -125,6 +126,7 @@ h_bolt_cutout = h_AA_battery + h_pad;
 r_bolt = 3.2/2;
 w_nut = 6;
 h_nut = 3;
+h_nut_inset = 7;
 battery_offset = .5;
 
 module _lamp_head_oring_holder() {
@@ -378,7 +380,7 @@ module battery_pack() {
     // bolt cutout
     cylinder(r=r_bolt, h=h_bolt_cutout + cutout);
     //nut cutout
-    translate([-w_nut/2, -w_nut/2, h_AA_battery])
+    translate([-w_nut/2, -w_nut/2, h_AA_battery + h_battery_inset - h_nut - h_nut_inset])
       cube([2*r_AA_battery + w_nut/2, w_nut, h_nut]);
   }
 }
@@ -388,6 +390,7 @@ module battery_pack_top_pad() {
     translate([0, 0, h_AA_battery])
       _battery_pad();
     _battery_cutouts();
+    battery_pack();
     // bolt cutout
     cylinder(r=r_bolt, h=h_bolt_cutout + cutout);
   }
