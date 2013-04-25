@@ -164,13 +164,13 @@ module _led_module_holder() {
         pitch=pitch_module,
         pitchRadius=r_module);
   }
-  /*translate([0, 0, h_module_holder - wall_thickness]) {*/
-    /*difference() {*/
-      /*cylinder(r=r_lense+wall_thickness, h=wall_thickness);*/
-      /*translate([0, 0, -cutout])*/
-        /*cylinder(r=r_lense, h=wall_thickness+2*cutout);*/
-    /*}*/
-  /*}*/
+  translate([0, 0, h_module_holder - wall_thickness]) {
+    difference() {
+      cylinder(r=r_lense+wall_thickness, h=wall_thickness);
+      translate([0, 0, -cutout])
+        cylinder(r=r_lense, h=wall_thickness+2*cutout);
+    }
+  }
 }
 
 module _shell(outer=true) {
@@ -230,8 +230,6 @@ module 2_lense_lamp_head() {
     translate([0, sign * (r_lense + r_lense_offset),
                h_shell+h_module_holder-wall_thickness]) {
       _led_module_holder();
-      /*translate([0, 0, h_module_holder])*/
-      /*_lense_holder();*/
     }
   }
 }
