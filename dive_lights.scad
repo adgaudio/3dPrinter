@@ -90,10 +90,10 @@ r_i_oring_2nd_wall = 103/2;
 h_oring = 11;
 h_oring_wall = 10;
 
-r_lense = 54/2;
+r_lense = 57/2;
 /*h_lense = 26;*/
 r_lense_offset = 2+max(x_crossbar, y_crossbar)/2; // distance from perimiter of lense to closest xy axis
-r_lense_lip = 46/2; // actual radius may be smaller than this
+r_lense_lip = 45/2; // actual radius may be smaller than this
 h_lense_lip = 10; //h_lense / 3;
 h_lense_lip_offset = 0;  // fit up to 2 glass lenses. must be less than h_lense_lip
 
