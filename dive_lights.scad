@@ -97,7 +97,7 @@ r_lense_lip = 45/2; // actual radius may be smaller than this
 h_lense_lip = 10; //h_lense / 3;
 h_lense_lip_offset = 0;  // fit up to 2 glass lenses. must be less than h_lense_lip
 
-pitch_module = 6;
+pitch_module = 10;
 r_module = r_lense - pitch_module/2;
 h_module = 10;
 h_module_holder = 15;
@@ -135,8 +135,8 @@ module _lamp_head_attachment(h_extension=0) {
     difference() {
       hull() {
         // main shaft
-        translate([-x_handle_mnt/2, -y_handle_mnt/2, 0])
-          cube([x_handle_mnt, y_handle_mnt, z_crossbar_cavity + z_crossbar]);
+        cylinder(r=max(x_handle_mnt, y_handle_mnt)/2, h=z_crossbar_cavity + z_crossbar);
+
         // connect to (ie extend) latch.  Could do it above, but in case design changes...
         translate([0, 0, z_handle_mnt])
           cylinder(r=max(x_handle_mnt, y_handle_mnt)/2, h=h_oring);
