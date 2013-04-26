@@ -16,7 +16,7 @@ module battery() {
   /*translate([0,0,h_AA_battery - 2])cylinder(r=3, h=2, center=true);*/
 }
 
-module _battery_cutouts() {
+module _2x2_battery_cutouts() {
   // battery cutouts
   for (sign1 = [-1, 1], sign2 = [-1, 1])
     translate([sign1 * (r_AA_battery + battery_offset),
@@ -46,7 +46,7 @@ module _battery_cutouts() {
 }
 
 
-module _battery_pad() {
+module _2x2_battery_pad() {
   translate([-(2*(r_AA_battery + battery_offset)),
              -(2*(r_AA_battery + battery_offset)),
              0])
@@ -59,11 +59,11 @@ module battery_pack() {
   difference() {
     union() {
       // bottom pad
-      _battery_pad();
+      _2x2_battery_pad();
       // center pole
       cylinder(r=2*r_AA_battery, h=h_AA_battery + h_battery_inset);
     }
-    _battery_cutouts();
+    _2x2_battery_cutouts();
     // bolt cutout
     cylinder(r=r_bolt, h=h_bolt_cutout + cutout);
     //nut cutout
@@ -72,11 +72,11 @@ module battery_pack() {
   }
 }
 
-module battery_pack_top_pad() {
+module 2x2_battery_pack_top_pad() {
   difference() {
     translate([0, 0, h_AA_battery])
-      _battery_pad();
-    _battery_cutouts();
+      _2x2_battery_pad();
+    _2x2_battery_cutouts();
     battery_pack();
     // bolt cutout
     cylinder(r=r_bolt, h=h_bolt_cutout + cutout);
@@ -91,11 +91,11 @@ module print_battery_pack() { // make me
       battery_pack();
 }
 
-module print_battery_pack_top_pad() { // make me
+module print_2x2_battery_pack_top_pad() { // make me
   /*for (sign1 = [-1, 1], sign2 = [-1, 1])*/
     /*translate([sign1 * (2*r_AA_battery + battery_offset +15),*/
                /*sign2 * (2*r_AA_battery + battery_offset +15),*/
                /*z_lense_offset/2])*/
       rotate([180, 0, 0])
-        battery_pack_top_pad();
+        2x2_battery_pack_top_pad();
 }
