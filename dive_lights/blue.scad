@@ -1,3 +1,7 @@
+/*
+ * Replace existing head on a dive light with new one.
+ * This could also be my first robot's eyes some day :)
+ */
 use <../lib/Thread_Library.scad>
 use <../battery_holder.scad>
 
