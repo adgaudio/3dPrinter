@@ -1,3 +1,5 @@
+function euclidean(a, b) = sqrt(pow(a, 2) + pow(b, 2));
+
 h_AA_battery = 50.5;
 r_AA_battery = 15.8/2;
 h_pad = 5;
@@ -101,22 +103,29 @@ module print_2x2_battery_pack_top_pad() { // make me
         2x2_battery_pack_top_pad();
 }
 
+slim_battery_inset = 2;
+h_slim_battery_pack = h_AA_battery + 2*slim_battery_inset + 2*h_nut;
+echo(h_slim_battery_pack);
 
 module slim_2x2_battery_pack() { // make me
   difference() {
-    cylinder(r=2*r_AA_battery-.01, h=h_AA_battery + 2*h_battery_inset + 2*h_nut);
+    cylinder(r=2.12*r_AA_battery-.01, h=h_slim_battery_pack);
 
     for (sign1 = [-1, 1], sign2 = [-1, 1]) {
     translate([sign1 * (r_AA_battery),
                sign2 * (r_AA_battery),
-               h_battery_inset]) {
-      translate([0, 0, -1.5*h_battery_inset])
-      cylinder(r=r_bolt, h=h_AA_battery + 3*h_battery_inset +2*h_nut);
+               0]) {
 
+      // bolt/contact cutout
+      translate([0, 0, -1/2*slim_battery_inset])
+      cylinder(r=r_bolt, h=h_slim_battery_pack + slim_battery_inset);
+
+      // battery cutout
+      translate([0, 0, slim_battery_inset])
       cylinder(r=r_AA_battery, h=h_AA_battery+2*h_nut);
     }}
 
-    cylinder(r=r_bolt, h=h_AA_battery);
+    cylinder(r=r_bolt, h=h_slim_battery_pack);
   }
 }
 module slim_2x2_battery_top_pad() { // make me
@@ -133,5 +142,27 @@ module slim_2x2_battery_top_pad() { // make me
     }}
 
     cylinder(r=r_bolt, h=h_AA_battery);
+  }
+}
+
+module slim_2x1_battery_pack() { // make me
+  difference() {
+    cylinder(r=2*r_AA_battery - 1/1.75*(euclidean(r_AA_battery, r_AA_battery) - r_AA_battery),
+             h=h_slim_battery_pack);
+
+    for (deg = [0:360/3:360-360/3])
+    rotate([0, 0, deg])
+    translate([r_AA_battery, 0, 0]) {
+      // bolt/contact cutout
+      translate([0, 0, -1/2*slim_battery_inset])
+      cylinder(r=r_bolt, h=h_slim_battery_pack + slim_battery_inset);
+
+      // battery cutout
+      translate([0, 0, slim_battery_inset])
+      cylinder(r=r_AA_battery, h=h_AA_battery+2*h_nut);
+    }
+
+    translate([0, 0, -.5])
+    cylinder(r=r_bolt, h=h_slim_battery_pack+1);
   }
 }
