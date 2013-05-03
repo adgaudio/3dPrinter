@@ -1,5 +1,14 @@
 cutout = 6; // extra dimensions to make clear difference() operations
 
+module donut(r_o, r_i, h, $fn, center=false) {
+  difference() {
+    cylinder(r=r_o, h=h, $fn=$fn, center=center);
+    translate([0, 0, -.5])
+    cylinder(r=r_i, h=h+1, $fn=$fn, center=center);
+  }
+}
+
+
 ////////////////////////
 // NEON light
 ////////////////////////
@@ -9,23 +18,38 @@ pi = 3.14159;
 module neon_spacer() {
   r_o1 = neon_r_o;
   r_i1 = 24/2;
-  h1 = 4;
+  h1 = 5;
   r_o2 = 32/2;
   r_i2 = r_o2 - 5;
-  h2 = 11;
+  h2 = 10;
   h_overlap = 3;
-
   $fn=50;
-  difference() {
-    cylinder(r=r_o1, h=h1+h_overlap);
-    cylinder(r=r_i1, h=h1+h_overlap + cutout);
-  }
-  translate([0, 0, h1])difference() {
-    cylinder(r=r_o2, h=h2);
-    cylinder(r=r_o1, h=h2 + cutout);
-  }
-}
 
+  donut(r_o1, r_i1, h1+h_overlap, $fn);
+  translate([0, 0, h1])
+    donut(r_o2, r_o1, h2, $fn);
+}
+/*neon_spacer();*/
+
+module neon_dichroic_filter_spacer() { // make me
+  // measured vars
+  r_lense = 29/2;
+  r_lense_lip = 1;  // section that holds filter
+  wall_thickness = 1;
+  h_total = 15.5;
+  h_lense = 2;
+  // derived vars
+  r_i = r_lense - r_lense_lip;
+  r_o = r_lense + wall_thickness;
+  lense_inset = 2 * h_lense;
+
+  $fn = 90;
+
+  donut(r_lense, r_i, h_total - lense_inset, $fn);
+  translate([0, 0, h_total - lense_inset - 3])
+  donut(r_o, r_lense, lense_inset + 3, $fn);
+}
+neon_dichroic_filter_spacer();
 
 module neon_module() {
   r_o = neon_r_o;
