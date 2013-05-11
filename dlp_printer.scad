@@ -15,8 +15,8 @@ module motor_mount() {
       difference() {
         translate([mount_x_offset, 0, 0])
           cube([motor_x, motor_y, z_slanted]);
-        rotate([0, vat_holder_angle, 0])
-          cube([motor_x, motor_y, z_slanted]);
+        rotate([0, vat_holder_angle, 0])translate([-.5, -.5, 0])
+          cube([motor_x+1, motor_y+1, z_slanted]);
       }
       // Base
       translate([mount_x_offset, 0, z_slanted+motor_mount_z/2]) {
@@ -41,7 +41,7 @@ module _shaft(r_o, r_i, h,
              r_bolt=m3_bolt_radius) {  // todo: define m3_bolt_radius
   difference() {
     cylinder(r=r_o, h=h, center=true);
-    cylinder(r=r_i, h=h, center=true);
+    cylinder(r=r_i, h=h+1, center=true);
     translate([0, 0, (h-w_nut)/2]) {
       for (mirror = [-1, 1]) {
         // slot for nuts
@@ -58,9 +58,9 @@ module _shaft(r_o, r_i, h,
 module _eccentric_roller(r_o, r_i, r_i2, h, r_i2_offset) {
   difference() {
     cylinder(r=r_o, h=h, center=true);
-    cylinder(r=r_i, h=h, center=true);
+    cylinder(r=r_i, h=h+1, center=true);
     translate([r_i2_offset, 0, 0])
-      cylinder(r=r_i2, h=h, center=true);
+      cylinder(r=r_i2, h=h+1, center=true);
   }
 }
 
@@ -106,7 +106,7 @@ module vat() {
       }
       // hinge bearing hole
       translate([-r_o - r_o_hinge + x_offset_hinge, y_offset_hinge, -h/2])rotate([90, 0, 0])
-        cylinder(r=r_i_hinge, h=thickness_hinge, center=true);
+        cylinder(r=r_i_hinge, h=thickness_hinge+1, center=true);
     }
   }
   // main body of vat with handle for tilt mechanism
@@ -171,7 +171,7 @@ module _hinge_connector(r_o, r_i, thickness) {
       translate([-r_o, 0, 0])
         cube([2*r_o, 2*r_o, thickness], center=true);
     }
-    cylinder(r=r_i, h=thickness, center=true);
+    cylinder(r=r_i, h=thickness+1, center=true);
   }
 }
 
