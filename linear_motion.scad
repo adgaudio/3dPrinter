@@ -14,6 +14,20 @@ module roller(r, h, r_608zz, r_608zz_hole, r_rod) {
     _two_bearings(1);
     rotate_extrude(convexity=10)
     translate([r+ r_rod/2,0,0])circle(r=r_rod, center=true);
+    _two_bearings(h-2*h_608zz + .1);
+  }
+}
+
+module roller_with_band(r, h, groove_width, groove_depth) {
+  difference() {
+    cylinder(r=r, h=h, center=true);
+    rotate_extrude(convexity=10)
+    translate([r+groove_width/2 - groove_depth,0,0])
+      square(groove_width, center=true);
+
+    _two_bearings(h-2*h_608zz + .1);
+
+
   }
 }
 
@@ -35,7 +49,8 @@ roller_r_rod = 8;
 
 $fn=40;
 
-eccentric_cube([30, 54, 10], [0, 10, 0]);
-translate([2*roller_r + 5, 0, 0]) {
-roller(roller_r, roller_h, r_608zz, r_608zz_hole, roller_r_rod);
-}
+translate([-2*roller_r + 5, 0, 0])
+  eccentric_cube([30, 54, 10], [0, 10, 0]);
+translate([2*roller_r + 5, 0, 0])
+  roller(roller_r, roller_h, r_608zz, r_608zz_hole, roller_r_rod);
+roller_with_band(roller_r, roller_h, 10, 5);
