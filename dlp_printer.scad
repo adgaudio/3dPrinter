@@ -1,4 +1,4 @@
-
+include <./shape_primitives.scad>;
 module motor_mount() {
   module base() {
     cube([motor_x, motor_y, motor_mount_z], center=true);
@@ -79,20 +79,22 @@ module eccentric_roller_shaft() {
 }
 
 
-module vat() {
-  r_o=vat_r_o;
-  r_i=vat_r_i;
-  h=vat_h;
-  z_holder=vat_z_holder;
-  w_holder=vat_holder_width;
-  angle_holder=vat_holder_angle;
-  r_o_hinge=vat_hinge_r_o;
-  r_i_hinge=r_608zz;
-  thickness_hinge=vat_hinge_thickness;
-  y_offset_hinge=vat_hinge_y_offset;
-  x_offset_hinge=vat_hinge_x_offset;
-  r_m8_bolt=m8_bolt_radius;
-
+module vat(r_lense_lip=vat_r_lense_lip,
+           h_lense_lip=vat_h_lense_lip,
+           z_lense_lip_offset=vat_z_lense_lip_offset,
+           r_o=vat_r_o,
+           r_i=vat_r_i,
+           h=vat_h,
+           z_holder=vat_z_holder,
+           w_holder=vat_holder_width,
+           angle_holder=vat_holder_angle,
+           r_o_hinge=vat_hinge_r_o,
+           r_i_hinge=r_608zz,
+           thickness_hinge=vat_hinge_thickness,
+           y_offset_hinge=vat_hinge_y_offset,
+           x_offset_hinge=vat_hinge_x_offset,
+           r_m8_bolt=m8_bolt_radius,
+          ) {
 
   module _vat_hinge() {
     // hinge
@@ -101,11 +103,11 @@ module vat() {
         translate([-r_o/2 + (r_o - r_i)/2 + x_offset_hinge, y_offset_hinge, 0]) {
           cube([r_o, thickness_hinge, h], center=true);
         }
-        translate([-r_o - r_o_hinge + x_offset_hinge, y_offset_hinge, -h/2])rotate([90, 0, 0])
+        translate([-r_o - r_o_hinge + x_offset_hinge, y_offset_hinge, 0])rotate([90, 0, 0])
           cylinder(r=r_o_hinge, h=thickness_hinge, center=true);
       }
       // hinge bearing hole
-      translate([-r_o - r_o_hinge + x_offset_hinge, y_offset_hinge, -h/2])rotate([90, 0, 0])
+      translate([-r_o - r_o_hinge + x_offset_hinge, y_offset_hinge, 0])rotate([90, 0, 0])
         cylinder(r=r_i_hinge, h=thickness_hinge+1, center=true);
     }
   }
@@ -116,7 +118,7 @@ module vat() {
         // main body
         cylinder(r=r_o, h=h, center=true);
         // slanted bolt holder
-        translate([r_o + w_holder/2, 0, 0])
+        translate([r_o + w_holder/2, 0, -z_holder/2])
           cube([w_holder, 10, h-z_holder], center=true);
       }
       _vat_hinge();
@@ -129,8 +131,10 @@ module vat() {
     cylinder(r=r_i, h=h+2*r_o_hinge, center=true);
     // holder bolt hole
     translate([r_o + w_holder/2, 0, 0])rotate([0, angle_holder, 0])
-      cylinder(r=r_m8_bolt, h=h, center=true);
+      cylinder(r=r_m8_bolt, h=2*h, center=true);
   }
+  translate([0, 0, (-h + z_lense_lip_offset)/2])
+    donut(r_o, r_lense_lip, h_lense_lip, center=true);
 }
 
 module 2Dhinge() {
@@ -231,6 +235,9 @@ roller_h = 2*h_608zz + 1;
 vat_r_o = 70;
 vat_r_i = vat_r_o - 3;
 vat_h = 30; // TODO
+vat_r_lense_lip = vat_r_i - 5;
+vat_h_lense_lip = 5;  // thickness of lip holding glass to vat
+vat_z_lense_lip_offset = 5;
 vat_z_holder = 5; // defines maximum possible z movement there can be when tilting vat
 vat_holder_width = 30; // TODO - just seems right
 vat_holder_angle = asin(vat_z_holder / vat_holder_width);
@@ -241,6 +248,7 @@ _y = (vat_hinge_y_offset- vat_hinge_thickness/2);
 vat_hinge_x_offset = vat_r_o - sqrt(pow(vat_r_o, 2) - pow(_y, 2));  // via geometric translation & pythagorean theorum
 
 
+/*$fn=40; // TODO */
 translate([vat_r_o + vat_holder_width + 10, 0, vat_h]) {
 // Motor Mount
   rotate([0, vat_holder_angle, 0])translate([0, 0, motor_z])rotate([0, -vat_holder_angle, 0])
@@ -254,7 +262,7 @@ translate([vat_r_o + vat_holder_width + 10, 0, vat_h]) {
 // Vat
 vat();
 
-translate([-20 + -vat_r_i - vat_hinge_r_o - vat_hinge_x_offset, 0, -vat_hinge_r_o]) {
+translate([-20 + -vat_r_i - vat_hinge_r_o - vat_hinge_x_offset, 0, 0]) {
 // Hinge
   2Dhinge();
 
