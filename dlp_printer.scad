@@ -100,17 +100,18 @@ module vat(r_lense_lip=vat_r_lense_lip,
     // hinge
     difference() {
       hull() {
-        translate([-r_o/2 + (r_o - r_i)/2 + x_offset_hinge, y_offset_hinge, 0]) {
+        translate([-r_o/2 + (r_o - r_i)/2 + x_offset_hinge, y_offset_hinge, 0])
           cube([r_o, thickness_hinge, h], center=true);
-        }
-        translate([-r_o - r_o_hinge + x_offset_hinge, y_offset_hinge, 0])rotate([90, 0, 0])
+        translate([-r_o - r_o_hinge + x_offset_hinge, y_offset_hinge, 0])
+        rotate([90, 0, 0])
           cylinder(r=r_o_hinge, h=thickness_hinge, center=true);
       }
-      // hinge bearing hole
-      translate([-r_o - r_o_hinge + x_offset_hinge, y_offset_hinge, 0])rotate([90, 0, 0])
-        cylinder(r=r_i_hinge, h=thickness_hinge+1, center=true);
-    }
+    // hinge bearing hole
+    translate([-r_o - r_o_hinge + x_offset_hinge, y_offset_hinge, 0])rotate([90, 0, 0])
+      cylinder(r=r_i_hinge, h=thickness_hinge+r_o, center=true);
   }
+}
+
   // main body of vat with handle for tilt mechanism
   difference() {
     union() {
@@ -133,8 +134,8 @@ module vat(r_lense_lip=vat_r_lense_lip,
     translate([r_o + w_holder/2, 0, 0])rotate([0, angle_holder, 0])
       cylinder(r=r_m8_bolt, h=2*h, center=true);
   }
-  translate([0, 0, (-h + z_lense_lip_offset)/2])
-    donut(r_o, r_lense_lip, h_lense_lip, center=true);
+  translate([0, 0, (-h+h_lense_lip)/2 + z_lense_lip_offset])
+    donut(r_o, r_lense_lip, h_lense_lip, $fn=$fn, center=true);
 }
 
 module 2Dhinge() {
@@ -150,20 +151,35 @@ module 2Dhinge() {
       for (mirror = [-1, 1], sign=[-1, 1]) {
         translate([x_offset, mirror * (y_offset + sign * thickness), 0])
           rotate([90, 0, 0])
-            _hinge_connector(r_o, r_i, thickness);
-        translate([-2*(r_o-x_offset/2), mirror * (y_offset), thickness + sign*thickness])
-          translate([0, 0, -r_o+thickness/2])rotate([0, 180, 0])
-            _hinge_connector(r_o, r_i, thickness);
+            _hinge_connector(r_o, r_i, thickness-1);
+
+        translate([-2*(r_o-x_offset/2), mirror * (y_offset), thickness + sign*thickness -.5])
+        translate([0, 0, -r_o+(thickness)/2])rotate([0, 180, 0])
+          _hinge_connector(r_o, r_i, thickness-1);
 
       translate([-1*(r_o -x_offset), mirror*y_offset, 0])
         cube([r_o+2*x_offset, 2*r_o, 2*r_o], center=true);
       }
     }
     for (mirror = [-1, 1], sign=[-1, 1]) {
+      // cut out female ends of hinge
+      translate([x_offset, mirror * (y_offset), 0])
+        rotate([90, 180, 0])
+          cylinder(r=r_o, h=thickness, center=true);
+
+      // cut out female ends of hinge along other dimension
+      translate([-2*(r_o-x_offset/2), mirror * (y_offset), thickness + sign*thickness])
+      translate([0, 0, -r_o-thickness/2])rotate([0, 180, 0])
+        cylinder(r=r_o, h=thickness, center=true);
+
+      // cut out holes for bearings on male end
       translate([x_offset, mirror * (y_offset + sign * thickness), 0])rotate([90, 0, 0])
         cylinder(r=r_i, h=r_o+thickness, center=true);
+
+      // cut out holes for bearings on male end along other dimension
       translate([-2*(r_o-x_offset/2), mirror * (y_offset), 0])rotate([0, 180, 0])
         cylinder(r=r_i, h=2*r_o+thickness, center=true);
+
     }
   }
 }
@@ -246,29 +262,3 @@ vat_hinge_thickness = h_608zz;
 vat_hinge_y_offset = 20;
 _y = (vat_hinge_y_offset- vat_hinge_thickness/2);
 vat_hinge_x_offset = vat_r_o - sqrt(pow(vat_r_o, 2) - pow(_y, 2));  // via geometric translation & pythagorean theorum
-
-
-/*$fn=40; // TODO */
-translate([vat_r_o + vat_holder_width + 10, 0, vat_h]) {
-// Motor Mount
-  rotate([0, vat_holder_angle, 0])translate([0, 0, motor_z])rotate([0, -vat_holder_angle, 0])
-    motor_mount();
-
-// Motor Gear
-  rotate([0, 0, 180])rotate([0, -vat_holder_angle, 0])
-  eccentric_roller_shaft();
-}
-
-// Vat
-vat();
-
-translate([-20 + -vat_r_i - vat_hinge_r_o - vat_hinge_x_offset, 0, 0]) {
-// Hinge
-  2Dhinge();
-
-// Hinge holder
-    translate([-20 + -2*vat_hinge_r_o + vat_hinge_x_offset, 0, -vat_hinge_thickness/2])
-      hinge_mount();
-}
-
-
