@@ -2,7 +2,7 @@ module donut(r_o, r_i, h, $fn, center=false) {
   difference() {
     cylinder(r=r_o, h=h, $fn=$fn, center=center);
     translate([0, 0, -.5])
-    cylinder(r=r_i, h=h+1, $fn=$fn, center=center);
+    cylinder(r=r_i, h=h+1.5, $fn=$fn, center=center);
   }
 }
 
