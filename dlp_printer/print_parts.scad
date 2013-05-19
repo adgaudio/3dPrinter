@@ -1,5 +1,8 @@
-include <./dlp_printer.scad>;
+include <vat.scad>;
+include <build_platform.scad>;
 
+/*$fn=10;*/
+$fn=100;
 
 module print_motor_mount() { // make me
   rotate([180, 0, 0])
@@ -19,7 +22,6 @@ module print_hinge_mount() { // make me
   hinge_mount();
 }
 
-$fn=100;
 /*print_motor_mount();*/
 /*print_eccentric_roller_shaft();*/
 /*print_vat();*/
@@ -29,7 +31,6 @@ system();
 
 
 
-/*[>$fn=40; // TODO <]*/
 module system() {
   translate([vat_r_o + vat_holder_width + 10, 0, vat_h]) {
   // Motor Mount
@@ -52,5 +53,8 @@ module system() {
       translate([-20 + -2*vat_hinge_r_o + vat_hinge_x_offset, 0, (-vat_hinge_thickness-2)/2])
         hinge_mount();
   }
+
+  // Build Platform
+  build_platform();
 }
 

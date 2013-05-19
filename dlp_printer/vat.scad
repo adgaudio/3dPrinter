@@ -1,37 +1,38 @@
-include <./shape_primitives.scad>;
+include <../shape_primitives.scad>;
+
 module motor_mount() {
   module base() {
     cube([motor_x, motor_y, motor_mount_z], center=true);
+    // attachment
     translate([motor_x/2 + mount_x_offset/2, 0, -z_slanted/2])
       cube([mount_x_offset, motor_y, motor_mount_z + z_slanted], center=true);
-    // attachment
   }
   z_slanted = tan(vat_holder_angle) * motor_x;
   mount_x_offset = sin(vat_holder_angle)*z_slanted;
-  difference() {
-    union() {
-      // Slanted section of mount
-      translate([-motor_x/2, -motor_y/2, 0])  // perform center=true manually
-      difference() {
-        translate([mount_x_offset, 0, 0])
-          cube([motor_x, motor_y, z_slanted]);
-        rotate([0, vat_holder_angle, 0])translate([-.5, -.5, 0])
-          cube([motor_x+1, motor_y+1, z_slanted]);
-      }
-      // Base
-      translate([mount_x_offset, 0, z_slanted+motor_mount_z/2]) {
-        base();
-      }
-    }
 
-    // bolt holes
-    for (mirror1 = [-1, 1], mirror2 = [-1, 1]) {
-     translate([mount_x_offset/2, 0, 0])
-      rotate([0, vat_holder_angle, 0])
-        translate([mirror1 * (motor_x - 2*motor_mount_inset - motor_mount_bolt_size)/2,
-                   mirror2 * (motor_y - 2*motor_mount_inset - motor_mount_bolt_size)/2,
-                   0])
-          cylinder(r=motor_mount_bolt_size, h=3*(motor_mount_z + motor_mount_z));
+  translate([mount_x_offset, 0, z_slanted+motor_mount_z/2]) {
+    difference() {
+      hull() {
+        // top of base
+          base();
+
+        // bottom (slanted part)
+        translate([0, 0, -z_slanted/2])
+        rotate([0, vat_holder_angle, 0]) {
+            translate([-motor_x/2, -motor_y/2, -1])
+              cube([motor_x, motor_y, 1]);
+        }
+      }
+
+      // cut out bolt holes
+      for (mirror1 = [-1, 1], mirror2 = [-1, 1]) {
+        rotate([0, vat_holder_angle, 0])
+        translate([mount_x_offset/2, 0, -10])
+          translate([mirror1 * (motor_x - 2*motor_mount_inset - motor_mount_bolt_size)/2,
+                     mirror2 * (motor_y - 2*motor_mount_inset - motor_mount_bolt_size)/2,
+                     0])
+            cylinder(r=motor_mount_bolt_size, h=3*(motor_mount_z + motor_mount_z), center=true);
+      }
     }
   }
 }
@@ -215,50 +216,3 @@ module hinge_mount() {
     }
   }
 }
-
-/*$fn=10;*/
-
-m3_nut_height = 1;
-m3_nut_width = 4;
-m3_bolt_radius = 1.5; // TODO
-m8_bolt_radius = 8/4;  // TODO
-
-r_608zz = 22/2 + .6;
-r_608zz_hole = 8/2;
-h_608zz = 7;
-
-motor_z = 50;
-motor_x = 80;
-motor_y = 80;
-motor_mount_z = 5;
-motor_mount_inset = 5;
-motor_mount_bolt_size = m3_bolt_radius;  // TODO
-
-h_motor_shaft = 5;
-thickness_motor_shaft = 3;
-r_motor_shaft = 5;
-
-eccentric_roller_rim_width = 3;
-eccentric_roller_offset = 3 + r_608zz + r_motor_shaft ;
-eccentric_roller_r = eccentric_roller_rim_width + 
-                     max(r_608zz, eccentric_roller_offset) + r_608zz;
-eccentric_roller_r_o_shaft = thickness_motor_shaft + r_motor_shaft;
-
-roller_r_rod = 8/2;
-roller_r = r_608zz + roller_r_rod + 1;
-roller_h = 2*h_608zz + 1;
-
-vat_r_o = 70;
-vat_r_i = vat_r_o - 3;
-vat_h = 30; // TODO
-vat_r_lense_lip = vat_r_i - 5;
-vat_h_lense_lip = 5;  // thickness of lip holding glass to vat
-vat_z_lense_lip_offset = 5;
-vat_z_holder = 5; // defines maximum possible z movement there can be when tilting vat
-vat_holder_width = 30; // TODO - just seems right
-vat_holder_angle = asin(vat_z_holder / vat_holder_width);
-vat_hinge_r_o = r_608zz + 3;
-vat_hinge_thickness = h_608zz;
-vat_hinge_y_offset = 20;
-_y = (vat_hinge_y_offset- vat_hinge_thickness/2);
-vat_hinge_x_offset = vat_r_o - sqrt(pow(vat_r_o, 2) - pow(_y, 2));  // via geometric translation & pythagorean theorum
