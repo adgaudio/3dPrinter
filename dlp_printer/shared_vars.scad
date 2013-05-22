@@ -10,7 +10,7 @@ h_608zz = 7;
 motor_z = 50;
 motor_x = 80;
 motor_y = 80;
-motor_mount_z = 5;
+motor_mount_z = 8;
 motor_mount_inset = 5;
 motor_mount_bolt_size = m3_bolt_radius;  // TODO
 

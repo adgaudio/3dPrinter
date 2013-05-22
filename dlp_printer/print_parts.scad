@@ -1,4 +1,5 @@
 include <vat.scad>;
+include <motor.scad>;
 include <build_platform.scad>;
 
 /*$fn=10;*/
