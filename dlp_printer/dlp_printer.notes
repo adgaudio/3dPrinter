@@ -6,46 +6,77 @@ electronics:
   - 
 
 frame:
-  - z axis:
-    - rods:
-    - nut
-    - 
-  - vat holder with tilt mechanism:
-    - eccentric turny thing
-    - 
-  - frame:
-    - <maybe> uv filters: http://www.edmundoptics.com/optics/optical-filters/longpass-edge-filters/flexible-thin-film-uv-filters/1873
-    - <or> uv window film: mhttp://www.amazon.com/Gila-LES361-Control-Residential-Platinum/dp/B000KKM8EG/ref=sr_1_1?ie=UTF8&qid=1361744130&sr=8-1&keywords=uv+film
-    - aluminum extrusions
+  - <maybe> uv filters: http://www.edmundoptics.com/optics/optical-filters/longpass-edge-filters/flexible-thin-film-uv-filters/1873
+  - <or> uv window film: mhttp://www.amazon.com/Gila-LES361-Control-Residential-Platinum/dp/B000KKM8EG/ref=sr_1_1?ie=UTF8&qid=1361744130&sr=8-1&keywords=uv+film
+  - aluminum extrusions
 
 projector:
   - ?
 
-build platform:
-  - fat ass glass?
-  - mounted on ??
-  - connection to frame ??
-  - some sort of coating?
-
-vat(s):
-  - bottom: clear glass bottom rather than acrylic (acrylic can absorb uv)
-    - http://howardglassco.thomasnet.com/viewitems/schott-b270-drawn-crown-glass/schott-b270-drawn-crown-glass-2?&forward=1
-  - different desired dimensions:
-    - 6x6x2:  6x6 pane, four 6x2 panes
-    - 12x12*2
-    - 4x4x2.5
-    - 1x1x1
-
-
-
-x12x2 inches, roughly
-
-  
-  - walls: more class from howard glass
-  - pdms: slygard 184 http://www.dowcorning.com/applications/search/default.aspx?r=131en
-    - going to try 100% pure aquarium silicone sealant first
-  - DAP silicone sealant
 
 resin:
   - resin: Bucktown Polymers or Spotamaterials.
   - dye: Opaque Yellow Castin’ Craft dye from Environmental Technologies Inc – eti-usa.com
+
+
+other stuff
+springs
+
+vat(s):
+  - bottom: clear glass bottom rather than acrylic (acrylic can absorb uv)
+    - round flashlight glass
+  - pdms: slygard 184 http://www.dowcorning.com/applications/search/default.aspx?r=131en
+  - DAP silicone sealant
+  - 608zz bearings, a whole ton of them
+  - m8 bolts that fit 3 in a row + nut
+
+build platform:
+  - glass?
+  - mounted on plastic plate
+    ? fastening springs/plungers
+
+  - connected to platform frame:
+    - mounted on (8020) extrusion in T shape
+      - 1 20x20 extrusion of y axis side length + some extra
+    - 2 t-slot nuts (connecting platform to extrusion)
+  - platform frame connected to rods
+    - smooth rods:
+      - 2 or 4 (printed) lm8uu bearing holders
+        - 4 or 8 t-slot nuts
+      - 2 or 4 lm8uu bearings
+    - threaded rods:
+      - 1 threaded nut and flange
+        - mcmaster 95072A129 $24.94 (nut)
+        - mcmaster 95082A641 $32.72 (flange)
+
+Z axis:
+  - 2 smooth rods
+    - 6112K15 $23.56
+  - 1 threaded/acme rod
+    - mcmaster 98940A619 $38.18 3ft
+  - bottoms of rods
+    - 1 rigid coupler (motor to rod)
+      - mcmaster 6115K21 $20.11 3ft
+    - 2 fasteners (printed) mounting smooth rod to extrusion
+  - tops of rods:
+    - 1 Flanged-Sleeve Bearing (for threaded rod)
+      - mcmaster 6338K415 $0.81
+    - 2 shaft collars (printed) + bushings + (printed) holders to attach ends of smooth rods to aluminum extrusion at top
+
+Frame:
+  - Top & bottom: square shape aluminum extrusions
+  - Sides (all same length): 
+    - 1 40x20 extrusions for vat mount
+    - 1 20x20 extrusions for motor (rod) mount
+    - 2 20x20 extrusions for build platform to 
+  - connecting motor to frame:
+    - 2 pieces smooth rod, each >= 1/2 width (x axis)
+      - 6112K15 $23.56
+    - 1 piece of 20x20 extrusion for vertical part
+      - (just get one as long as a side and then cut to length)
+    - 1 20x20 extrusion sitting on top of frame
+    - 2 lm8uu bearing 
+    - 2 printed holders
+    - 8 t-slot nuts
+  - connecting hinge to frame:
+    
