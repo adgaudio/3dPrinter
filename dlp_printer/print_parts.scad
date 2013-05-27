@@ -28,34 +28,7 @@ module print_hinge_mount() { // make me
 /*print_vat();*/
 /*print_2Dhinge();*/
 /*print_hinge_mount();*/
-system();
+/*system();*/
 
 
-
-module system() {
-  translate([vat_r_o + vat_holder_width + 10, 0, vat_h]) {
-  // Motor Mount
-    rotate([0, vat_holder_angle, 0])translate([0, 0, motor_z])rotate([0, -vat_holder_angle, 0])
-      motor_mount();
-
-  // Motor Gear
-    rotate([0, 0, 180])rotate([0, -vat_holder_angle, 0])
-    eccentric_roller_shaft();
-  }
-
-  // Vat
-  vat();
-
-  translate([-20 + -vat_r_i - vat_hinge_r_o - vat_hinge_x_offset, 0, 0]) {
-  // Hinge
-    2Dhinge();
-
-  // Hinge holder
-      translate([-20 + -2*vat_hinge_r_o + vat_hinge_x_offset, 0, (-vat_hinge_thickness-2)/2])
-        hinge_mount();
-  }
-
-  // Build Platform
-  build_platform();
-}
 
