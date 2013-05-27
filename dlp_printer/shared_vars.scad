@@ -28,7 +28,7 @@ roller_r_rod = 8/2;
 roller_r = r_608zz + roller_r_rod + 1;
 roller_h = 2*h_608zz + 1;
 
-vat_r_i = 52/2;
+vat_r_i = 54/2;
 vat_r_o = vat_r_i + 3;
 vat_h = 30; // TODO
 vat_r_lense_lip = vat_r_i - 5;
