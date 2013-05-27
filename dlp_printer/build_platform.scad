@@ -11,7 +11,7 @@ xyz_platform_mount = [2*r_platform_shaft, 30, z_platform_mount];
 dist_between_platform_mount_screws = 20;
 
 z_offset_build_platform = vat_z_lense_lip_offset; // TODO: 50
-y_offset_build_platform = vat_r_i - r_platform; // how much extra room is between the vat and the platform
+y_offset_build_platform = vat_r_i - r_platform; // make vat disc eccentricly place
 
 
 module build_platform() {
@@ -32,4 +32,8 @@ translate([0, y_offset_build_platform, z_offset_build_platform]) {
 }
 }
 
-module rod_to_extrusion_mount() {}
+module rod_to_extrusion_mount() {
+
+}
+
+rod_to_extrusion_mount();

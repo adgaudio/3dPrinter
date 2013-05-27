@@ -23,6 +23,14 @@ module print_hinge_mount() { // make me
   hinge_mount();
 }
 
+module print_build_platform() { // make me
+  build_platform();
+}
+
+module print_rod_to_extrusion_mount() { // make me
+  rod_to_extrusion_mount();
+}
+
 /*print_motor_mount();*/
 /*print_eccentric_roller_shaft();*/
 /*print_vat();*/
