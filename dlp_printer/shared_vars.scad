@@ -1,31 +1,29 @@
 m3_nut_height = 1;
 m3_nut_width = 4;
 m3_bolt_radius = 1.5; // TODO
+m5_bolt_radius = 5/2; // TODO
 m8_bolt_radius = 8/4;  // TODO
 
 r_608zz = 22/2 + .6;
 r_608zz_hole = 8/2;
 h_608zz = 7;
 
-motor_z = 50;
-motor_x = 80;
-motor_y = 80;
+motor_z = 50; // actually, this is just aesthetic
+motor_x = 4 + 56.39;
+motor_y = 4 + 56.58;
 motor_mount_z = 8;
-motor_mount_inset = 5;
-motor_mount_bolt_size = m3_bolt_radius;  // TODO
+motor_mount_inset = 2 + 2.0;
+motor_mount_bolt_size = m5_bolt_radius;
 
-h_motor_shaft = 5;
-thickness_motor_shaft = 3;
-r_motor_shaft = 5;
+h_motor_shaft = 10;
+thickness_motor_shaft = 6.34/2;
+r_motor_shaft = 3;
 
 eccentric_roller_rim_width = 3;
-eccentric_roller_offset = 3 + r_608zz + r_motor_shaft ;
+eccentric_roller_offset = thickness_motor_shaft + r_608zz + r_motor_shaft ;
 eccentric_roller_r = eccentric_roller_rim_width + 
                      max(r_608zz, eccentric_roller_offset) + r_608zz;
 eccentric_roller_r_o_shaft = thickness_motor_shaft + r_motor_shaft;
-
-roller_r_rod = 8/2;
-roller_r = r_608zz + roller_r_rod + 1;
 roller_h = 2*h_608zz + 1;
 
 vat_r_i = 54/2;
@@ -37,7 +35,6 @@ vat_z_lense_lip_offset = 5;
 vat_z_holder = 10; // defines maximum possible z movement there can be when tilting vat
 vat_holder_width = 30; // TODO - just seems right.  
 vat_holder_angle = asin(vat_z_holder / vat_holder_width);
-echo(vat_holder_angle);
 vat_hinge_r_o = r_608zz + 3;
 vat_hinge_thickness = h_608zz;
 vat_hinge_y_offset = 20;
