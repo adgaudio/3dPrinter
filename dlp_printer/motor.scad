@@ -44,11 +44,11 @@ module _shaft(r_o, r_i, h,
   difference() {
     cylinder(r=r_o, h=h, center=true);
     cylinder(r=r_i, h=h+1, center=true);
-    translate([0, 0, (h-w_nut)/2]) {
+    translate([0, 0, h/2 - roller_nut_inset]) {
       for (mirror = [-1, 1]) {
         // slot for nuts
-        translate([0, r_i*mirror, 0])
-          cube([w_nut, h_nut, w_nut], center=true);
+        translate([0, .01 + mirror*(r_i + h_nut/2), roller_nut_inset/2])
+          cube([w_nut, h_nut, w_nut+roller_nut_inset], center=true);
         // hole for bolt
         rotate([0, 90*mirror, 90])
           cylinder(r=r_bolt, h=r_o);
@@ -74,7 +74,11 @@ module eccentric_roller_shaft() {
   r_i2_offset=eccentric_roller_offset;
   r_o_shaft=eccentric_roller_r_o_shaft;
   h_shaft=h_motor_shaft;
-  _eccentric_roller(r_o, r_i, r_i2, h, r_i2_offset);
+  intersection() {
+    _eccentric_roller(r_o, r_i, r_i2, h, r_i2_offset);
+    translate([r_o/2, 0, 0])
+    cube([r_o*2, r_o, 20], center=true);
+  }
 
   translate([0, 0, (h+h_shaft) / 2])
     _shaft(r_o=r_o_shaft, r_i=r_i, h=h_shaft);
