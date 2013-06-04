@@ -1,8 +1,8 @@
-m3_nut_height = 3; // TODO
-m3_nut_width = 4; // TODO
-m3_bolt_radius = 1.5; // TODO
-m5_bolt_radius = 5/2; // TODO
-m8_bolt_radius = 8/4;  // TODO
+m3_nut_height = 3; // slightly larger than actual
+m3_nut_width = 5.75; // slightly larger than actual
+m3_bolt_radius = 1.5;
+m5_bolt_radius = 5/2;
+m8_bolt_radius = 8/4;
 
 r_608zz = 22/2 + .3;
 r_608zz_hole = 8/2;
@@ -12,7 +12,7 @@ motor_z = 50; // actually, this is just aesthetic
 motor_x = 4 + 56.39;
 motor_y = 4 + 56.58;
 motor_mount_z = 8;
-motor_mount_inset = 7 + 2.0;
+motor_mount_inset = 4/2 + 4.5;
 motor_mount_bolt_size = m5_bolt_radius;
 
 h_motor_shaft = 10;
