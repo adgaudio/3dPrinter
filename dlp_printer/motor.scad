@@ -1,40 +1,36 @@
 include <shared_vars.scad>;
 
-// TODO: nut traps to mount lm8uu holders
 module motor_mount() {
-  module base() {
-    cube([motor_x, motor_y, motor_mount_z], center=true);
-    // attachment
-    translate([motor_x/2 + mount_x_offset/2, 0, -z_slanted/2])
-      cube([mount_x_offset, motor_y, motor_mount_z + z_slanted], center=true);
-  }
   z_slanted = tan(vat_holder_angle) * motor_x;
-  mount_x_offset = sin(vat_holder_angle)*z_slanted;
+  hyp = (2*thickness_motor_mount + motor_x) / cos(vat_holder_angle);
+  difference() {
+    translate([motor_x/-2, motor_y/-2, motor_z/-2])
+    union() {
+      // bottom wall
+      cube([motor_x, motor_y, thickness_motor_mount]);
+      // long side wall
+      translate([motor_x, 0, 0])
+      cube([thickness_motor_mount, motor_y, motor_z+z_slanted+thickness_motor_mount]);
+      // short side wall
+      translate([-thickness_motor_mount, 0, 0])
+      cube([thickness_motor_mount, motor_y, motor_z+thickness_motor_mount]);
+      // top wall
+      translate([-thickness_motor_mount, 0, motor_z])
+      rotate([0, -vat_holder_angle, 0])
+      cube([hyp, motor_y, thickness_motor_mount]);
 
-  translate([mount_x_offset, 0, z_slanted+motor_mount_z/2]) {
-    difference() {
-      hull() {
-        // top of base
-          base();
-
-        // bottom (slanted part)
-        translate([0, 0, -z_slanted/2])
-        rotate([0, vat_holder_angle, 0]) {
-            translate([-motor_x/2, -motor_y/2, -1])
-              cube([motor_x, motor_y, 1]);
-        }
-      }
-
-      // cut out bolt holes
-      for (mirror1 = [-1, 1], mirror2 = [-1, 1]) {
-        rotate([0, vat_holder_angle, 0])
-        translate([mount_x_offset/2, 0, -10])
-          translate([mirror1 * (motor_x - 2*motor_mount_inset - motor_mount_bolt_size)/2,
-                     mirror2 * (motor_y - 2*motor_mount_inset - motor_mount_bolt_size)/2,
-                     0])
-            cylinder(r=motor_mount_bolt_size, h=3*(motor_mount_z + motor_mount_z), center=true);
-      }
     }
+    // hole for shaft and that round part
+    translate([0, 0, -motor_z/2 + thickness_motor_mount/2])
+      cylinder(r=motor_r, h=thickness_motor_mount+1, center=true);
+    // screw holes
+    for (mirror1 = [-1, 1], mirror2 = [-1, 1]) {
+      translate([mirror1 * (motor_x/2 - motor_mount_inset - motor_mount_bolt_size/2),
+                 mirror2 * (motor_y/2 - motor_mount_inset - motor_mount_bolt_size/2),
+                 -motor_z/2 - .5])
+        cylinder(r=motor_mount_bolt_size, h=thickness_motor_mount+1);
+    }
+
   }
 }
 

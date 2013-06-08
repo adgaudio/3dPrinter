@@ -6,7 +6,6 @@ include <build_platform.scad>;
 $fn=100;
 
 module print_motor_mount() { // make me
-  rotate([180, 0, 0])
   motor_mount();
 }
 module print_eccentric_roller_shaft() { // make me

@@ -1,5 +1,6 @@
 m3_nut_height = 3; // slightly larger than actual
 m3_nut_width = 5.75; // slightly larger than actual
+m3_nut_width = 2*(6.34/2 + .5) - .6; // much larger than actual because my slicing software isn't exact
 m3_bolt_radius = 1.5;
 m5_bolt_radius = 5/2;
 m8_bolt_radius = 8/4;
@@ -8,16 +9,18 @@ r_608zz = 22/2 + .3;
 r_608zz_hole = 8/2;
 h_608zz = 7;
 
-motor_z = 50; // actually, this is just aesthetic
+motor_z = 55;
 motor_x = 4 + 56.39;
 motor_y = 4 + 56.58;
+motor_r = (38+1)/2;
 motor_mount_z = 8;
-motor_mount_inset = 4/2 + 4.5;
+motor_mount_inset = 2.0 + 3.25;
 motor_mount_bolt_size = m5_bolt_radius;
+thickness_motor_mount = 5;
 
 h_motor_shaft = 10;
 thickness_motor_shaft = 5;
-r_motor_shaft = 6.34/2;
+r_motor_shaft = 6.34/2 + .5;
 
 eccentric_roller_rim_width = 3;
 eccentric_roller_offset = thickness_motor_shaft + r_608zz + r_motor_shaft ;
