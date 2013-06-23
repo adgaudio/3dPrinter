@@ -30,14 +30,24 @@ module system() {
 
 
 module bar(xyz, center=true, color="gray") {
+  cutout = 1;
   color(color)
-    cube(xyz, center=center);
+    cube([xyz[0] - cutout,
+          xyz[1] - cutout,
+          xyz[2] - cutout],
+         center=center);
 }
 
 module build_platform_extrusion() {
-translate([0, 10 + 10, z_offset_build_platform + z_platform_mount + h_platform_shaft + 10]) {
-    bar([20, 420 - 20 - 20 - 10, 20], center=true);
+translate([0, 0, z_offset_build_platform + z_platform_mount + h_platform_shaft + 10]) {
+    bar([20, 400, 20], center=true);
+
+    // printed part that stabilizes build platform with rod
+    translate([13, -(400)/2, 0])
+    rotate([0, 0, 270])
+    rod_to_extrusion_stabilizing_mount();
 }
+
 }
 
 module _frame() {
@@ -56,11 +66,10 @@ module frame() {
       cylinder(r=8/2, h=420 + 40, center=true);
   }
   // smooth rod on other side of frame
-  translate([0, -420/2 + 20 + rod_to_bar_dist, 10]) {
+  for (sign=[-1, 1])
+  translate([sign * 30, -420/2 + 20 + rod_to_bar_dist, 10]) {
     cylinder(r=8/2, h=420 + 40, center=true);
 
-    // printed part that stabilizes build platform with rod
-    /*rod_to_extrusion_stabilizing_mount();*/
   }
 
 
@@ -78,15 +87,15 @@ module frame() {
 
     // top extrusion in middle (adjustable for motor mount)
     translate([0, 0, 20])
-    bar([420 + 40, 20, 20], center=true);
+    bar([460, 20, 20], center=true);
 
     // small vertical piece of extrusion for motor mount
     translate([20, 0, -(420/2 +20)/2 + 10])
-    bar([20, 20, 420/2 + 20], center=true);
+    bar([20, 20, 230], center=true);
 
     // small horizontal piece of extrusion for motor mount
     translate([420/4 + 15, 0, -420/2 + 40]) {
-      bar([420/2-20-10, 20, 20], center=true);
+      bar([180, 20, 20], center=true);
       // rods for motor mount
       for (sign=[-1, 1])
       translate([-420/4, 20*sign, 0])

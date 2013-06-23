@@ -33,7 +33,56 @@ translate([0, y_offset_build_platform, z_offset_build_platform]) {
 }
 
 module rod_to_extrusion_mount() {
-
+// TODO
 }
 
-rod_to_extrusion_mount();
+ext_xy = 20;
+ext_thickness = 3;
+r_smooth_rod = 8/2;  // TODO
+
+r_lm8uu = 11.5;  // TODO// TODO
+r_rod_holder = r_lm8uu + ext_thickness;
+h_rod_holder = 20;
+z_offset_rod_holder = 40; // vertical distance from center to top/bottom
+x_offset_rod_holder = ext_thickness; // adjust the angle made by this piece
+length_rod_holder_flaps = 23;
+
+module rod_to_extrusion_stabilizing_mount() {
+  difference() {
+    union() {
+      for (angle=[0, 180]) {
+      rotate([angle, 0, 0])
+      hull() {
+        // part that attaches to rod
+        translate([r_rod_holder, 0, z_offset_rod_holder])
+          cylinder(r=r_rod_holder, h=h_rod_holder, center=true);
+        // part that attaches to extrusion
+        translate([-x_offset_rod_holder/2 + ext_thickness/2, 0, 0])
+           cube([x_offset_rod_holder, ext_xy + 2*ext_thickness, h_rod_holder], center=true);
+      }
+      translate([-length_rod_holder_flaps/2, 0, 0])
+         cube([length_rod_holder_flaps+2*ext_thickness,
+               ext_xy+2*ext_thickness,
+               ext_xy+2*ext_thickness],
+               center=true);
+    }
+    }
+    // cutout spot for the lm8uu bearings
+    translate([r_rod_holder, 0, 0])
+      cylinder(r=r_lm8uu, h=2*(z_offset_rod_holder + h_rod_holder + ext_thickness), center=true);
+    // cutout for extrusion
+    translate([-x_offset_rod_holder - length_rod_holder_flaps/2, 0, 0]) {
+      cube([x_offset_rod_holder + length_rod_holder_flaps, h_rod_holder, h_rod_holder + 1], center=true);
+      // screw holes
+      cylinder(r=m5_bolt_radius, h=h_rod_holder+ext_thickness*2+1, center=true);
+    }
+    rotate([0, 90, 0])
+      cylinder(r=m5_bolt_radius, h=2*r_rod_holder, center=true);
+  }
+}
+
+//cube([20, 50, 20], center=true);
+//translate([20, 0, 0])
+  //cylinder(r=8/2, h=50, center=true);
+//translate([10, 0, 0])
+  //rod_to_extrusion_stabilizing_mount();

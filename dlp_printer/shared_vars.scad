@@ -18,6 +18,8 @@ motor_mount_inset = 2.0 + 3.25;
 motor_mount_bolt_size = m5_bolt_radius;
 thickness_motor_mount = 5;
 
+thickness = 3; // general thickness of things// TODO: used anywhere?
+
 h_motor_shaft = 10;
 thickness_motor_shaft = 5;
 r_motor_shaft = 6.34/2 + .5;
