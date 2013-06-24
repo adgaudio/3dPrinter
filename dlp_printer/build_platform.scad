@@ -57,31 +57,37 @@ module rod_to_extrusion_stabilizing_mount() {
         translate([r_rod_holder, 0, z_offset_rod_holder])
           cylinder(r=r_rod_holder, h=h_rod_holder, center=true);
         // part that attaches to extrusion
-        translate([-x_offset_rod_holder/2 + ext_thickness/2, 0, 0])
-           cube([x_offset_rod_holder, ext_xy + 2*ext_thickness, h_rod_holder], center=true);
+        cube([.01, 2*r_rod_holder, 2*20], center=true);
       }
-      translate([-length_rod_holder_flaps/2, 0, 0])
-         cube([length_rod_holder_flaps+2*ext_thickness,
-               ext_xy+2*ext_thickness,
-               ext_xy+2*ext_thickness],
-               center=true);
     }
     }
     // cutout spot for the lm8uu bearings
     translate([r_rod_holder, 0, 0])
       cylinder(r=r_lm8uu, h=2*(z_offset_rod_holder + h_rod_holder + ext_thickness), center=true);
+    // screw holes
+    rotate([0, 90, 0])for (sign=[-1, 1])translate([sign*10, 0, 0])
+      cylinder(r=m5_bolt_radius, h=2*r_rod_holder, center=true);
+  }
+}
+
+module _tmp_extrusion_mount() {
+  difference() {
+      // small extension to wrap around extrusion
+      translate([-length_rod_holder_flaps/2, 0, 0])
+         cube([length_rod_holder_flaps+2*ext_thickness,
+               ext_xy+2*ext_thickness,
+               ext_xy+2*ext_thickness],
+               center=true);
     // cutout for extrusion
     translate([-x_offset_rod_holder - length_rod_holder_flaps/2, 0, 0]) {
       cube([x_offset_rod_holder + length_rod_holder_flaps, h_rod_holder, h_rod_holder + 1], center=true);
       // screw holes
       cylinder(r=m5_bolt_radius, h=h_rod_holder+ext_thickness*2+1, center=true);
     }
-    rotate([0, 90, 0])
-      cylinder(r=m5_bolt_radius, h=2*r_rod_holder, center=true);
   }
 }
 
-//cube([20, 50, 20], center=true);
+//cube([20, 100, 40], center=true);
 //translate([20, 0, 0])
   //cylinder(r=8/2, h=50, center=true);
 //translate([10, 0, 0])
