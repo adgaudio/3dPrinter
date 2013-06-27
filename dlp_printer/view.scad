@@ -4,7 +4,7 @@ rod_to_bar_dist = 10;
 module system() {
   translate([vat_r_o + vat_holder_width + 10, 0, vat_h]) {
   // Motor Mount
-    rotate([0, vat_holder_angle, 0])translate([0, 0, motor_z + 10])
+    rotate([0, vat_holder_angle, 0])translate([0, 0, motor_z])
       motor_mount();
 
   // Motor Gear

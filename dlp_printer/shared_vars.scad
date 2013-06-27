@@ -9,9 +9,9 @@ r_608zz = 22/2 + .3;
 r_608zz_hole = 8/2;
 h_608zz = 7;
 
-motor_z = 55;
-motor_x = 4 + 56.39;
-motor_y = 4 + 56.58;
+motor_z = 2 + 55;
+motor_x = 2 + 56.25;
+motor_y = 2 + 56.25;
 motor_r = (38+1)/2;
 motor_mount_z = 8;
 motor_mount_inset = 2.0 + 3.25;

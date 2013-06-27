@@ -10,12 +10,12 @@ module motor_mount() {
       cube([motor_x, motor_y, thickness_motor_mount]);
       // long side wall
       translate([motor_x, 0, 0])
-      cube([thickness_motor_mount, motor_y, motor_z+z_slanted+thickness_motor_mount]);
+      cube([thickness_motor_mount, motor_y, motor_z+z_slanted+2*thickness_motor_mount]);
       // short side wall
       translate([-thickness_motor_mount, 0, 0])
-      cube([thickness_motor_mount, motor_y, motor_z+thickness_motor_mount]);
+      cube([thickness_motor_mount, motor_y, motor_z+2*thickness_motor_mount]);
       // top wall
-      translate([-thickness_motor_mount, 0, motor_z])
+      translate([-thickness_motor_mount, 0, motor_z+thickness_motor_mount])
       rotate([0, -vat_holder_angle, 0])
       cube([hyp, motor_y, thickness_motor_mount]);
 
