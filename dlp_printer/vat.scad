@@ -133,7 +133,7 @@ module hinge_mount() {
       }
     }
     // bolt holes
-    for (x_sign = [-1, 1], y_sign = [-1, 0, 1]) {
+    for (x_sign = [-1, 1], y_sign = [-1, 1]) {
       translate([-2*vat_hinge_r_o - (vat_hinge_r_o - 5) * x_sign,
                  y_sign * (vat_hinge_r_o + vat_hinge_y_offset - 5),
                  -1.5*vat_hinge_thickness])
