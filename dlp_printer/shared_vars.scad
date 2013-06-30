@@ -24,6 +24,9 @@ h_motor_shaft = 10;
 thickness_motor_shaft = 5;
 r_motor_shaft = 6.34/2 + .5;
 
+xy_extrusion = 20;
+r_smooth_rod = 8/2;  // TODO
+
 eccentric_roller_rim_width = 3;
 eccentric_roller_offset = thickness_motor_shaft + r_608zz + r_motor_shaft ;
 eccentric_roller_r = eccentric_roller_rim_width + 
@@ -46,3 +49,24 @@ vat_hinge_thickness = h_608zz;
 vat_hinge_y_offset = 20;
 _y = (vat_hinge_y_offset- vat_hinge_thickness/2);
 vat_hinge_x_offset = vat_r_o - sqrt(pow(vat_r_o, 2) - pow(_y, 2));  // via geometric translation & pythagorean theorum
+
+// build platform vars
+thickness_platform = 5;
+r_platform = vat_r_i - eccentric_roller_offset/2; // made up number - just seems like a good value
+y_offset_platform_mount = 10;
+r_platform_shaft = 8;
+h_platform_shaft = 20 + vat_h-vat_z_lense_lip_offset - vat_h_lense_lip;
+z_platform_mount = 3;
+xyz_platform_mount = [2*r_platform_shaft, 30, z_platform_mount];
+dist_between_platform_mount_screws = 20;
+
+z_offset_build_platform = vat_z_lense_lip_offset; // TODO: 50
+y_offset_build_platform = vat_r_i - r_platform; // make vat disc eccentricly place
+
+r_lm8uu = 11.5;  // TODO// TODO
+r_rod_holder = r_lm8uu + thickness;
+h_rod_holder = 20;
+z_offset_rod_holder = 40; // vertical distance from center to top/bottom
+x_offset_rod_holder = thickness; // adjust the angle made by this piece
+length_rod_holder_flaps = 23;
+

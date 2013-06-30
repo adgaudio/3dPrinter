@@ -120,7 +120,7 @@ module _hinge_connector(r_o, r_i, thickness) {
 
 
 module hinge_mount() {
-  extrusion_conn = (20+2*thickness);
+  extrusion_conn = (xy_extrusion+2*thickness);
   difference() {
     union() {
       for (mirror = [-1, 1]) {
@@ -141,9 +141,9 @@ module hinge_mount() {
     }
     for (angle=[0, 1], z_mirror=[-1, 1]) translate([-2*vat_hinge_r_o, 0, z_mirror*(30+vat_hinge_thickness)/4])
         rotate([[1, 0][angle] * 90, angle*90, 0])
-        cylinder(r=m5_bolt_radius, h=21 + vat_hinge_thickness, center=true);
+        cylinder(r=m5_bolt_radius, h=xy_extrusion+1 + vat_hinge_thickness, center=true);
     // extrusion cutout
     translate([-(2*vat_hinge_r_o), 0, 0])
-      cube([20, 20, 40+vat_hinge_thickness + 1], center=true);
+      cube([xy_extrusion, xy_extrusion, xy_extrusion*2+vat_hinge_thickness + 1], center=true);
   }
 }
