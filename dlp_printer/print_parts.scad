@@ -26,8 +26,8 @@ module print_build_platform() { // make me
   build_platform();
 }
 
-module print_rod_to_extrusion_mount() { // make me
-  rod_to_extrusion_mount();
+module print_rod_to_extrusion_stabilizing_mount() { // make me
+  rod_to_extrusion_stabilizing_mount();
 }
 
 /*print_motor_mount();*/
@@ -35,7 +35,5 @@ module print_rod_to_extrusion_mount() { // make me
 /*print_vat();*/
 /*print_2Dhinge();*/
 /*print_hinge_mount();*/
+/*print_rod_to_extrusion_stabilizing_mount();*/
 /*system();*/
-
-
-

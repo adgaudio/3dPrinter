@@ -24,7 +24,7 @@ h_motor_shaft = 10;
 thickness_motor_shaft = 5;
 r_motor_shaft = 6.34/2 + .5;
 
-xy_extrusion = 20;
+xy_extrusion = 20.8; // extrusion cutout
 r_smooth_rod = 8/2;  // TODO
 
 eccentric_roller_rim_width = 3;
@@ -63,7 +63,7 @@ dist_between_platform_mount_screws = 20;
 z_offset_build_platform = vat_z_lense_lip_offset; // TODO: 50
 y_offset_build_platform = vat_r_i - r_platform; // make vat disc eccentricly place
 
-r_lm8uu = 11.5;  // TODO// TODO
+r_lm8uu = 16/2;  // TODO// TODO
 r_rod_holder = r_lm8uu + thickness;
 h_rod_holder = 20;
 z_offset_rod_holder = 40; // vertical distance from center to top/bottom
