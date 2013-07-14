@@ -32,8 +32,8 @@ module vat(r_lense_lip=vat_r_lense_lip,
     // hinge bearing hole
     translate([-r_o - r_o_hinge + x_offset_hinge, y_offset_hinge, 0])rotate([90, 0, 0])
       cylinder(r=r_i_hinge, h=thickness_hinge+r_o, center=true);
+    }
   }
-}
 
   // main body of vat with handle for tilt mechanism
   difference() {
@@ -62,88 +62,38 @@ module vat(r_lense_lip=vat_r_lense_lip,
 }
 
 module 2Dhinge() {
-  // TODO: get rid of x_offset, because it shouldnt be here!
-  r_o=vat_hinge_r_o;
-  r_i=r_608zz;
-  y_offset=vat_hinge_y_offset;
-  x_offset=vat_hinge_x_offset;
-  thickness=vat_hinge_thickness;
+  translate([-hinge_r_o, 0, 0])
+    donut(hinge_r_o, hinge_r_i, h=hinge_h, center=true);
+  translate([hinge_r_o, 0, 0]) rotate([90, 0, 0])
+    donut(hinge_r_o, hinge_r_i, h=hinge_h, center=true);
 
-  difference() {
-    union() {
-      for (mirror = [-1, 1], sign=[-1, 1]) {
-        translate([x_offset, mirror * (y_offset + sign * thickness), 0])
-          rotate([90, 0, 0])
-            _hinge_connector(r_o, r_i, thickness-1);
-
-        translate([-2*(r_o-x_offset/2), mirror * (y_offset), thickness + sign*thickness -.5])
-        translate([0, 0, -r_o+(thickness)/2])rotate([0, 180, 0])
-          _hinge_connector(r_o, r_i, thickness-1);
-
-      translate([-1*(r_o -x_offset), mirror*y_offset, 0])
-        cube([r_o+2*x_offset, 2*r_o, 2*r_o], center=true);
-      }
-    }
-    for (mirror = [-1, 1], sign=[-1, 1]) {
-      // cut out female ends of hinge
-      translate([x_offset, mirror * (y_offset), 0])
-        rotate([90, 180, 0])
-          cylinder(r=r_o, h=thickness, center=true);
-
-      // cut out female ends of hinge along other dimension
-      translate([-2*(r_o-x_offset/2), mirror * (y_offset), thickness + sign*thickness])
-      translate([0, 0, -r_o-thickness/2])rotate([0, 180, 0])
-        cylinder(r=r_o, h=thickness, center=true);
-
-      // cut out holes for bearings on male end
-      translate([x_offset, mirror * (y_offset + sign * thickness), 0])rotate([90, 0, 0])
-        cylinder(r=r_i, h=r_o+thickness, center=true);
-
-      // cut out holes for bearings on male end along other dimension
-      translate([-2*(r_o-x_offset/2), mirror * (y_offset), 0])rotate([0, 180, 0])
-        cylinder(r=r_i, h=2*r_o+thickness, center=true);
-
-    }
-  }
+  cube([2*hinge_thick, hinge_h, hinge_h], center=true);
 }
-
-module _hinge_connector(r_o, r_i, thickness) {
-  difference() {
-    hull() {
-      cylinder(r=r_o, h=thickness, center=true);
-      translate([-r_o, 0, 0])
-        cube([2*r_o, 2*r_o, thickness], center=true);
-    }
-    cylinder(r=r_i, h=thickness+1, center=true);
-  }
-}
-
 
 module hinge_mount() {
   extrusion_conn = (xy_extrusion+2*thickness);
-  difference() {
-    union() {
-      for (mirror = [-1, 1]) {
-        translate([0, vat_hinge_y_offset * mirror, 0])
-          _hinge_connector(vat_hinge_r_o, r_608zz, vat_hinge_thickness);
-      }
-      translate([-2*vat_hinge_r_o, 0, 0]) {
-        cube([2*vat_hinge_r_o, 2*(vat_hinge_r_o + vat_hinge_y_offset), vat_hinge_thickness], center=true);
-        cube([extrusion_conn, extrusion_conn, 30+vat_hinge_thickness], center=true);
-      }
-    }
-    // bolt holes
-    for (x_sign = [-1, 1], y_sign = [-1, 1]) {
-      translate([-2*vat_hinge_r_o - (vat_hinge_r_o - 5) * x_sign,
-                 y_sign * (vat_hinge_r_o + vat_hinge_y_offset - 5),
-                 -1.5*vat_hinge_thickness])
-        cylinder(r=m3_bolt_radius, h=2*vat_hinge_thickness);
-    }
-    for (angle=[0, 1], z_mirror=[-1, 1]) translate([-2*vat_hinge_r_o, 0, z_mirror*(30+vat_hinge_thickness)/4])
+  module _extrusion_mount() {
+    difference() {
+      cube([extrusion_conn, extrusion_conn, 30+hinge_h], center=true);
+      cube([xy_extrusion, xy_extrusion, xy_extrusion*2+hinge_h + 1], center=true);
+      // bolt holes
+      for (angle=[0, 1], z_mirror=[-1, 1]) translate([0, 0, z_mirror*(30)/2])
         rotate([[1, 0][angle] * 90, angle*90, 0])
-        cylinder(r=m5_bolt_radius, h=xy_extrusion+1 + vat_hinge_thickness, center=true);
-    // extrusion cutout
-    translate([-(2*vat_hinge_r_o), 0, 0])
-      cube([xy_extrusion, xy_extrusion, xy_extrusion*2+vat_hinge_thickness + 1], center=true);
+          cylinder(r=m5_bolt_radius, h=xy_extrusion+1 + hinge_h, center=true);
+    }
   }
+  module _hinge_mount() {
+    donut(hinge_r_o, hinge_r_i, hinge_h, center=true);
+  }
+
+  _hinge_mount();
+  translate([-2*hinge_r_o, 0, 0])
+    _extrusion_mount();
+  // hinge to extrusion connector
+  translate([-hinge_r_o/2, 0, 0])
+    difference() {
+      cube([hinge_thick + thickness + hinge_r_o, extrusion_conn, hinge_h], center=true);
+      translate([hinge_thick + thickness, 0, 0])
+        cylinder(r=hinge_r_i, h=hinge_h + 1, center=true);
+    }
 }

@@ -5,7 +5,7 @@ m3_bolt_radius = 1.5;
 m5_bolt_radius = 5/2;
 m8_bolt_radius = 8/4;
 
-r_608zz = 22/2 + .3;
+r_608zz = 22/2;
 r_608zz_hole = 8/2;
 h_608zz = 7;
 
@@ -44,11 +44,18 @@ vat_z_lense_lip_offset = 5;
 vat_z_holder = 10; // defines maximum possible z movement there can be when tilting vat
 vat_holder_width = 30; // TODO - just seems right.  
 vat_holder_angle = asin(vat_z_holder / vat_holder_width);
-vat_hinge_r_o = r_608zz + 3;
+vat_hinge_r_o = r_608zz + thickness;
 vat_hinge_thickness = h_608zz;
-vat_hinge_y_offset = 20;
+vat_hinge_y_offset = 2*h_608zz;
 _y = (vat_hinge_y_offset- vat_hinge_thickness/2);
 vat_hinge_x_offset = vat_r_o - sqrt(pow(vat_r_o, 2) - pow(_y, 2));  // via geometric translation & pythagorean theorum
+
+
+hinge_h = 2*h_608zz;
+hinge_r_o = vat_hinge_r_o;
+hinge_r_i = r_608zz;
+hinge_thick = hinge_r_o - hinge_r_i;
+
 
 // build platform vars
 thickness_platform = 5;
