@@ -13,7 +13,7 @@ module vat(r_lense_lip=vat_r_lense_lip,
            angle_holder=vat_holder_angle,
            r_o_hinge=vat_hinge_r_o,
            r_i_hinge=r_608zz,
-           thickness_hinge=vat_hinge_thickness,
+           thickness_hinge=vat_hinge_h,
            y_offset_hinge=vat_hinge_y_offset,
            x_offset_hinge=vat_hinge_x_offset,
            r_m8_bolt=m8_bolt_radius,
@@ -23,9 +23,9 @@ module vat(r_lense_lip=vat_r_lense_lip,
     // hinge
     difference() {
       hull() {
-        translate([-r_o/2 + (r_o - r_i)/2 + x_offset_hinge, y_offset_hinge - thickness_hinge/2, 0])
+        translate([-r_o/2 + (r_o - r_i)/2 + x_offset_hinge, y_offset_hinge +.1, 0])
           cube([r_o, thickness_hinge, h], center=true);
-        translate([-r_o - r_o_hinge + x_offset_hinge, y_offset_hinge - thickness_hinge/2, 0])
+        translate([-r_o - r_o_hinge + x_offset_hinge, y_offset_hinge +.1, 0])
         rotate([90, 0, 0])
           cylinder(r=r_o_hinge, h=thickness_hinge, center=true);
       }

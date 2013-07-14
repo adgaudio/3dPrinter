@@ -35,6 +35,13 @@ eccentric_roller_r_o_shaft = thickness_motor_shaft + r_motor_shaft;
 roller_h = 2*h_608zz + 1;
 roller_nut_inset = .5*h_motor_shaft -1;
 
+
+hinge_h = 2*h_608zz;
+hinge_r_o = r_608zz + thickness;;
+hinge_r_i = r_608zz;
+hinge_thick = hinge_r_o - hinge_r_i;
+
+
 vat_r_i = 54/2;
 vat_r_o = vat_r_i + 3;
 vat_h = 30; // TODO
@@ -44,17 +51,11 @@ vat_z_lense_lip_offset = 5;
 vat_z_holder = 10; // defines maximum possible z movement there can be when tilting vat
 vat_holder_width = 30; // TODO - just seems right.  
 vat_holder_angle = asin(vat_z_holder / vat_holder_width);
-vat_hinge_r_o = r_608zz + thickness;
-vat_hinge_thickness = h_608zz;
-vat_hinge_y_offset = 2*h_608zz;
-_y = (vat_hinge_y_offset- vat_hinge_thickness/2);
+vat_hinge_r_o = hinge_r_o;
+vat_hinge_h = 2*h_608zz;
+vat_hinge_y_offset = 2/2*vat_hinge_h;
+_y = (vat_hinge_y_offset- vat_hinge_h/2);
 vat_hinge_x_offset = vat_r_o - sqrt(pow(vat_r_o, 2) - pow(_y, 2));  // via geometric translation & pythagorean theorum
-
-
-hinge_h = 2*h_608zz;
-hinge_r_o = vat_hinge_r_o;
-hinge_r_i = r_608zz;
-hinge_thick = hinge_r_o - hinge_r_i;
 
 
 // build platform vars

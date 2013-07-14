@@ -20,7 +20,7 @@ module system() {
     2Dhinge();
 
   // Hinge holder
-      translate([-20 + -2*vat_hinge_r_o + vat_hinge_x_offset, 0, (-vat_hinge_thickness-2)/2])
+      translate([-20 + -2*vat_hinge_r_o + vat_hinge_x_offset, 0, (-vat_hinge_h-2)/2])
         hinge_mount();
   }
 
