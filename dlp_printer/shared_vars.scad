@@ -74,7 +74,8 @@ y_offset_build_platform = vat_r_i - r_platform; // make vat disc eccentricly pla
 r_lm8uu = 16/2;  // TODO// TODO
 r_rod_holder = r_lm8uu + thickness;
 h_rod_holder = 20;
-z_offset_rod_holder = 40; // vertical distance from center to top/bottom
+z_offset_rod_holder = 2*xy_extrusion; // vertical distance from center to top/bottom
 x_offset_rod_holder = thickness; // adjust the angle made by this piece
 length_rod_holder_flaps = 23;
+rod_mount_length = r_rod_holder + 2*xy_extrusion;
 

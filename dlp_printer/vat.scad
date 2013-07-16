@@ -80,6 +80,10 @@ module hinge_mount() {
       for (angle=[0, 1], z_mirror=[-1, 1]) translate([0, 0, z_mirror*(30)/2])
         rotate([[1, 0][angle] * 90, angle*90, 0])
           cylinder(r=m5_bolt_radius, h=xy_extrusion+1 + hinge_h, center=true);
+      // TMP: for simplicity, actually just cut out the cube
+      translate([-thickness, 0, 0])
+        cube([extrusion_conn, extrusion_conn+1, 30+hinge_h+1], center=true);
+
     }
   }
   module _hinge_mount() {

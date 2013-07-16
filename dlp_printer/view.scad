@@ -44,9 +44,9 @@ translate([0, 0, z_offset_build_platform + z_platform_mount + h_platform_shaft +
 
     // printed part that stabilizes build platform with rod
     for (angle=[0, 180]) rotate([0, angle, 0])
-    translate([10, -1*(400/2 - 20), 0])
+    translate([-20-thickness, -1*(400/2 - 20), 0])
     rod_to_extrusion_stabilizing_mount();
-    translate([10, 400/2 - 20, 0])
+    translate([thickness+20, 400/2 - 20, 0]) rotate ([0, 180, 0])
     rod_to_extrusion_stabilizing_mount();
 }
 }
@@ -102,7 +102,7 @@ module frame() {
         rotate([0, 90, 0])
           cylinder(r=8/2, h=420/2);
       }
-      translate([0, sign*(10+r_rod_holder), -(r_rod_holder)])rotate([0, -90, 0])
+      translate([0, sign*(10+r_rod_holder), -r_rod_holder + thickness])rotate([0, 90, 0])
         rod_to_extrusion_stabilizing_mount();
       }
     }
