@@ -64,10 +64,15 @@ module vat(r_lense_lip=vat_r_lense_lip,
 module 2Dhinge() {
   translate([-hinge_r_o, 0, 0])
     donut(hinge_r_o, hinge_r_i, h=hinge_h, center=true);
-  translate([hinge_r_o, 0, 0]) rotate([90, 0, 0])
+  translate([hinge_r_o, 0, hinge_h/2]) rotate([90, 0, 0])
     donut(hinge_r_o, hinge_r_i, h=hinge_h, center=true);
 
-  cube([2*hinge_thick, hinge_h, hinge_h], center=true);
+  translate([-thickness, hinge_h/-2, -hinge_r_o/2 ]) {
+   for(i=[0: 1: hinge_r_o]) {
+       translate([i,0,0])
+       cube(size=[thickness, hinge_h, hinge_h - sin(i/hinge_r_o*90)*hinge_r_o]);
+    }
+  }
 }
 
 module hinge_mount() {
