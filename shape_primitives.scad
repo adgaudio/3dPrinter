@@ -19,3 +19,15 @@ module cone_hollow(r1, r2, h) {
     cylinder(r=r2[1], h=1);
   }
 }
+
+module U(r_o, r_i, w, thick) {
+  difference () {
+    hull () {
+      cylinder(r=r_o, h=thick, center=true);
+      translate([r_o, 0, 0])
+        cube([w-r_o, 2*r_o, thick], center=true);
+    }
+    cylinder(r=r_i, h=thick+1, center=true);
+  }
+}
+
