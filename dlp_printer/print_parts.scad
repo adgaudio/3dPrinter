@@ -27,22 +27,26 @@ module print_build_platform() { // make me
 }
 
 module print_rod_to_extrusion_stabilizing_mount() { // make me
+  rotate([0, 90, 0])
   rod_to_extrusion_stabilizing_mount();
 }
 
 module print_rod_mount() { // make me
+  rotate([0, 90, 0])
   rod_mount(0);
 }
 
 module print_rod_mount90() { // make me
+  rotate([0, 90, 0])
   rod_mount(90);
 }
-/*print_motor_mount();*/
-/*print_eccentric_roller_shaft();*/
-/*print_vat();*/
-/*print_2Dhinge();*/
+//print_motor_mount();
+//print_build_platform();
+//print_eccentric_roller_shaft();
+//print_vat();
+//print_2Dhinge();
 //print_hinge_mount();
-/*print_rod_to_extrusion_stabilizing_mount();*/
+//print_rod_to_extrusion_stabilizing_mount();
 //print_rod_mount();
 //print_rod_mount90();
 /*system();*/
