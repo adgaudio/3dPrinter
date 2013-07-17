@@ -64,7 +64,7 @@ module vat(r_lense_lip=vat_r_lense_lip,
 module 2Dhinge() {
   translate([-hinge_r_o, 0, 0])
     donut(hinge_r_o, hinge_r_i, h=hinge_h, center=true);
-  translate([hinge_r_o, 0, hinge_h/2]) rotate([90, 0, 0])
+  translate([hinge_r_o+.0000001, 0, hinge_h/2]) rotate([90, 0, 0])
     donut(hinge_r_o, hinge_r_i, h=hinge_h, center=true);
 
   translate([-thickness, hinge_h/-2, -hinge_r_o/2 ]) {
