@@ -31,3 +31,10 @@ module U(r_o, r_i, w, thick) {
   }
 }
 
+module pie_slice(r, angle, h) {
+  intersection() {
+    cylinder(r=r, h=h);
+    cube([r, r, h]);
+    rotate(90-angle) cube([r, r, h]);
+  }
+}
