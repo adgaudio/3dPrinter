@@ -40,6 +40,15 @@ module print_rod_mount90() { // make me
   rotate([0, 90, 0])
   rod_mount(90);
 }
+
+module print_extrusion_vertical_support() {
+  rotate([90, 0, 0])
+  extrusion_vertical_support();
+}
+
+module print_extrusion_support() { // make me
+  extrusion_support();
+}
 //print_motor_mount();
 //print_build_platform();
 //print_eccentric_roller_shaft();
@@ -49,4 +58,6 @@ module print_rod_mount90() { // make me
 //print_rod_to_extrusion_stabilizing_mount();
 //print_rod_mount();
 //print_rod_mount90();
+//print_extrusion_vertical_support();
+//print_extrusion_support();
 /*system();*/

@@ -47,3 +47,63 @@ module rod_mount(mount_angle=0) {
         cylinder(r=m5_bolt_radius, h=2*r_rod_holder+thickness, center=true);
   }
 }
+
+module extrusion_support() {
+  module face(extra_length=0) {
+    difference() {
+    cube([xy_extrusion+extra_length, thickness, xy_extrusion], center=true);
+    translate([extra_length/2, 0, 0])rotate([90, 0, 0])
+    cylinder(r=m5_bolt_radius, h=thickness+1, center=true);
+    }
+  }
+  module side() {
+    translate([(xy_extrusion)/-2, xy_extrusion/2, 0]) {
+      difference() {
+      cube([thickness, xy_extrusion+thickness, xy_extrusion], center=true);
+      translate([0, -thickness, 0])rotate([0, 90, 0]) cylinder(r=m5_bolt_radius, h=thickness+1, center=true);
+      }
+    }
+  }
+  for (mirror=[-1, 1]) {
+    translate([mirror*xy_extrusion, 0, 0]) 
+    translate([5*mirror, 0, 0])rotate([0, (mirror-1)*-90, 0])face(10);
+  }
+  translate([thickness/-2, 0, 0])
+  side();
+  translate([thickness/2 + xy_extrusion, 0,  0])
+    side();
+  translate([0, xy_extrusion, 0])
+    face();
+}
+
+module extrusion_vertical_support() {
+  // a chiral object, so dont expect it to work on both sides
+  len = extrusion_support_length;
+  angle = extrusion_support_angle;
+  rotate([0, angle, 0]) {
+    cube([xy_extrusion, thickness, len], center=false);
+      rotate([0, angle, 0]) {
+      difference() {
+      cube([xy_extrusion, xy_extrusion, thickness], center=false);
+      translate([xy_extrusion/2, xy_extrusion/2, thickness/2])
+        rotate(90)cylinder(r=m5_bolt_radius, h=thickness+1, center=true);
+      }}
+      translate([0, thickness, 0]) rotate([0, 90, -90])
+        translate([.001, 0, 0]) // make valid 2-manifold
+        pie_slice(xy_extrusion, abs(angle), thickness);
+    translate ([0, 0, len]) {
+      rotate([0, angle, 0]) translate([0, -xy_extrusion+thickness, 0]) {
+      difference() {
+      cube([thickness, xy_extrusion, xy_extrusion], center=false);
+      translate([thickness/2, xy_extrusion/2, xy_extrusion/2])
+        rotate([0, 90, 0])cylinder(r=m5_bolt_radius, h=thickness+1, center=true);
+      }}
+     //connection
+     rotate([-90, 360-90, 0])
+     translate([0, .001, 0]) // make valid 2-manifold
+     pie_slice(xy_extrusion, 90-abs(angle), thickness);
+    }
+  }
+}
+
+

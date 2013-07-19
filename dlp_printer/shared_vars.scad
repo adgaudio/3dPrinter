@@ -79,3 +79,5 @@ x_offset_rod_holder = thickness; // adjust the angle made by this piece
 length_rod_holder_flaps = 23;
 rod_mount_length = r_rod_holder + 2*xy_extrusion;
 
+extrusion_support_length = 4*xy_extrusion;
+extrusion_support_angle = 45;

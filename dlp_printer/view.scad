@@ -110,16 +110,25 @@ module frame() {
   // side - motor (rod) mount extrusion
   translate([420/2 + 10, 0, 0])
     bar([20, 20, 420+20], center=true);
+  translate([420/2, 0, -420/2])rotate([0, 0, -90])
+    extrusion_support();
+  
   // side - vat mount extrusion
   translate([-420/2 - 10, 0, 0])
     bar([20, 20, 420+20], center=true);
+  translate([-420/2, 0, -420/2])rotate([0, 0, 90])
+    extrusion_support();
   // vat mount extrusion
   translate([-420/2 + 71.5, 0, 10])
     bar([20, 20, 420], center=true);
+  translate([0, -420/2, -420/2])rotate([0, 0, 180])
+    extrusion_support();
   // other sides
   for (sign = [-1, 1])
   translate([0, sign*(420/2 + 10), 0])
   bar([20, 20, 420+20], center=true);
+  translate([0, 420/2, -420/2])
+    extrusion_support();
 }
 translate([0, 0, -420/2 + 100]) {
 system();
