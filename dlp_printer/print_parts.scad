@@ -40,6 +40,14 @@ module print_rod_mount90() { // make me
   rotate([0, 90, 0])
   rod_mount(90);
 }
+module print_rod_fastening_mount_female() { // make me
+  rotate([0, 90, 0])
+  rod_fastening_mount(-1);
+}
+module print_rod_fastening_mount_male() { // make me
+  rotate([0, 90, 0])
+  rod_fastening_mount(1);
+}
 
 module print_extrusion_vertical_support() {
   rotate([90, 0, 0])
@@ -51,18 +59,12 @@ module print_extrusion_support() { // make me
 }
 
 module print_extrusion_corner_support() { // make me
-  extrusion_corner_support();
+  extrusion_corner_support(chirality=-1);
 }
-
-//print_motor_mount();
-//print_build_platform();
-//print_eccentric_roller_shaft();
-//print_vat();
-//print_2Dhinge();
-//print_hinge_mount();
-//print_rod_to_extrusion_stabilizing_mount();
-//print_rod_mount();
-//print_rod_mount90();
-//print_extrusion_vertical_support();
-//print_extrusion_support();
-/*system();*/
+module print_extrusion_corner_support2() { // make me
+  extrusion_corner_support(chirality=1);
+}
+module print_extrusion_T_support() { // make me
+  rotate([90, 0, 0])
+  extrusion_T_support();
+}

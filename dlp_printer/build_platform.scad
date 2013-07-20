@@ -33,10 +33,10 @@ module rod_to_extrusion_stabilizing_mount() {
   }
 }
 
-module rod_mount(mount_angle=0) {
+module rod_mount(mount_angle=0, r_i=r_lm8uu) {
   difference () {
     union () {
-      U(r_rod_holder, r_lm8uu, r_rod_holder+thickness, r_rod_holder);
+      U(r_rod_holder, r_i, r_rod_holder+thickness, r_rod_holder);
       translate ([r_rod_holder, 0, 0])rotate([mount_angle, 0, 0])
         cube ([thickness, xy_extrusion, rod_mount_length], center=true);
     }
@@ -46,6 +46,32 @@ module rod_mount(mount_angle=0) {
       translate([sign*(rod_mount_length-xy_extrusion)/2, 0, 1])
         cylinder(r=m5_bolt_radius, h=2*r_rod_holder+thickness, center=true);
   }
+}
+
+module rod_fastening_mount(female_end=-1) {
+difference() {
+  union() {
+  rod_mount(90, r_smooth_rod);
+  // platform for bolts on male side
+  for (mirror=[-1, 1])
+    translate([-r_smooth_rod*2-thickness,
+               mirror*(r_rod_holder - r_smooth_rod),
+               0])
+    rotate([0, 90, 0])
+    cylinder(r=m3_bolt_radius+abs(thickness-m3_bolt_radius), h=r_rod_holder, center=false);
+  }
+  translate ([female_end*r_rod_holder, 0, 0])
+    cube([2*r_rod_holder, 2*r_rod_holder +2*xy_extrusion, 2*r_rod_holder], center=true);
+  for (mirror=[-1, 1]){
+    // bolt holes
+    translate([0, mirror*(r_rod_holder-r_smooth_rod), 0]) {
+      rotate([0, 90, 0])
+        cylinder (h=2*r_rod_holder+thickness+1, r=m3_bolt_radius, center=true);
+      // nut traps for female side
+      translate([r_rod_holder - thickness, 0, r_rod_holder/2 - m3_nut_width])
+        cube([m3_nut_height, m3_nut_width, r_rod_holder], center=true);
+  }}
+}
 }
 
 module extrusion_support() {
@@ -106,18 +132,24 @@ module extrusion_vertical_support() {
   }
 }
 
+module _sq() {
+  difference() {
+  cube([xy_extrusion, thickness, xy_extrusion], center=true);
+  rotate([90, 0, 0])cylinder (h=thickness+1, r=m5_bolt_radius, center=true);
+  }
+}
 
 module extrusion_corner_support(chirality=-1) {
-  module sq() {
-    difference() {
-    cube([xy_extrusion, thickness, xy_extrusion], center=true);
-    rotate([90, 0, 0])cylinder (h=thickness+1, r=m5_bolt_radius, center=true);
-    }
-  }
-  sq();
-  translate([0, 0, xy_extrusion])sq();
+  _sq();
+  translate([0, 0, xy_extrusion])_sq();
   translate([chirality*(xy_extrusion-thickness)/2, xy_extrusion/2, 0])rotate([0, 0, 90]) {
-    sq();
+    _sq();
     // add an extra screw hole to fit normal hex screws
-    translate([xy_extrusion, 0, 0])sq();}
+    translate([xy_extrusion, 0, 0])_sq();}
 }
+
+module extrusion_T_support() {
+  for (i=[-1:1]) {
+    translate([i*xy_extrusion, 0, 0])_sq();
+    translate([0, 0, (i+1)*xy_extrusion])_sq();
+}}
