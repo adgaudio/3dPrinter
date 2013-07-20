@@ -107,3 +107,17 @@ module extrusion_vertical_support() {
 }
 
 
+module extrusion_corner_support(chirality=-1) {
+  module sq() {
+    difference() {
+    cube([xy_extrusion, thickness, xy_extrusion], center=true);
+    rotate([90, 0, 0])cylinder (h=thickness+1, r=m5_bolt_radius, center=true);
+    }
+  }
+  sq();
+  translate([0, 0, xy_extrusion])sq();
+  translate([chirality*(xy_extrusion-thickness)/2, xy_extrusion/2, 0])rotate([0, 0, 90]) {
+    sq();
+    // add an extra screw hole to fit normal hex screws
+    translate([xy_extrusion, 0, 0])sq();}
+}

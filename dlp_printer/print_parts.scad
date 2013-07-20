@@ -49,6 +49,11 @@ module print_extrusion_vertical_support() {
 module print_extrusion_support() { // make me
   extrusion_support();
 }
+
+module print_extrusion_corner_support() { // make me
+  extrusion_corner_support();
+}
+
 //print_motor_mount();
 //print_build_platform();
 //print_eccentric_roller_shaft();
