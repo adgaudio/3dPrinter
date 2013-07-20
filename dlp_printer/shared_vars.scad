@@ -1,7 +1,7 @@
 m3_nut_height = 3.1; // slightly larger than actual
 m3_nut_width = 5.75; // slightly larger than actual
 m3_nut_width = 2*(6.34/2 + .5) - .6; // much larger than actual because my slicing software isn't exact
-m3_bolt_radius = 1.6;
+m3_bolt_radius = 1.65;
 m5_bolt_radius = 5/2;
 m8_bolt_radius = 8/4;
 

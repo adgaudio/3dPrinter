@@ -58,7 +58,7 @@ difference() {
                mirror*(r_rod_holder - r_smooth_rod),
                0])
     rotate([0, 90, 0])
-    cylinder(r=m3_bolt_radius+abs(thickness-m3_bolt_radius), h=r_rod_holder, center=false);
+    cylinder(r=.15+m3_bolt_radius+abs(thickness-m3_bolt_radius), h=r_rod_holder, center=false);
   }
   translate ([female_end*r_rod_holder, 0, 0])
     cube([2*r_rod_holder, 2*r_rod_holder +2*xy_extrusion, 2*r_rod_holder], center=true);
@@ -66,7 +66,7 @@ difference() {
     // bolt holes
     translate([0, mirror*(r_rod_holder-r_smooth_rod), 0]) {
       rotate([0, 90, 0])
-        cylinder (h=2*r_rod_holder+thickness+1, r=m3_bolt_radius, center=true);
+        cylinder (h=2*r_rod_holder+thickness+1, r=.15+m3_bolt_radius, center=true);
       // nut traps for female side
       translate([r_rod_holder - thickness, 0, r_rod_holder/2 - m3_nut_width])
         cube([m3_nut_height, m3_nut_width, r_rod_holder], center=true);
