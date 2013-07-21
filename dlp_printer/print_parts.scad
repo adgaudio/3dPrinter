@@ -8,6 +8,9 @@ $fn=100;
 module print_motor_mount() { // make me
   motor_mount();
 }
+module print_motor_mount2() { // make me
+  rotate([0, -90, 0])motor_mount2();
+}
 module print_eccentric_roller_shaft() { // make me
   eccentric_roller_shaft();
 }
@@ -30,6 +33,10 @@ module print_rod_to_extrusion_stabilizing_mount() { // make me
   rotate([0, 90, 0])
   rod_to_extrusion_stabilizing_mount();
 }
+module print_rod_to_extrusion_stabilizing_mount_with_flap() { // make me
+  rotate([0, 90, 0])
+  rod_to_extrusion_stabilizing_mount(true);
+}
 
 module print_rod_mount() { // make me
   rotate([0, 90, 0])
@@ -47,6 +54,16 @@ module print_rod_fastening_mount_female() { // make me
 module print_rod_fastening_mount_male() { // make me
   rotate([0, 90, 0])
   rod_fastening_mount(1);
+}
+
+module print_lead_screw_nut_mount() {
+  lead_screw_nut_mount();
+}
+module print_lead_screw_mount() {
+  lead_screw_mount();
+}
+module print_lead_screw_spacer() {
+  lead_screw_spacer();
 }
 
 module print_extrusion_vertical_support() {

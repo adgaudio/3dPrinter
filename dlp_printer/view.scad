@@ -42,12 +42,16 @@ module build_platform_extrusion() {
 translate([0, 0, z_offset_build_platform + z_platform_mount + h_platform_shaft + 20]) {
     bar([20, 400, 40], center=true);
 
+    translate([xy_extrusion*-1.5, 400/2 - xy_extrusion, 0]) {
+      lead_screw_nut_mount();
+      translate([0, 0, 500/2])lead_screw_mount();
+    }
     // printed part that stabilizes build platform with rod
     for (angle=[0, 180]) rotate([0, angle, 0])
     translate([-20-thickness, -1*(400/2 - 20), 0])
-    rod_to_extrusion_stabilizing_mount();
+    rod_to_extrusion_stabilizing_mount(true);
     translate([thickness+20, 400/2 - 20, 0]) rotate ([0, 180, 0])
-    rod_to_extrusion_stabilizing_mount();
+    rod_to_extrusion_stabilizing_mount(true, -1);
 }
 }
 
@@ -63,6 +67,8 @@ module frame() {
   translate([0, 420/2, 0]) {
     translate([-30, -20 - 10, -(420 - 380)/2 - 10 + motor_z])
       cylinder(r=(3/8.)*25.4, h=380, center=true);
+  translate([0, 0, -420/2])rotate([0, 0, 180])
+    motor_mount2();
     translate([(r_smooth_rod + r_lm8uu + 10), -20 - 10, 10])
       cylinder(r=8/2, h=420 + 40, center=true);
   }

@@ -20,12 +20,23 @@ translate([0, y_offset_build_platform, z_offset_build_platform]) {
 }
 }
 
-module rod_to_extrusion_stabilizing_mount() {
+module rod_to_extrusion_stabilizing_mount(with_flap=false, flap_side=1) {
+  // flap_side: -1 means to left.  1 means to right
+  module _flap() {
+        difference() {
+          cube([thickness, xy_extrusion, rod_mount_length+r_rod_holder], center=true);
+        for (sign=[-1.2,1.2, -.5, .5]) {
+          translate([0, 0, sign*xy_extrusion])rotate([0, 90, 0])
+            cylinder(r=m5_bolt_radius, h=thickness+1, center=true);
+      }}}
   difference () {
     union () {
-      for (sign=[-1, 1]) translate ([0, 0, sign*(rod_mount_length)/2])
+      for (sign=[-1, 1]) {
+        translate ([0, 0, sign*(rod_mount_length)/2])
         rod_mount();
-    }
+        if (with_flap) {
+        translate([r_rod_holder, flap_side*xy_extrusion, 0])_flap();
+    }}}
     for (sign=[-1, 1]) {
       translate ([xy_extrusion/2, 0, sign*(rod_mount_length - xy_extrusion/2 + 5/2)])
       cube([xy_extrusion+5, 5+xy_extrusion, xy_extrusion+5], center=true);
@@ -73,6 +84,43 @@ difference() {
   }}
 }
 }
+
+module lead_screw_nut_mount() {
+  module _lead_screw_mount_plate() {
+  difference() {
+  U(r_lead_screw_nut_flange, r_i_lead_screw_nut_flange,
+    r_lead_screw_nut_flange+2*thickness, 2*thickness);
+  for (ang=[45:90:360])rotate([0, 0, ang]) translate([r_screwhole_lead_screw_nut_flange, 0, 0])
+    cylinder(r=m5_bolt_radius, h=2*thickness+1, center=true);
+  }}
+  module _extrusion_mount() {
+  difference() {
+  cube([thickness, max(r_lead_screw_nut_flange, 2*xy_extrusion), xy_extrusion+2*thickness], center=true);
+  for (mirror=[-1, 1]) translate([0, 1/2*xy_extrusion*mirror, 2*thickness])
+  rotate([0, 90, 0])cylinder(r=m5_bolt_radius, h=thickness+1, center=true);
+  }}
+  _lead_screw_mount_plate();
+  translate([r_lead_screw_nut_flange + thickness, 0, (xy_extrusion)/2])
+    _extrusion_mount();
+}
+
+/////////
+h_lead_screw_spacer = 8;
+r_lead_screw_sleeve_bearing = 12.72/2;
+h_lead_screw_sleeve_bearing = 12.72;
+
+module lead_screw_spacer() {
+  donut(m5_bolt_radius+3, m5_bolt_radius+1.5, h_lead_screw_spacer);
+}
+
+module lead_screw_mount() {
+  U(r_lead_screw_sleeve_bearing + 10, r_lead_screw_sleeve_bearing,
+    r_lead_screw_nut_flange+2*thickness, h_lead_screw_sleeve_bearing);
+  translate([r_lead_screw_nut_flange, 0, 0]){
+  cube([thickness,2*r_lead_screw_nut_flange+2*xy_extrusion,  xy_extrusion], center=true);
+  for (mirror=[-1, 1]) translate([0, mirror*(r_lead_screw_nut_flange+xy_extrusion/2), 0])
+    rotate([90, 0, 0])cylinder(r=m5_bolt_radius, h=thickness+1, center=true);
+}}
 
 module extrusion_support() {
   module face(extra_length=0) {

@@ -71,13 +71,17 @@ dist_between_platform_mount_screws = 20;
 z_offset_build_platform = vat_z_lense_lip_offset; // TODO: 50
 y_offset_build_platform = vat_r_i - r_platform; // make vat disc eccentricly place
 
-r_lm8uu = 16/2;  // TODO// TODO
+r_lm8uu = 16/2; // I'm actually using sdp-si press-fit bearings
 r_rod_holder = r_lm8uu + thickness;
 h_rod_holder = 20;
 z_offset_rod_holder = 2*xy_extrusion; // vertical distance from center to top/bottom
 x_offset_rod_holder = thickness; // adjust the angle made by this piece
 length_rod_holder_flaps = 23;
 rod_mount_length = r_rod_holder + 2*xy_extrusion;
+
+r_lead_screw_nut_flange = 40/2;
+r_i_lead_screw_nut_flange = 17.5/2;
+r_screwhole_lead_screw_nut_flange = 14.27;
 
 extrusion_support_length = 4*xy_extrusion;
 extrusion_support_angle = 45;
