@@ -104,15 +104,6 @@ module lead_screw_nut_mount() {
     _extrusion_mount();
 }
 
-/////////
-h_lead_screw_spacer = 8;
-r_lead_screw_sleeve_bearing = 12.72/2;
-h_lead_screw_sleeve_bearing = 12.72;
-
-module lead_screw_spacer() {
-  donut(m5_bolt_radius+3, m5_bolt_radius+1.5, h_lead_screw_spacer);
-}
-
 module lead_screw_mount() {
   U(r_lead_screw_sleeve_bearing + 10, r_lead_screw_sleeve_bearing,
     r_lead_screw_nut_flange+2*thickness, h_lead_screw_sleeve_bearing);

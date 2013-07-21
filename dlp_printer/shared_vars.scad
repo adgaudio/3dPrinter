@@ -79,6 +79,9 @@ x_offset_rod_holder = thickness; // adjust the angle made by this piece
 length_rod_holder_flaps = 23;
 rod_mount_length = r_rod_holder + 2*xy_extrusion;
 
+r_lead_screw_sleeve_bearing = 12.72/2;
+h_lead_screw_sleeve_bearing = 12.72;
+
 r_lead_screw_nut_flange = 40/2;
 r_i_lead_screw_nut_flange = 17.5/2;
 r_screwhole_lead_screw_nut_flange = 14.27;
