@@ -38,6 +38,10 @@ module print_rod_to_extrusion_stabilizing_mount_with_flap() { // make me
   rod_to_extrusion_stabilizing_mount(true);
 }
 
+module print_rod_to_extrusion_roller() {
+  rod_to_extrusion_roller();
+}
+
 module print_rod_mount() { // make me
   rotate([0, 90, 0])
   rod_mount(0);

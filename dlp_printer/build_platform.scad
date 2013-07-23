@@ -85,6 +85,46 @@ difference() {
 }
 }
 
+module rod_to_extrusion_roller() {
+  x_offset = xy_extrusion/4+(m8_bolt_radius+thickness)/2;
+
+  // bottom plate
+  translate([r_608zz-xy_extrusion/2, 0, 0])
+  difference() {
+    cube([xy_extrusion*2+2*r_608zz, xy_extrusion, thickness], center=true);
+    translate([-r_608zz-xy_extrusion/2, 0, 0])
+    cylinder(r=m5_bolt_radius, h=thickness+1, center=true);
+    cylinder(r=m5_bolt_radius, h=thickness+1, center=true);
+  }
+  for (mirror=[-1, 1]) {
+  translate([0, mirror*(xy_extrusion+thickness)/2, 0]) {
+    // short side walls
+    translate([-xy_extrusion/2, mirror*-thickness, xy_extrusion/2]) {
+      difference() {
+        cube([xy_extrusion*2, thickness, xy_extrusion+thickness], center=true);
+        translate([-xy_extrusion/2, 0, -thickness*2])rotate([90, 0, 0])cylinder(r=m5_bolt_radius, h=thickness+1, center=true);
+      }}
+    // tall side walls
+    translate([xy_extrusion, 0, xy_extrusion/2 + r_608zz - thickness/2]) {
+    difference() {
+    cube([xy_extrusion - r_608zz/2, thickness, xy_extrusion+2*r_608zz], center=true);
+      // shaft hole for 608zz
+      translate([2*r_608zz - xy_extrusion, 0, r_608zz])
+      rotate([90, 0, 0])cylinder(r=r_608zz_hole, h=thickness+1, center=true);
+    }}
+  }}
+  // connect tall and short side walls together
+  translate([xy_extrusion/2+r_608zz/2+thickness/2, 0, xy_extrusion/2-thickness/2-.5])
+  cube([r_608zz*2, xy_extrusion, xy_extrusion -1], center=true);
+
+  translate([xy_extrusion + (2*r_608zz - xy_extrusion), 0, 30]) {
+    rotate([90, 0, 0])
+  %  cylinder(r=r_608zz, h=h_608zz*3, center=true);
+  //%  translate([r_608zz, 0, 0]) cube([.1, xy_extrusion, 100], center=true);
+}
+
+}
+
 module lead_screw_nut_mount() {
   module _lead_screw_mount_plate() {
   difference() {

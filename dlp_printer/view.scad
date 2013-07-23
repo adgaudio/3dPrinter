@@ -52,6 +52,8 @@ translate([0, 0, z_offset_build_platform + z_platform_mount + h_platform_shaft +
     rod_to_extrusion_stabilizing_mount(true);
     translate([thickness+20, 400/2 - 20, 0]) rotate ([0, 180, 0])
     rod_to_extrusion_stabilizing_mount(true, -1);
+    rotate([0, 0, -90])translate([400/2-xy_extrusion, 0, xy_extrusion])
+    rod_to_extrusion_roller();
 }
 }
 
