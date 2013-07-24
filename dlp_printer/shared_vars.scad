@@ -3,7 +3,7 @@ m3_nut_width = 5.75; // slightly larger than actual
 m3_nut_width = 2*(6.34/2 + .5) - .6; // much larger than actual because my slicing software isn't exact
 m3_bolt_radius = 1.65;
 m5_bolt_radius = 5.3/2;
-m8_bolt_radius = 8/4;
+m8_bolt_radius = 8/2 + .2;
 m6_wing_nut_width = 25; // between handles
 
 r_608zz = 22/2;
@@ -43,12 +43,12 @@ hinge_r_i = r_608zz;
 hinge_thick = hinge_r_o - hinge_r_i;
 
 
-vat_r_i = 54/2;
-vat_r_o = vat_r_i + 3;
+vat_r_i = 54/2+2;
+vat_r_o = vat_r_i + thickness;
 vat_h = 30; // TODO
-vat_r_lense_lip = vat_r_i - 5;
+vat_r_lense_lip = vat_r_i - 7;
 vat_h_lense_lip = 5;  // thickness of lip holding glass to vat
-vat_z_lense_lip_offset = 5;
+vat_z_lense_lip_offset = 7;
 vat_z_holder = 10; // defines maximum possible z movement there can be when tilting vat
 vat_holder_width = 30; // TODO - just seems right.  
 vat_holder_angle = asin(vat_z_holder / vat_holder_width);
