@@ -4,6 +4,7 @@ m3_nut_width = 2*(6.34/2 + .5) - .6; // much larger than actual because my slici
 m3_bolt_radius = 1.65;
 m5_bolt_radius = 5.3/2;
 m8_bolt_radius = 8/4;
+m6_wing_nut_width = 25; // between handles
 
 r_608zz = 22/2;
 r_608zz_hole = 8/2;
@@ -56,6 +57,7 @@ vat_hinge_h = 2*h_608zz;
 vat_hinge_y_offset = 2/2*vat_hinge_h;
 _y = (vat_hinge_y_offset- vat_hinge_h/2);
 vat_hinge_x_offset = vat_r_o - sqrt(pow(vat_r_o, 2) - pow(_y, 2));  // via geometric translation & pythagorean theorum
+vat_wing_nut_inset = vat_h - 25; // needs to fit my shoulder screw
 
 
 // build platform vars

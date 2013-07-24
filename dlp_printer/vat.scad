@@ -54,8 +54,11 @@ module vat(r_lense_lip=vat_r_lense_lip,
     // hollow out center
     cylinder(r=r_i, h=h+2*r_o_hinge, center=true);
     // holder bolt hole
-    translate([r_o + w_holder/2, 0, 0])rotate([0, angle_holder, 0])
+    translate([r_o + w_holder/2, 0, 0])rotate([0, angle_holder, 0]) {
       cylinder(r=r_m8_bolt, h=2*h, center=true);
+      translate([0, 0, -vat_h/2 - 33 + vat_wing_nut_inset])
+      cylinder(r=m6_wing_nut_width/2, h=33);
+    }
   }
   translate([0, 0, (-h+h_lense_lip)/2 + z_lense_lip_offset])
     donut(r_o, r_lense_lip, h_lense_lip, $fn=$fn, center=true);
