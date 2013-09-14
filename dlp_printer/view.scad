@@ -115,12 +115,17 @@ module frame() {
       }
     }
   }
+  // bottoms to clamp printer onto another base (optional)
+  for (rmirror=[0, 1]) rotate([0, 0, 180*rmirror])
+  for (mirror=[-1, 1])
+  translate([420/3*mirror, 420/-2, -420/2-xy_extrusion/2])
+    extrusion_clamp();
   // side - motor (rod) mount extrusion
   translate([420/2 + 10, 0, 0])
     bar([20, 20, 420+20], center=true);
   translate([420/2, 0, -420/2])rotate([0, 0, -90])
     extrusion_support();
-  
+
   // side - vat mount extrusion
   translate([-420/2 - 10, 0, 0])
     bar([20, 20, 420+20], center=true);

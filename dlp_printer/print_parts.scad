@@ -89,3 +89,7 @@ module print_extrusion_T_support() { // make me
   rotate([90, 0, 0])
   extrusion_T_support();
 }
+module print_extrusion_clamp() { // make me
+  rotate([90, 0, 0])
+  extrusion_clamp();
+}

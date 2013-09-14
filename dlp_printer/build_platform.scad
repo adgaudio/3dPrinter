@@ -170,7 +170,7 @@ module extrusion_support() {
     }
   }
   for (mirror=[-1, 1]) {
-    translate([mirror*xy_extrusion, 0, 0]) 
+    translate([mirror*xy_extrusion, 0, 0])
     translate([5*mirror, 0, 0])rotate([0, (mirror-1)*-90, 0])face(10);
   }
   translate([thickness/-2, 0, 0])
@@ -232,3 +232,25 @@ module extrusion_T_support() {
     translate([i*xy_extrusion, 0, 0])_sq();
     translate([0, 0, (i+1)*xy_extrusion])_sq();
 }}
+
+module extrusion_clamp() {
+  // for screwing two extrusions in parallel and side by side
+  module two_sq() {
+    for (mirror=[1, -1]) {
+    translate([mirror*xy_extrusion/2, 0, 0])
+        _sq();
+    }
+  }
+  dist = (xy_extrusion*2+thickness)/2;
+
+  for (mirror=[1, -1]) {
+    translate([0, 0, mirror*xy_extrusion/2])
+    two_sq();
+    // walls
+    translate([0, dist - xy_extrusion/2, mirror*dist]) rotate([90, 0, 0])
+      two_sq();
+    // corner pieces
+    translate([0, 0, mirror*dist])
+      cube([2*xy_extrusion, thickness, thickness], center=true);
+  }
+}
