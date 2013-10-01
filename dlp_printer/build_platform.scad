@@ -251,6 +251,12 @@ module extrusion_clamp() {
       two_sq();
     // corner pieces
     translate([0, 0, mirror*dist])
-      cube([2*xy_extrusion, thickness, thickness], center=true);
+      cube([2*xy_extrusion, thickness+.00001, .00001 + thickness], center=true);
   }
 }
+
+module connector_bar(length=120) {
+  for (i=[0: 20: length]) {
+    translate([i, 0, 0]) {
+    _sq();
+}}}

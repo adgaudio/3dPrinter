@@ -56,8 +56,6 @@ module print_rod_fastening_mount_female() { // make me
   rod_fastening_mount(-1);
 }
 module print_rod_fastening_mount_male() { // make me
-  rotate([0, 90, 0])
-  rod_fastening_mount(1);
 }
 
 module print_lead_screw_nut_mount() {
@@ -92,4 +90,8 @@ module print_extrusion_T_support() { // make me
 module print_extrusion_clamp() { // make me
   rotate([90, 0, 0])
   extrusion_clamp();
+}
+module print_connector_bar() { // make me
+  rotate([90, 0, 0])
+  connector_bar();
 }
