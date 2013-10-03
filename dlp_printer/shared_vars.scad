@@ -1,14 +1,4 @@
-m3_nut_height = 3.1; // slightly larger than actual
-m3_nut_width = 5.75; // slightly larger than actual
-m3_nut_width = 2*(6.34/2 + .5) - .6; // much larger than actual because my slicing software isn't exact
-m3_bolt_radius = 1.65;
-m5_bolt_radius = 5.3/2;
-m8_bolt_radius = 8/2 + .2;
-m6_wing_nut_width = 25; // between handles
-
-r_608zz = 22/2;
-r_608zz_hole = 8/2;
-h_608zz = 7;
+include <../shared_vars.scad>;
 
 motor_z = 2 + 55;
 motor_x = 2 + 56.25;
