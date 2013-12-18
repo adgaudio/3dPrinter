@@ -1,5 +1,20 @@
 $fn=20;
 
+washer_r_i=10;
+washer_width=5;
+washer_height=1;
+bowl_r_i = 4;
+bowl_width=.5;
+bowl_height=3.5;
+
+gem_side_length=2.5*(bowl_r_i-bowl_width);
+gem_angle = 45;
+gem_height=6/5*gem_side_length*4*gem_angle/360;
+
+gem_side_length=2.5*(bowl_r_i-bowl_width);
+gem_angle = 45;
+gem_height=6/5*gem_side_length*4*gem_angle/360;
+
 module donut(r_i, height) {
   translate([0, 0, height/2 - r_i/4])
     rotate_extrude(convexity=10) {
@@ -81,17 +96,6 @@ module gemstone(side_length, height, angle) {
 
 
 module ring() {
-  washer_r_i=10;
-  washer_width=5;
-  washer_height=1;
-  bowl_r_i = 4;
-  bowl_width=.5;
-  bowl_height=3.5;
-
-  gem_side_length=2.5*(bowl_r_i-bowl_width);
-  gem_angle = 45;
-  gem_height=6/5*gem_side_length*4*gem_angle/360;
-
   // ring body
   rotate([0, 90, 0])
     washer(washer_r_i, washer_width, washer_height);
@@ -113,4 +117,5 @@ module ring() {
   }
 }
 
-rotate([0, 180, 0])ring();
+/*rotate([0, 180, 0])ring();*/
+gemstone(gem_side_length, gem_height, gem_angle);
