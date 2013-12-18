@@ -1,3 +1,11 @@
+# This file sets up the software I use for 3d printing on my reprap.
+# It's not necessarily intended as an install script, though it functions
+# as one.
+#
+# Author: Alex Gaudio
+# github.com/adgaudio/3dPrinter
+
+
 echo "get arduino and start it"
 git clone git://github.com/arduino/Arduino.git
 (cd Arduino ; git checkout 1.0.1 ; cd build ; ant ; ant run)
