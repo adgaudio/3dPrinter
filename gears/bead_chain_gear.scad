@@ -1,4 +1,4 @@
-include <bolts.scad>;
+include <../bolts.scad>;
 
 bead_radius = 4.6/2; //6.05/2; //4.45/2;
 link_radius=.5;
