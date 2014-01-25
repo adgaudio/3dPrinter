@@ -7,22 +7,22 @@
  */
 
 // Main configurable vars:
-num_slots = 3;
-thickness = 3;
-min_height = 20; // there is a hardcoded min height
+num_slots = 1;
+thickness = 5;
+min_height = 50;//40; // there is a hardcoded min height
 min_length = 0; // there is a hardcoded min length.  you can either choose the number of slots, or a length
 
 // Advanced Configurable vars:
-detent_width=thickness/3/3;
-detent_arm_min_tolerance=thickness/25;
-detent_angle = 3;  // TODO: adjust this based on detent_width
-lower_gap_height = thickness/4;
+detent_width=thickness/5;
+detent_arm_min_tolerance=max(1, thickness/20);
+detent_angle = 7;  // TODO: adjust this based on detent_width
+lower_gap_height = thickness/2;
 height = max(min_height, 2*(2*thickness + lower_gap_height));
 divider_upper_gap_height = height/2;
 insert_upper_gap_height = (height - divider_upper_gap_height - thickness - lower_gap_height);
 detent_arm_height= detent_width*2 + thickness;//5;//height/2 + lower_gap_height;
 detent_arm_width = sin(detent_angle) * detent_arm_height + detent_width/2 + detent_arm_min_tolerance;
-dist_between_gaps = thickness + 2*sin(detent_angle)*detent_arm_height;
+dist_between_gaps =  thickness/2 + 2*detent_arm_min_tolerance+ detent_width*2 + 2*sin(detent_angle)*detent_arm_height;
 
 length = max(min_length, num_slots * thickness + num_slots*dist_between_gaps + thickness);
 // length calculates the end-to-end length
@@ -35,7 +35,7 @@ module ticks_cutout(type) {
    */
   _inner_length = length - 3*thickness;
   for (x=[0:_inner_length/gap_width]) {
-    translate([_inner_length/-2 + x*gap_width, 0, 0]) {
+    translate([_inner_length/-2 + x*gap_width + 2*sin(detent_angle)*detent_arm_height, 0, 0]) {
       if (type == "divider") {
         divider_cutout();
       } else if (type == "insert") {
@@ -74,7 +74,7 @@ module insert_cutout() {
         scale([detent_width + .02, thickness + 1, thickness + 1])
           cube([1, 1, 1], center=true);
       translate([detent_width/3 * sign, 0, 0])
-        scale([detent_width, lower_gap_height/2, 1])
+        scale([detent_width, (lower_gap_height-detent_arm_min_tolerance)/2, 1])
           cylinder(r=1, h=thickness, center=true, $fn=10);
     }
   }}}}
@@ -111,9 +111,31 @@ module insert() {
     ticks_cutout("insert");
   }
 }
+
+module print_divider() { // make me
 translate([0, height/2 + 5, 0])
 rotate([90, 0, 0])
 divider();
+}
+module print_insert() { // make me
 translate([0, -height/2 - 5, 0])
 rotate([-90, 0, 0])
 insert();
+}
+
+module simple_divider(length=235) { // make me
+// A divider that only has insert holes at the ends
+rotate([-90, 0, 0])
+  difference() {
+    cube([length, thickness, height], center=true);
+    translate([length/2 - thickness/2 - thickness, 0, 0])
+    ticks_cutout("divider");
+    translate([-1*(length/2) + thickness*1.5, 0, 0])
+    ticks_cutout("divider");
+  }
+}
+
+/*print_divider();*/
+/*print_insert();*/
+/*cube([1, 1, 1]);*/
+/*simple_divider();*/
