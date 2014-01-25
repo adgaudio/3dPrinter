@@ -9,7 +9,7 @@ module print_motor_mount() { // make me
   motor_mount();
 }
 module print_motor_mount2() { // make me
-  rotate([0, -90, 0])motor_mount2();
+  rotate([090, 0, 0])motor_mount2();
 }
 module print_eccentric_roller_shaft() { // make me
   eccentric_roller_shaft();
@@ -60,14 +60,12 @@ module print_rod_fastening_mount_male() { // make me
   rod_fastening_mount(1);
 }
 
-module print_lead_screw_nut_mount() {
+module print_lead_screw_nut_mount() { // make me
   lead_screw_nut_mount();
 }
-module print_lead_screw_mount() {
+module print_lead_screw_mount() { // make me
+  rotate([0, 90, 0])
   lead_screw_mount();
-}
-module print_lead_screw_spacer() {
-  lead_screw_spacer();
 }
 
 module print_extrusion_vertical_support() {
