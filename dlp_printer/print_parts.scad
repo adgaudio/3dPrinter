@@ -56,6 +56,8 @@ module print_rod_fastening_mount_female() { // make me
   rod_fastening_mount(-1);
 }
 module print_rod_fastening_mount_male() { // make me
+  rotate([0, 90, 0])
+  rod_fastening_mount(1);
 }
 
 module print_lead_screw_nut_mount() {

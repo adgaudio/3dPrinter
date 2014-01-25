@@ -46,8 +46,7 @@ translate([0, 0, z_offset_build_platform + z_platform_mount + h_platform_shaft +
       lead_screw_nut_mount();
       translate([0, 0, 500/2])lead_screw_mount();
     }
-    // printed part that stabilizes build platform with rod
-    for (angle=[0, 180]) rotate([0, angle, 0])
+    // printed part that stabilizes build platform with smooth rod
     translate([-20-thickness, -1*(400/2 - 20), 0])
     rod_to_extrusion_stabilizing_mount(true);
     translate([thickness+20, 400/2 - 20, 0]) rotate ([0, 180, 0])
@@ -66,20 +65,28 @@ module _frame() {
 
 module frame() {
   // threaded and smooth rod
-  translate([0, 420/2, 0]) {
-    translate([-30, -20 - 10, -(420 - 380)/2 - 10 + motor_z])
-      cylinder(r=(3/8.)*25.4, h=380, center=true);
-  translate([0, 0, -420/2])rotate([0, 0, 180])
-    motor_mount2();
-    translate([(r_smooth_rod + r_lm8uu + 10), -20 - 10, 10])
-      cylinder(r=8/2, h=420 + 40, center=true);
+  for (sign=[0, 1]) { // for each side of printer:
+    rotate([0, 0, sign*180]) {
+      translate([0, 420/2, 0]) {
+        translate([-30, -20 - 10, -(420 - 380)/2 - 10 + motor_z])
+          cylinder(r=(3/8.)*25.4, h=380, center=true);
+      translate([0, 0, -420/2])rotate([0, 0, 180])
+        motor_mount2();
+        translate([(r_smooth_rod + r_lm8uu + 10), -20 - 10, 10]) {
+          cylinder(r=8/2, h=420 + 40, center=true);
+          for (sign2=[0, 1]) {rotate([180*sign2, 0, sign2*-90]) {
+          translate([0, 0, 420/2 - 20/2 + sign2*20]) {
+          // parts that tie smooth rod to frame
+          rotate([0, 0, 180])rod_fastening_mount(-1);
+          rotate([0, 0, 180])translate([-5, 0, 0])rod_fastening_mount(1);
+          }
+          }}
+          
+          /*cube([20, 10, 10], center=true);*/
+        }
+      }
+    }
   }
-  // smooth rod on other side of frame
-  for (sign=[-1, 1])
-  translate([sign * (r_smooth_rod + r_lm8uu + 10), -420/2 + 20 + rod_to_bar_dist, 10]) {
-    cylinder(r=8/2, h=420 + 40, center=true);
-  }
-
 
   // bottom
   translate([0, 0, -420/2]) {
