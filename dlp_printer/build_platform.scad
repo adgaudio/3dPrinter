@@ -148,10 +148,12 @@ module lead_screw_mount() {
   U(r_lead_screw_sleeve_bearing + 10, r_lead_screw_sleeve_bearing,
     r_lead_screw_nut_flange+2*thickness, h_lead_screw_sleeve_bearing);
   translate([r_lead_screw_nut_flange, 0, 0]){
+  difference() {
   cube([thickness,2*r_lead_screw_nut_flange+2*xy_extrusion,  xy_extrusion], center=true);
   for (mirror=[-1, 1]) translate([0, mirror*(r_lead_screw_nut_flange+xy_extrusion/2), 0])
-    rotate([90, 0, 0])cylinder(r=m5_bolt_radius, h=thickness+1, center=true);
+    rotate([0, 90, 0])cylinder(r=m5_bolt_radius, h=thickness+1, center=true);
 }}
+}
 
 module extrusion_support() {
   module face(extra_length=0) {
