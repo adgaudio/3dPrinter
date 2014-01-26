@@ -5,7 +5,7 @@ motor_x = 2 + 56.25;
 motor_y = 2 + 56.25;
 motor_r = (38+1)/2;
 motor_mount_z = 8;
-motor_mount_inset = 2.0 + 3.25;
+motor_mount_inset = 2.0 + 3;
 motor_mount_bolt_size = m5_bolt_radius;
 thickness_motor_mount = 5;
 
