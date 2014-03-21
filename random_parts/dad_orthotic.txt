@@ -1,0 +1,18 @@
+http://www.thingiverse.com/apps/customizer/run?thing_id=46922&code=931dc0c2105dd222f25e4f723df614b6
+
+Right foot:
+
+heel width: 60
+foot width: 91
+beginning of arch: 67
+end of arch: 177
+arch height: 27
+
+
+Left foot:
+
+heel width: 60
+foot width: 91
+beginning of arch: 67
+end of arch: 177
+arch height: 27
