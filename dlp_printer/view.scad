@@ -149,9 +149,15 @@ module frame() {
   bar([20, 20, 420+20], center=true);
   translate([0, 420/2, -420/2])
     extrusion_support();
+  // circuit board attachments
+  translate([-420/2-thickness/2, 60, -420/2+xy_extrusion/2+thickness/2])
+    rotate([0, 90, 0]) {
+      pcb_screw_attachment();
+      translate([0, 2*xy_extrusion, 0]) pcb_screw_attachment();
+    }
 }
+frame();
 translate([0, 0, -420/2 + 100]) {
 system();
 build_platform_extrusion();
 }
-frame();

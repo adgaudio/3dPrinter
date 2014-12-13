@@ -1,6 +1,7 @@
 include <vat.scad>;
 include <motor.scad>;
 include <build_platform.scad>;
+include <circuit_board.scad>;
 
 /*$fn=10;*/
 $fn=100;
@@ -94,4 +95,8 @@ module print_extrusion_clamp() { // make me
 module print_connector_bar() { // make me
   rotate([90, 0, 0])
   connector_bar();
+}
+module print_pcb_screw_attachment() { // make me
+  rotate([0, -90, 0])
+    pcb_screw_attachment();
 }
