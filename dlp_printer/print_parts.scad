@@ -100,3 +100,7 @@ module print_pcb_screw_attachment() { // make me
   rotate([0, -90, 0])
     pcb_screw_attachment();
 }
+
+module print_power_rocker_switch_mount() { // make me
+  rotate([0, 180, 0])power_rocker_switch_mount();
+}

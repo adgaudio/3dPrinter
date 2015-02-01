@@ -155,6 +155,10 @@ module frame() {
       pcb_screw_attachment();
       translate([0, 2*xy_extrusion, 0]) pcb_screw_attachment();
     }
+  // power supply switch
+  translate([-420/3+30, 420/2-40, -420/2+xy_extrusion/2+thickness/2])
+    rotate([0, 0, 90])
+    power_rocker_switch_mount();
 }
 frame();
 translate([0, 0, -420/2 + 100]) {
