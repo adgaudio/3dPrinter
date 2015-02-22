@@ -1,7 +1,5 @@
-// EXAMPLES:
-//spiral_spring(50, 0, 10, 20, trim_width=1);
-//translate([20, 0, 0])
-//spiral_spring_with_fun_properties(10, 0, 1, 5, 1, .1);
+// Generate spiral springs of different sizes, num coils, resolution, etc.
+// See bottom of file for examples
 
 pi = 3.14159265359;
 
@@ -52,3 +50,9 @@ module spiral_spring_with_fun_properties(r_o, r_i, h, n_coils, resolution=1, tri
     }
   }
 }
+
+
+// EXAMPLES:
+//spiral_spring(50, 0, 10, 20, trim_width=1);
+//translate([20, 0, 0])
+//spiral_spring_with_fun_properties(10, 0, 1, 5, 1, .1);

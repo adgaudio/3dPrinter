@@ -1,4 +1,4 @@
-use <../shape_primitives.scad>
+use <../lib/shape_primitives.scad>
 cutout = 6; // extra dimensions to make clear difference() operations
 
 

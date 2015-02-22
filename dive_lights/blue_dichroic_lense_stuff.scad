@@ -1,4 +1,4 @@
-use <../shape_primitives.scad>
+use <../lib/shape_primitives.scad>
 function avg(a, b) = (a + b) / 2;
 
 r_dichroic = 47.5/2;

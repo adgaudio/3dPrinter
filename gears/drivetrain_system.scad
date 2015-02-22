@@ -1,4 +1,4 @@
-include <../bolts.scad>;
+include <../lib/bolts.scad>;
 include <bead_chain_gear.scad>;
 
 x_gear_offset = 20;  // x distance between gears
