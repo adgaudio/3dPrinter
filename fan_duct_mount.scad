@@ -22,7 +22,8 @@ arm_depth = mount_depth;
 module cone() {
   difference() {
     cylinder(r2=cone_ri_base + cone_thickness, r1=cone_ro_top, h=cone_h, center=false);
-    cylinder(r2=cone_ri_base, r1=cone_ro_top - cone_thickness, h=cone_h, center=false);
+    translate([0, 0, -.5])
+      cylinder(r2=cone_ri_base, r1=cone_ro_top - cone_thickness, h=cone_h+1, center=false);
   }
 }
 
@@ -42,7 +43,7 @@ module arm() {
     rotate([0, cone_angle, 90])translate([arm_length+default_boltsize/2, -arm_width/2, 0])
       difference(){
         cylinder(r=inset, h=arm_depth);
-        cylinder(r=default_boltsize/2, h=arm_depth);
+        translate([0, 0, -.5])cylinder(r=default_boltsize/2, h=arm_depth + 1, $fn=40);
       }
   }
 }
@@ -51,11 +52,12 @@ module fan_mount() {
   union() {
     difference() {
       cube([mount_width, mount_width, mount_depth], center=true);
-      cylinder(r=cone_ri_base, h=mount_depth, center=true);
+      cylinder(r=cone_ri_base, h=mount_depth+1, center=true, $fn=40);
       // make bolt holes on corners
       for (sign = [-1, 1], sign2 = [-1, 1]) {
         assign (corner = sign * (mount_width/2 - inset)) {
-          translate([corner, sign2 * corner, -mount_depth/2])cylinder(r=default_boltsize/2, h=mount_depth);
+          translate([corner, sign2 * corner, -mount_depth/2 - .5])
+            cylinder(r=default_boltsize/2, h=mount_depth+1, $fn=40);
         }
       }
     }
