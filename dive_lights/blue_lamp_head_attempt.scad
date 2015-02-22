@@ -2,7 +2,7 @@
  * Replace existing head on a dive light with new one.
  * This could also be my first robot's eyes some day :)
  */
-use <../lib/Thread_Library.scad>
+use <../external/Thread_Library.scad>
 use <../battery_holder.scad>
 
 function euclidean(a, b) = sqrt(pow(a, 2) + pow(b, 2));
