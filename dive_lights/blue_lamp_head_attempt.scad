@@ -276,3 +276,8 @@ module print_led_module() { // make me
       rotate([180, 0, 0])
       led_module();
 }
+/* print_lamp_head(); */
+/* translate([0, 50, -100]) */
+/* print_led_module(); */
+/* translate([0, -50, -100]) */
+/* print_led_module(); */
