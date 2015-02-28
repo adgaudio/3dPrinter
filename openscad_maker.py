@@ -4,17 +4,25 @@
 import argparse
 import atexit
 from os.path import abspath
+from os import getenv
 import re
-import sys
-import subprocess
-import shlex
+from subprocess import check_call, Popen
 import tempfile
 
 
-template = u"""
+TEMPLATE = u"""
 include <{fp}>;
 {module}({args});
 """
+REGEX = r'( *module *|.*\)|)([A-Za-z0-9_-]+)\((.*?)\) *(\{|;).*// *make me.*'
+CMD = "openscad -o {module}.{ftype} {tfp}"
+
+
+def cleanup(procs, tfp):
+    """Remove temp file created on exit"""
+    for proc in procs.values():
+        proc.wait()
+    check_call(['rm',  tfp])
 
 
 def get_modules(fp):
@@ -22,52 +30,70 @@ def get_modules(fp):
     the module name and, if it is a called module, the parameters given
     """
     lines = open(fp, 'r').readlines()
-    matches = [re.search(r'( *module *|.*\)|)([A-Za-z0-9_-]+)\((.*?)\) *(\{|;).*// *make me.*', line)
-               for line in lines if re.match('.*// *make me.*', line)]
-    assert matches, ("No modules found.  You should specify "
-                     " '// make me' on a module or when calling one")
-    modules = [(x.group(2), x.group(3) if 'module' not in x.group(1) else '')
-               for x in matches]
+    matches = [
+        re.search(REGEX, line)
+        for line in lines if re.match('.*// *make me.*', line)]
+    assert matches, (
+        "No modules found.  You should specify "
+        " '// make me' on a module or when calling one")
+    modules = [
+        (x.group(2), x.group(3) if 'module' not in x.group(1) else '')
+        for x in matches]
     return modules
 
 
-def export(fp, ftype, modules, block=True):
-    if not modules:
-        modules = get_modules(fp)
-    cmd = "openscad -o {module}.{ftype} {tfp}"
-    ps = {}
-    for module, args in modules:
+def main(ns):
+    procs = {}
+    for module, args in (ns.modules or get_modules(ns.fp)):
         # make temp scad file with relevant contents
-        _, tfp = tempfile.mkstemp(prefix='openscad_%s_' % module, suffix='.scad')
-        atexit.register(lambda tfp: subprocess.Popen('rm %s' % tfp, shell=True), tfp)
+        _, tfp = tempfile.mkstemp(
+            prefix='openscad_%s_' % module, suffix='.scad')
         with open(tfp, 'w') as tfd:
-            tfd.write(template.format(fp=abspath(fp), module=module, args=args))
+            tfd.write(TEMPLATE.format(module=module, args=args, fp=ns.fp))
+
         # run openscad on temp file
-        tcmd = cmd.format(module=module, ftype=ftype, tfp=tfp)
-        p = subprocess.Popen(shlex.split(tcmd))
-        ps[tcmd] = p
-    if block:
-        for p in ps.values():
+        tcmd = CMD.format(module=module, ftype=ns.ftype, tfp=tfp)
+        if ns.openscadpath:
+            tcmd = "OPENSCADPATH=%s %s" % (ns.openscadpath, tcmd)
+        print(tcmd)
+        p = Popen(tcmd, shell=True)
+        procs[tcmd] = p
+        atexit.register(cleanup, procs=procs, tfp=tfp)
+
+    if ns.block:
+        for p in procs.values():
             p.wait()
-        for tcmd, p in ps.items():
+        for tcmd, p in procs.items():
             if p.returncode:
-                print 'FAILED: %s, %s' % (tcmd, p.returncode)
-                print open(tfp).read()
-                print
+                print('FAILED: %s, %s' % (tcmd, p.returncode))
+                print(open(tfp).read())
+                print("")
 
             else:
-                print 'Finished: %s, %s' % (tcmd, p.returncode)
+                print('Finished: %s, %s' % (tcmd, p.returncode))
 
 
 def arg_parser():
-    parser = argparse.ArgumentParser(description='Export openscad modules simply and in parallel')
-    parser.add_argument('fp', help="please supply a <file.scad>")
-    parser.add_argument('--ftype', default='stl')
-    parser.add_argument('--modules', default=[], nargs='+', type=lambda x: (x, ''),
-                        help='Comma separated list of modules to export to stl')
+    parser = argparse.ArgumentParser(
+        description='Export openscad modules simply and in parallel')
+    parser.add_argument(
+        'fp', type=abspath, help="please supply a <file.scad>")
+    parser.add_argument(
+        '--ftype', default='stl',
+        help="generate STL or other openscad supported file type")
+    parser.add_argument(
+        '--modules', default=[], nargs='+', type=lambda x: (x, ''),
+        help='Comma separated list of modules to export to stl')
+    parser.add_argument(
+        '--openscadpath', default=getenv('OPENSCADPATH'),
+        help="OPENSCADPATH lets you define where external libraries might be")
+    parser.add_argument(
+        '--block', action='store_true', help=(
+            'Run in serial rather than in parallel.  '
+            ' May take forever if you are compiling a lot of openscad modules'))
     return parser
 
 
 if __name__ == '__main__':
-    ns = arg_parser().parse_args(sys.argv[1:])
-    export(**ns.__dict__)
+    NS = arg_parser().parse_args()
+    main(NS)
