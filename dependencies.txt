@@ -12,7 +12,6 @@
 # Uncomment the below lines if you'd like to declare that your project depends
 # on them:
 #
+openscad_exporter-->https://raw.githubusercontent.com/adgaudio/OpenSCAD-Tools/master/openscad_exporter
 # adgaudio/shape_primitives.scad-->https://raw.githubusercontent.com/adgaudio/3dPrinter/master/lib/shape_primitives.scad
 # adgaudio/shared_vars.scad-->https://raw.githubusercontent.com/adgaudio/3dPrinter/master/shared_vars.scad
-# openscad_maker.py-->https://raw.githubusercontent.com/adgaudio/3dPrinter/master/openscad_maker.py
-
