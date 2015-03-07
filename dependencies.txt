@@ -4,7 +4,7 @@
 # https://raw.githubusercontent.com/adgaudio/3dPrinter/master/bootstrap_deps.sh
 #
 # To get this script and fetch dependencies in one step, do:
-# url=https://raw.githubusercontent.com/adgaudio/3dPrinter/master/bootstrap_deps.sh
+# url=https://raw.githubusercontent.com/adgaudio/OpenSCAD-Tools/master/package_manager/bootstrap_deps.sh
 # wget -O - $url 1>/dev/null 2>/dev/null| bash
 #
 # EXAMPLE dependencies.txt:
