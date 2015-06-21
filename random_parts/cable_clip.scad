@@ -1,11 +1,11 @@
 
 
-s = 12;  // side length
+s = 20;  // side length
 th = 3;  // wall thickness
 
 // wire diameter size (size of clip notch, not inner radius)
-wd = 6;
 wd = 3/16*s +th;  // suggested wire diameter (size of the clip notch).
+wd = 8;
 /* wd = s-2*th; // max wire diameter (size of clip notch) */
 
 
