@@ -10,13 +10,13 @@ want a bundle of up to 6 pvc pipes wrapped together and sharing borders
 
 // How many tubes would you like to bundle together?
 // You must specify a number 1 <= X <= 6
-n_tubes = 6;
+n_tubes = 1;
 
 // Do you want a hole in the center of the endcap?  Define its radius:
 r_endcap_hole = 0;
 
 // How many batteries long is this tube?
-n_cells_long = 6;
+n_cells_long = 1;
 // battery dimensions (these are for an AA battery)
 l_cell = 50.5;
 d_cell = 14.5 + .5;  // .5 for extra clearance
@@ -26,12 +26,14 @@ d_cell = 14.5 + .5;  // .5 for extra clearance
 h_tube_extra_length = 10;
 // l_cell = 0;
 
+// How thick do you want your separating walls to be?
+th = 1.5;  // wall thickness
+
 /////////////////////
 // Internal settings
 /////////////////////
-th = 2;  // wall thickness
 h_tube = n_cells_long*l_cell +h_tube_extra_length;
-ri_tube = d_cell;
+ri_tube = d_cell/2;
 ro_tube = ri_tube+th;
 h_endcap = 10+th;
 ri_endcap = ro_tube+.2;
@@ -79,6 +81,6 @@ module endcap(ro=ro_endcap, ri=ri_endcap, h=h_endcap) {  // make me
 }
 
 
-translate([0,ro_tube+th+ ro_tube*n_tubes, 0])
-tube();
-endcap();
+/* translate([0,ro_tube+th+ ro_tube*n_tubes, 0]) */
+/* tube(); */
+/* endcap(); */
