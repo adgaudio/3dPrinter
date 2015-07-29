@@ -81,6 +81,13 @@ module endcap(ro=ro_endcap, ri=ri_endcap, h=h_endcap) {  // make me
 }
 
 
+/* // TEST */
+/* translate([0, 0, -010]) */
+/* tube(); */
+/* rotate([180, 0, 0]) */
+/* endcap(); */
+
+/* // VIEW or print */
 /* translate([0,ro_tube+th+ ro_tube*n_tubes, 0]) */
 /* tube(); */
 /* endcap(); */
