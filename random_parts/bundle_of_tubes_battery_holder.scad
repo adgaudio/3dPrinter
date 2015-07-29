@@ -75,7 +75,7 @@ module endcap(ro=ro_endcap, ri=ri_endcap, h=h_endcap) {  // make me
       tube(ro, 0, th);
       cylinder(r=ro_tube, h=th);
     }
-    translate([0,0,th])hull(){tube(ri/2, 0, h);}
+    translate([0,0,th])hull(){tube(ri/2 + th/2, 0, h);}
     translate([0,0,-.01])cylinder(r=r_endcap_hole, h=th+.1);
   }
 }
