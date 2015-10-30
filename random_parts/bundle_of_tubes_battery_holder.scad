@@ -10,7 +10,7 @@
 
 // How many tubes would you like to bundle together?
 // You must specify a number 1 <= X <= 6
-n_tubes = 5;
+n_tubes = 2;
 
 // Do you want a hole in the center of the endcap?  Define its radius:
 r_endcap_hole = 1;
@@ -29,7 +29,7 @@ h_tube_extra_length = 10;
 // How thick do you want your separating walls to be?
 th = 1;  // wall thickness
 
-$fn=50;
+$fn=25;
 /////////////////////
 // Internal settings
 /////////////////////
@@ -86,14 +86,66 @@ module endcap(ro=ro_endcap, ri=ri_endcap, h=h_endcap) {  // make me
 }
 
 
-// TEST                       
-  translate([0, 0, -010 - 20])
-rotate([180, 0, 0])           
-  tube();                     
-rotate([180, 0, 0])           
-  endcap();                   
+hi_chip = 2*th+1;  // TODO
+r_chip = r_translation;
+module endcap_with_microchip_compartment() { // make me
+  translate([0, 0, -th]){
+    difference(){
+      union(){
+        hull() {
+          tube(ro=ro_endcap, ri=ri_endcap, h=th);
+          translate([0, 0, -hi_chip/2])cylinder(r=r_chip, h=hi_chip, center=true);
+        }
+        endcap();
+      }
+      hull() {
+        tube(ro=ro_endcap-th, ri=ri_endcap-th, h=th);
+        translate([0, 0, -hi_chip/2])cylinder(r=r_chip-th, h=hi_chip-th, center=true);
+      }
+      // prettier visual rendering
+      translate([0, 0, .1])hull(){tube(ro=ro_tube, ri=ri_tube, h=th);}
+      /* rotate([180, 0, 0])cylinder(r=r_chip, h=hi_chip+.1); */
+      translate([0, 0, -hi_chip-.05])cylinder(r=r_endcap_hole, h=th+.1);
+    }
+    translate([0, 0, .1]) // translate fixes bug introduced by rendering above
+      difference(){
+        hull(){tube(ro=ro_endcap, ri=ri_endcap, h=th);}
+        translate([0,0,-.1])hull(){tube(ri_endcap/2 + th/2, 0, h=th+2);}
+        translate([0,0,-.1])tube(ri_endcap-th, 0, h=th+2);
+      }
+  }
+}
 
-  /* // VIEW or print */
-  /* translate([0,ro_tube+th+ ro_tube*n_tubes, 0]) */
-  /* tube(); */
-  /* endcap(); */
+
+module endcap_insert() {
+  intersection() {
+    union(){
+      tube(ro=ri_endcap-th/2, ri=ri_endcap-2.5*th, h=th);
+      rotate([0, 0, 360/n_tubes/2])
+        tube(ro=ro_endcap, ri=ri_endcap-th, h=th);
+    }
+    translate([0, 0, -th-hi_chip])
+      hull(){tube(ro=ri_endcap-th/2, ri=ri_endcap-th/2-th, h=hi_chip+2*th+.1);}
+  }
+}
+
+/* // TEST                          */
+/* translate([0, 0, -010 - 20])rotate([180, 0, 0])              */
+/*   tube();                                                    */
+/*   translate([0, 0, -1*(10+hi_chip+2*th)]) endcap_insert();   */
+/* rotate([180, 0, 0])                                          */
+/*   endcap();                                                  */
+/*   translate([0, 0, -10 - 20 -20 - 10 -n_cells_long*h_tube]){ */
+/*     endcap_with_microchip_compartment();                     */
+/*     translate([0, 0, 10+hi_chip+2*th]) endcap_insert();      */
+/*   }                                                          */
+
+/* // VIEW or print */
+/* translate([0,ro_tube+th+ ro_tube*n_tubes, 0]) { */
+/* tube();                                         */
+/* translate([0, ro_tube*n_tubes +ro_tube])        */
+/* endcap_with_microchip_compartment();            */
+/* }                                               */
+/* endcap();                                       */
+/* translate([0, -3*ro_tube, 0]) endcap_insert();  */
+/* translate([0, -6*ro_tube, 0]) endcap_insert();  */
