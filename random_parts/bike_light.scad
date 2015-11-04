@@ -5,9 +5,11 @@ h_AA_terminal_neg = 5;
 h_AA_terminal_pos = 1.5;
 h_AA_battery = 50.5;
 r_AA_battery = 14.5/2;
-w_wire_AA_canister = 3;
+w_wire_AA_canister = 2;
 _h_cap_AA_canister = 20;
 h_AA_cap_plug = 10;
+
+r_led_star = 20/2;
 
 // Derived settings
 ri_AA_canister = r_AA_battery + .3;
@@ -47,7 +49,9 @@ module AAx2_canister() { // make me
         rotate([0, 90, -45])
         cube([.1+w_wire_AA_canister, w_wire_AA_canister, r_AA_battery],
             center=true);
-      translate([-ri_AA_canister/2, ro_AA_canister-w_wire_AA_canister+.1, -.1])
+      translate([-ri_AA_canister/2,
+          ro_AA_canister-w_wire_AA_canister+.1,
+          sn*(h_AA_canister-w_wire_AA_canister)+(2*sn -1)*.1])
         cube([ri_AA_canister, w_wire_AA_canister, w_wire_AA_canister+.1]);
     }
   }
@@ -105,63 +109,122 @@ module _extension(holes=true) {
     }
 
     if(holes) {
-    // wire holes through to the outside for pcb (need to waterproof)
-    for(sn=[-1,1])
-      translate([sn*ri_AA_canister/2-sn*w_wire_AA_canister/2,
-          0, h_AA_cap_plug+w_wire_AA_canister/2])
-        rotate([90, 0, 0])
-        cylinder(r=w_wire_AA_canister/2, h=10, $fn=25);
+      // wire holes through to the outside for pcb (need to waterproof)
+      _extension_wire_holes_cutout();
+
     }
   }
 }
 
 
+module _extension_wire_holes_cutout(h=10) {
+  for(sn=[-1,1])
+    translate([sn*ri_AA_canister/2-sn*w_wire_AA_canister/2,
+        -ri_AA_canister, h_AA_cap_plug+w_wire_AA_canister/2]) {
+      rotate([90-45, 0, 0])
+        cylinder(r=w_wire_AA_canister/2, h=h, $fn=25);
+    }
+}
+
+
+module _led_star_cutout() {
+  z = h_AA_cap_plug+w_wire_AA_canister+th;
+  translate([0, -ro_AA_canister, z +ro_AA_canister])
+    rotate([90,0,0])
+    cylinder(r=r_led_star, h=10);
+}
+
+
 /* AAx2_canister_cap(); */
-module AAx2_canister_cap_electronics() {
+module AAx2_canister_shell(version=1) {
 
   /* h_AA_electronics = h_AA_canister+h_AA_cap_plug; */
   /* AAx2_canister_cap(h=h_AA_electronics); */
-  AAx2_canister();
+  translate([0, 0, h_AA_canister_extension-w_wire_AA_canister])
+    AAx2_canister();
   // extend the top of canister with a "shell" that the plug can fit in
-  translate([0, 0, h_AA_canister+h_AA_cap_plug])rotate([180, 0, 0])
-    _extension();
-  // extend the bottom of the canister but don't add holes
-  translate([0, 0, -h_AA_canister_extension+w_wire_AA_canister+th])
+  translate([0, 0, h_AA_canister+2*h_AA_cap_plug])rotate([180, 0, 0])
     _extension(holes=false);
-
-  // add curved space where I'll attach led strip
-  h_led_mount = h_AA_canister+h_AA_cap_plug*2;
-  difference(){
-    translate([0, ro_AA_canister/-2, h_led_mount/2-h_AA_cap_plug])
-      scale([2, 1, 1])cylinder(r=ro_AA_canister, h=h_led_mount, center=true);
-    translate([0, 0, h_AA_canister-1])hull(){AAx2_canister();}
-    translate([0, 0, 0])hull(){AAx2_canister();}
-    translate([0, 0, -h_AA_canister+1])hull(){AAx2_canister();}
-  }
-
-  // mounts for circuit board
-  x=20;
-  y=10;
-  z=40;
-  // mimic the circuit board
-  // TODO: dimensions!
-  translate([x/2, ro_AA_canister, h_AA_canister-w_wire_AA_canister-th]) {
-    rotate([0, 180, 0])%cube([x, y,z]);
-    // put circuit board encasing
+  // extend the bottom of the canister but don't add holes
+  rotate([180, 180, 0]) _extension(holes=true);
+  if (version == 1){
+    translate([0,th,0])
+      _v1();
   }
 }
+
+
+module _v1_curved_outer_shell() {
+  union(){
+    translate(xyz_between_led_stars)
+      hull(){
+        cube([th*2+w_wire_AA_canister*2, th*2+w_wire_AA_canister*2, z_between_led_stars],
+            center=true);
+        translate([0, w_wire_AA_canister+th/2, 0])
+#    cube([ro_AA_canister*3, th, z_between_led_stars], center=true);
+      }
+    translate([0, ro_AA_canister/-2, h_led_mount/2])
+      scale([2, 1, 1])cylinder(r=ro_AA_canister, h=h_led_mount, center=true, $fn=100);
+  }
+}
+
+
+z_between_led_stars = h_AA_canister-4*r_led_star-2*th;
+h_led_mount = h_AA_canister+h_AA_cap_plug*2;
+xyz_between_led_stars = [
+  0,-(ro_AA_canister+w_wire_AA_canister+th),h_AA_cap_plug + h_AA_canister/2];
+module _v1() {
+  // add curved space where I'll attach led strip
+  rotate([0, 0, 180]) {
+    difference(){
+      _v1_curved_outer_shell();
+      translate([0, 0, h_AA_canister-1])hull(){AAx2_canister();}
+      translate([0, 0, 0])hull(){AAx2_canister();}
+      translate([0, 0, -h_AA_canister+1])hull(){AAx2_canister();}
+
+      // cutout the top led star hole (and give wire holes leading to it)
+      _extension_wire_holes_cutout(
+          h=ro_AA_canister*1.5);
+      _led_star_cutout();
+      // a space between the 2 led stars where wires can travel
+      translate(xyz_between_led_stars)
+        cube([w_wire_AA_canister*2, w_wire_AA_canister*2, z_between_led_stars],
+            center=true);
+
+      // cutout the bottom led star hole (do not give wire holes leading to it)
+      translate([0, 0, h_AA_canister-th*2]) {
+        // bottom led star cutout with link to both
+        translate([0,0,-(h_AA_cap_plug+w_wire_AA_canister/2+th+r_led_star)])
+          _led_star_cutout();
+      }
+    }
+  }
+}
+
+// mounts for circuit board
+/* module _v2() { */
+/* x=20; */
+/* y=10; */
+/* z=40; */
+// mimic the circuit board
+// TODO: dimensions!
+/* translate([x/2, ro_AA_canister, h_AA_canister-w_wire_AA_canister-th]) { */
+/* rotate([0, 180, 0])%cube([x, y,z]); */
+// put circuit board encasing
+/* } */
+/* } */
 
 
 
 translate([100, 0, 0]) {
-translate([0, ro_AA_canister*2 + 10, 0]) {
-  AAx2_canister_cap();
-  translate([0, ro_cap_AA_canister*2+10, 0])
-    AAx2_canister();
+  translate([0, ro_AA_canister*2 + 10, 0]) {
+    AAx2_canister_cap();
+    translate([0, ro_cap_AA_canister*2+10, 0])
+      AAx2_canister();
+  }
+  /* translate([0, -ro_AA_canister*2-10, 0]) { */
+  translate([0, -ro_cap_AA_canister*2-10, +ro_AA_canister*2+48]) {
+    AAx2_cap_plug();
+  }
 }
-/* translate([0, -ro_AA_canister*2-10, 0]) { */
-translate([0, -ro_cap_AA_canister*2-10, +ro_AA_canister*2+48]) {
-  AAx2_cap_plug();
-}
-}
-AAx2_canister_cap_electronics();
+AAx2_canister_shell(version=1);
