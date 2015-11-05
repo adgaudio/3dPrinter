@@ -17,9 +17,19 @@ ro_AA_canister = ri_AA_canister + th;
 h_AA_canister = h_AA_battery + h_AA_terminal_neg + h_AA_terminal_pos;
 h_AA_canister_extension = w_wire_AA_canister+th+h_AA_cap_plug;
 
+final_height = h_AA_canister_extension*2-th*2+h_AA_canister;
+
 ro_cap_AA_canister = ro_AA_canister+th;
 ri_cap_AA_canister = ro_AA_canister+.2;
 h_cap_AA_canister = min(h_AA_canister/2, _h_cap_AA_canister);
+
+xyz_between_led_stars = [
+  0,-(ro_AA_canister+w_wire_AA_canister),final_height/2];
+z_between_led_stars = max(th, h_AA_canister-4*r_led_star-2*th);
+
+h_led_star_cutout = abs(xyz_between_led_stars[1]);
+z_led_star_cutout = (h_AA_canister_extension-th)+h_led_star_cutout+1;
+h_led_mount = h_AA_canister+h_AA_canister_extension*2-th*2;
 
 module AAx2_canister() { // make me
   difference(){
@@ -46,7 +56,7 @@ module AAx2_canister() { // make me
             ri_AA_canister/2,
             ri_AA_canister,
             -(2*sn-1)*.5*(w_wire_AA_canister-.1)])
-        rotate([0, 90, 90+atan(ri_AA_canister*.5 / ro_AA_canister)])
+        rotate([0, 90, 90+atan((ri_AA_canister*.5-w_wire_AA_canister) / ro_AA_canister)])
         cube([
             .1+w_wire_AA_canister,
             w_wire_AA_canister,
@@ -120,21 +130,27 @@ module _extension(holes=true) {
 }
 
 
-module _extension_wire_holes_cutout(h=10) {
+module _extension_wire_holes_cutout() {
   for(sn=[-1,1])
     translate([sn*ri_AA_canister/2-sn*w_wire_AA_canister/2,
-        -ro_AA_canister+w_wire_AA_canister, h_AA_canister_extension-w_wire_AA_canister/2]) {
-      rotate([90-45, 0, 0])
-        cylinder(r=w_wire_AA_canister/2, h=h+w_wire_AA_canister, $fn=25);
+        -ro_AA_canister-w_wire_AA_canister/2, h_AA_canister_extension-th+w_wire_AA_canister/2]) {
+      // vertical
+      cylinder(r=w_wire_AA_canister/2, h=w_wire_AA_canister+r_led_star, $fn=25);
+      // horizontal
+      translate([0, w_wire_AA_canister/2+.1, 0]) rotate([90, 0, 0])
+        cylinder(r=w_wire_AA_canister/2, h=w_wire_AA_canister+.1, $fn=25);
+      // angled (for easier insertion and to remove the L shape)
+      translate([0, w_wire_AA_canister/2+.1, 0]) rotate([90-45, 0, 0])
+        cylinder(r=w_wire_AA_canister/2, h=w_wire_AA_canister, $fn=25);
+/* } */
     }
 }
 
 
 module _led_star_cutout() {
-  z = h_AA_cap_plug+w_wire_AA_canister+th;
-  translate([0, -ro_AA_canister, z +ro_AA_canister])
+  /* z = h_AA_cap_plug+w_wire_AA_canister; */
     rotate([90,0,0])
-    cylinder(r=r_led_star, h=abs(xyz_between_led_stars[1]), $fn=100);
+    cylinder(r=r_led_star, h=h_led_star_cutout, $fn=100);
 }
 
 
@@ -143,10 +159,10 @@ module AAx2_canister_shell(version=1) {
 
   /* h_AA_electronics = h_AA_canister+h_AA_cap_plug; */
   /* AAx2_canister_cap(h=h_AA_electronics); */
-  translate([0, 0, h_AA_canister_extension])
+  translate([0, 0, h_AA_canister_extension-th])
     AAx2_canister();
   // extend the top of canister with a "shell" that the plug can fit in
-  translate([0, 0, h_AA_canister+2*h_AA_canister_extension])rotate([180, 0, 0])
+  translate([0, 0, h_AA_canister+2*h_AA_canister_extension-2*th])rotate([180, 0, 0])
     _extension(holes=false);
   // extend the bottom of the canister but don't add holes
   rotate([180, 180, 0]) _extension(holes=true);
@@ -172,10 +188,6 @@ module _v1_curved_outer_shell() {
 }
 
 
-z_between_led_stars = h_AA_canister-4*r_led_star-2*th;
-h_led_mount = h_AA_canister+h_AA_canister_extension*2;
-xyz_between_led_stars = [
-0,-(ro_AA_canister+w_wire_AA_canister),h_AA_cap_plug + h_AA_canister/2];
 module _v1() {
   // add curved space where I'll attach led strip
   rotate([0, 0, 180]) {
@@ -186,8 +198,9 @@ module _v1() {
       translate([0, 0, -h_AA_canister+1])hull(){AAx2_canister();}
 
       // cutout the top led star hole (and give wire holes leading to it)
-      _extension_wire_holes_cutout(
-          h=ro_AA_canister*1.5);
+      _extension_wire_holes_cutout();
+
+      translate([0, -ro_AA_canister, z_led_star_cutout])
       _led_star_cutout();
       // a space between the 2 led stars where wires can travel
       translate(xyz_between_led_stars)
@@ -195,11 +208,8 @@ module _v1() {
             center=true);
 
       // cutout the bottom led star hole (do not give wire holes leading to it)
-      translate([0, 0, h_AA_canister-th*2]) {
-        // bottom led star cutout with link to both
-        translate([0,0,-(h_AA_cap_plug+w_wire_AA_canister/2+th+r_led_star)])
+      translate([0, -ro_AA_canister, final_height-z_led_star_cutout])
           _led_star_cutout();
-      }
     }
   }
 }
