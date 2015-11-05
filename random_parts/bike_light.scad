@@ -1,5 +1,5 @@
 // Configurable Settings
-th = 1;
+th = 2;
 
 h_AA_terminal_neg = 5;
 h_AA_terminal_pos = 1.5;
@@ -32,7 +32,7 @@ module AAx2_canister() { // make me
     // cut out space for batteries
     for (sn=[-1,1])
       translate([sn*ri_AA_canister, 0, -.05])
-        cylinder(r=ri_AA_canister, h=h_AA_canister+.1);
+        cylinder(r=ri_AA_canister, h=h_AA_canister+.1, $fn=100);
     // cut out middle section
     translate([-r_AA_battery/2, -r_AA_battery/2, -.05])
       cube([r_AA_battery, r_AA_battery, h_AA_canister+.1]);
@@ -46,9 +46,12 @@ module AAx2_canister() { // make me
             ri_AA_canister/2,
             ri_AA_canister,
             -(2*sn-1)*.5*(w_wire_AA_canister-.1)])
-        rotate([0, 90, -45])
-        cube([.1+w_wire_AA_canister, w_wire_AA_canister, r_AA_battery],
-            center=true);
+        rotate([0, 90, 90+atan(ri_AA_canister*.5 / ro_AA_canister)])
+        cube([
+            .1+w_wire_AA_canister,
+            w_wire_AA_canister,
+            sqrt(pow(ro_AA_canister,2) + pow(ri_AA_canister,2))
+            ], center=true);
       translate([-ri_AA_canister/2,
           ro_AA_canister-w_wire_AA_canister+.1,
           sn*(h_AA_canister-w_wire_AA_canister)+(2*sn -1)*.1])
@@ -120,9 +123,9 @@ module _extension(holes=true) {
 module _extension_wire_holes_cutout(h=10) {
   for(sn=[-1,1])
     translate([sn*ri_AA_canister/2-sn*w_wire_AA_canister/2,
-        -ri_AA_canister, h_AA_cap_plug+w_wire_AA_canister/2]) {
+        -ro_AA_canister+w_wire_AA_canister, h_AA_canister_extension-w_wire_AA_canister/2]) {
       rotate([90-45, 0, 0])
-        cylinder(r=w_wire_AA_canister/2, h=h, $fn=25);
+        cylinder(r=w_wire_AA_canister/2, h=h+w_wire_AA_canister, $fn=25);
     }
 }
 
@@ -131,7 +134,7 @@ module _led_star_cutout() {
   z = h_AA_cap_plug+w_wire_AA_canister+th;
   translate([0, -ro_AA_canister, z +ro_AA_canister])
     rotate([90,0,0])
-    cylinder(r=r_led_star, h=10);
+    cylinder(r=r_led_star, h=abs(xyz_between_led_stars[1]), $fn=100);
 }
 
 
@@ -140,15 +143,15 @@ module AAx2_canister_shell(version=1) {
 
   /* h_AA_electronics = h_AA_canister+h_AA_cap_plug; */
   /* AAx2_canister_cap(h=h_AA_electronics); */
-  translate([0, 0, h_AA_canister_extension-w_wire_AA_canister])
+  translate([0, 0, h_AA_canister_extension])
     AAx2_canister();
   // extend the top of canister with a "shell" that the plug can fit in
-  translate([0, 0, h_AA_canister+2*h_AA_cap_plug])rotate([180, 0, 0])
+  translate([0, 0, h_AA_canister+2*h_AA_canister_extension])rotate([180, 0, 0])
     _extension(holes=false);
   // extend the bottom of the canister but don't add holes
   rotate([180, 180, 0]) _extension(holes=true);
   if (version == 1){
-    translate([0,th,0])
+    /* translate([0,th,0]) */
       _v1();
   }
 }
@@ -161,7 +164,7 @@ module _v1_curved_outer_shell() {
         cube([th*2+w_wire_AA_canister*2, th*2+w_wire_AA_canister*2, z_between_led_stars],
             center=true);
         translate([0, w_wire_AA_canister+th/2, 0])
-#    cube([ro_AA_canister*3, th, z_between_led_stars], center=true);
+          cube([ro_AA_canister*3, th, z_between_led_stars], center=true);
       }
     translate([0, ro_AA_canister/-2, h_led_mount/2])
       scale([2, 1, 1])cylinder(r=ro_AA_canister, h=h_led_mount, center=true, $fn=100);
@@ -170,9 +173,9 @@ module _v1_curved_outer_shell() {
 
 
 z_between_led_stars = h_AA_canister-4*r_led_star-2*th;
-h_led_mount = h_AA_canister+h_AA_cap_plug*2;
+h_led_mount = h_AA_canister+h_AA_canister_extension*2;
 xyz_between_led_stars = [
-  0,-(ro_AA_canister+w_wire_AA_canister+th),h_AA_cap_plug + h_AA_canister/2];
+0,-(ro_AA_canister+w_wire_AA_canister),h_AA_cap_plug + h_AA_canister/2];
 module _v1() {
   // add curved space where I'll attach led strip
   rotate([0, 0, 180]) {
@@ -216,15 +219,15 @@ module _v1() {
 
 
 
-translate([100, 0, 0]) {
-  translate([0, ro_AA_canister*2 + 10, 0]) {
-    AAx2_canister_cap();
-    translate([0, ro_cap_AA_canister*2+10, 0])
-      AAx2_canister();
-  }
-  /* translate([0, -ro_AA_canister*2-10, 0]) { */
-  translate([0, -ro_cap_AA_canister*2-10, +ro_AA_canister*2+48]) {
-    AAx2_cap_plug();
-  }
-}
+/* translate([100, 0, 0]) { */
+/* translate([0, ro_AA_canister*2 + 10, 0]) { */
+/* AAx2_canister_cap(); */
+/* translate([0, ro_cap_AA_canister*2+10, 0]) */
+/* AAx2_canister(); */
+/* } */
+/* [> translate([0, -ro_AA_canister*2-10, 0]) { <] */
+/* translate([0, -ro_cap_AA_canister*2-10, +ro_AA_canister*2+48]) { */
+/* AAx2_cap_plug(); */
+/* } */
+/* } */
 AAx2_canister_shell(version=1);
