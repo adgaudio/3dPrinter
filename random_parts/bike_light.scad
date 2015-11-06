@@ -8,8 +8,8 @@ h_terminal_pos = 1.5;
 // r_AA_battery = 14.5/2;
 // r_18650_battery = 18/2;
 // h_18650_battery = 65;
-h_battery = 50.5;
-r_battery = 14.5/2;
+h_battery = 65;
+r_battery = 18.1/2;
 w_wire_canister = 2;
 _h_cap_canister = 20;
 h_cap_plug = 10;
@@ -41,7 +41,7 @@ z_between_leds = max(th, h_canister-4*r_led_lens-2*th);
 h_led_cutout = abs(xyz_between_leds[1]);
 z_led_cutout = (h_canister_extension-th)+h_led_cutout+1;
 
-module AAx2_canister() { // make me
+module canister() { // make me
   difference(){
     // build outer shell
     hull($fn=150) {
@@ -81,7 +81,7 @@ module AAx2_canister() { // make me
 }
 
 
-module AAx2_canister_cap(h=h_cap_canister) { // make me
+module canister_cap(h=h_cap_canister) { // make me
   difference(){
     hull() {
       translate([+ri_cap_canister, 0, 0])
@@ -108,7 +108,7 @@ module _cap(smaller_by, r, h=h_cap_plug) {
       cylinder(r2=r, r1=r-smaller_by, h=h);
   }
 }
-module AAx2_cap_plug(smaller_by=.5) {  // make me
+module cap_plug(smaller_by=.5) {  // make me
   _cap(smaller_by, r=ri_cap_canister);
   // little hands-friendly handle
   translate([0, 0, h_cap_plug])
@@ -133,7 +133,7 @@ module _cap_rocker(h){
 }
 
 
-module AAx2_cap_rocker_switch(){  // make me
+module cap_rocker_switch(){  // make me
   h=max(h_cap_plug,h_rocker_switch);
   difference(){
     scale([1+2*th/(4*ro_cap_canister), 1+2*th/(2*ro_cap_canister), 1])_cap_rocker(h);
@@ -146,17 +146,20 @@ module AAx2_cap_rocker_switch(){  // make me
 
 
 module battery_terminal_insert() {  // make me
+rotate([180,0,0]){
   difference(){
     hull(){
       translate([-ri_canister,0,0])cylinder(r=ri_canister,h=.5);
       translate([ri_canister,0,0])cylinder(r=ri_canister,h=.5);
     }
-    translate([2*ri_canister-3,-3/2,-.25])
+    for(sn=[0,1])
+    translate([(2*sn-1)*(2*ri_canister)-sn*3,-3/2,-.25])
       cube([3,3,1]);
-    translate([0,ri_canister-3,-.25])
-      cube([ri_canister,3+.1,1]);
+    translate([-3,ri_canister-ri_canister/2,-.25])
+      cube([ri_canister+3,ri_canister/2+.1,1]);
   }
-}
+  translate([0,-ri_canister/4,0])cube([1, ri_canister*1.5, 1], center=true);
+}}
 
 
 module _extension(holes=true) {
@@ -210,13 +213,10 @@ module _led_cutout() {
 }
 
 
-/* AAx2_canister_cap(); */
-module AAx2_canister_shell(version=1) {  // make me
+module canister_shell(version=1) {  // make me
 
-  /* h_electronics = h_canister+h_cap_plug; */
-  /* AAx2_canister_cap(h=h_electronics); */
   translate([0, 0, h_canister_extension-th])
-    AAx2_canister();
+    canister();
   // extend the top of canister with a "shell" that the plug can fit in
   translate([0, 0, h_canister+2*h_canister_extension-2*th])rotate([180, 0, 0])
     _extension(holes=false);
@@ -258,9 +258,9 @@ module _v1() {
                 r=r_led_lens+th,
                 h=w_wire_canister+th+h_led_lens_support_wall, $fn=100);
       }
-      translate([0, 0, h_canister-1])hull(){AAx2_canister();}
-      translate([0, 0, 0])hull(){AAx2_canister();}
-      translate([0, 0, -h_canister+1])hull(){AAx2_canister();}
+      translate([0, 0, h_canister-1])hull(){canister();}
+      translate([0, 0, 0])hull(){canister();}
+      translate([0, 0, -h_canister+1])hull(){canister();}
 
       // cutout the top led hole (and give wire holes leading to it)
       _extension_wire_holes_cutout();
@@ -298,21 +298,21 @@ module _v1() {
 // Simplest version
 /* translate([100, 0, 0]) { */
 /* translate([0, ro_canister*2 + 10, 0]) { */
-/* AAx2_canister_cap(); */
+/* canister_cap(); */
 /* translate([0, ro_cap_canister*2+10, 0]) */
-/* AAx2_canister(); */
+/* canister(); */
 /* } */
 /* } */
 
 // Complex version
 /* translate([0, -ro_cap_canister*2-10, 0])     */
 /*   [> translate([0,0,-11]) <]                 */
-/*   rotate([0,0,180])AAx2_cap_rocker_switch(); */
+/*   rotate([0,0,180])cap_rocker_switch(); */
 
-/*   AAx2_canister_shell(version=1);            */
+/*   canister_shell(version=1);            */
 
 /* translate([0,ro_cap_canister*3,0])           */
-/*   battery_terminal_insert();                 */
+/* battery_terminal_insert();             */
 
 /* translate([0, ro_cap_canister*6, 0])         */
-/*   AAx2_cap_plug();                           */
+/*   cap_plug();                           */
