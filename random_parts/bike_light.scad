@@ -14,9 +14,10 @@ w_wire_canister = 2;
 _h_cap_canister = 20;
 h_cap_plug = 10;
 
-r_led_star = 16/2;
-r_led_lens = 18/2;
-h_led_lens_support_wall = 1;
+r_led_star = 17/2;
+r_led_lens = 19/2;
+h_led_lens_support_wall = 3;
+_h_led_star = 7;
 
 l_rocker_switch = 20+1;  // +1 for waterproofing silicone sheet .5mm thick
 w_rocker_switch = 13+1;
@@ -30,7 +31,7 @@ h_canister_extension = w_wire_canister+th+h_cap_plug;
 
 final_height = h_canister_extension*2-th*2+h_canister;
 
-ro_cap_canister = ro_canister+th;
+ro_cap_canister = ro_canister+th+.5;  // .5 is for silicone sheet or glue
 ri_cap_canister = ro_canister+.2;
 h_cap_canister = min(h_canister/2, _h_cap_canister);
 
@@ -38,17 +39,23 @@ xyz_between_leds = [
 0,-(ro_canister+w_wire_canister),final_height/2];
 z_between_leds = max(th, h_canister-4*r_led_lens-2*th);
 
-h_led_cutout = abs(xyz_between_leds[1]);
-z_led_cutout = (h_canister_extension-th)+h_led_cutout+1;
+h_led_star = _h_led_star+ w_wire_canister+th;
+z_led_cutout = (h_canister_extension-th)+max(
+    _h_led_star+h_led_lens_support_wall, abs(xyz_between_leds[1]));
+
+module _canister_shell(err=0) {
+  hull($fn=150) {
+    for (sn=[-1,1])
+      translate([sn*ri_canister, 0, 0])
+        cylinder(r=ro_canister+err, h=h_canister);
+  }
+}
+
 
 module canister() { // make me
   difference(){
     // build outer shell
-    hull($fn=150) {
-      for (sn=[-1,1])
-        translate([sn*ri_canister, 0, 0])
-          cylinder(r=ro_canister, h=h_canister);
-    }
+    _canister_shell();
     // cut out space for batteries
     for (sn=[-1,1])
       translate([sn*ri_canister, 0, -.05])
@@ -73,9 +80,9 @@ module canister() { // make me
             sqrt(pow(ro_canister,2) + pow(ri_canister,2))
             ], center=true);
       translate([-ri_canister/2,
-          ro_canister-w_wire_canister+.1,
+          ro_canister-w_wire_canister*2+.1,
           sn*(h_canister-w_wire_canister)+(2*sn -1)*.1])
-        cube([ri_canister, w_wire_canister, w_wire_canister+.1]);
+        cube([ri_canister, 2*w_wire_canister, w_wire_canister+.1]);
     }
   }
 }
@@ -119,56 +126,65 @@ module cap_plug(smaller_by=.5) {  // make me
 }
 
 
-module _cap_rocker(h){
-  union(){
-    _cap(smaller_by=.5, r=ro_cap_canister, h=h);
-    difference(){
-      _v1_curved_outer_shell();
-      translate([-2*ro_cap_canister,ro_cap_canister-10,0])
-        cube([4*ro_cap_canister, 10, final_height]);
-      translate([0, 0, h+final_height/2])
-        cube([4*ro_cap_canister, 3*ro_cap_canister, final_height], center=true);
-    }
-  }
-}
-
-
 module cap_rocker_switch(){  // make me
   h=max(h_cap_plug,h_rocker_switch);
-  difference(){
-    scale([1+2*th/(4*ro_cap_canister), 1+2*th/(2*ro_cap_canister), 1])_cap_rocker(h);
-    translate([0,0,max(0,h_rocker_switch-h_cap_plug)]) _cap_rocker(h);
-    // cut out space for rocker switch
-    translate([0,0,h/2])
-      cube([l_rocker_switch, w_rocker_switch, h+1], center=true);//h_cap_plug+1], center=true);
-  }
+  final_cannister_shell_x = 4*ro_canister;
+  final_cannister_shell_y = 2*ro_canister+ro_canister/2+th;
+  xyz_scale_factor = [  // scale_factor = outer / inner
+    (final_cannister_shell_x+2*th)/final_cannister_shell_x,
+    (final_cannister_shell_y+2*th)/final_cannister_shell_y,
+    1];
+  // test cubes
+  /* xyz_inner = [final_cannister_shell_x, final_cannister_shell_y,h];               */
+  /* %translate([0,ro_canister/4-th/2,15])                                           */
+  /*   cube([4*ro_canister, 2*ro_canister+ro_canister/2+th, h], center=true);        */
+  /* %translate([0,ro_canister/4-th/2,8])                                            */
+  /*   cube([xyz_inner[0]+2*th, xyz_inner[1]+2*th, xyz_inner[2]+2*th], center=true); */
+
+
+  translate([0,0,13])
+    difference(){
+      hull()
+        intersection(){
+          cube([100,100,h], center=true);
+          translate([0,0,0])
+            scale(xyz_scale_factor)canister_shell(version=1);
+        }
+      translate([0,0,max(0,h_rocker_switch-h_cap_plug)]){
+        canister_shell(version=1);
+        _canister_shell(.1);
+      }
+      // cut out space for rocker switch
+      translate([0,0,h/2])
+        cube([l_rocker_switch, w_rocker_switch, h+1], center=true);//h_cap_plug+1], center=true);
+    }
 }
 
 
 module battery_terminal_insert() {  // make me
-rotate([180,0,0]){
-  difference(){
-    hull(){
-      translate([-ri_canister,0,0])cylinder(r=ri_canister,h=.5);
-      translate([ri_canister,0,0])cylinder(r=ri_canister,h=.5);
+  rotate([180,0,0]){
+    difference(){
+      hull(){
+        translate([-ri_canister,0,0])cylinder(r=ri_canister,h=.5);
+        translate([ri_canister,0,0])cylinder(r=ri_canister,h=.5);
+      }
+      for(sn=[0,1])
+        translate([(2*sn-1)*(2*ri_canister)-sn*3,-3/2,-.25])
+          cube([3,3,1]);
+      translate([-3,ri_canister-ri_canister/2,-.25])
+        cube([ri_canister+3,ri_canister/2+.1,1]);
     }
-    for(sn=[0,1])
-    translate([(2*sn-1)*(2*ri_canister)-sn*3,-3/2,-.25])
-      cube([3,3,1]);
-    translate([-3,ri_canister-ri_canister/2,-.25])
-      cube([ri_canister+3,ri_canister/2+.1,1]);
-  }
-  translate([0,-ri_canister/4,0])cube([1, ri_canister*1.5, 1], center=true);
-}}
+    translate([0,-ri_canister/4,0])cube([1, ri_canister*1.5, 1], center=true);
+  }}
 
 
 module _extension(holes=true) {
   difference(){
     hull($fn=150) {
       translate([+ri_canister, 0, 0])
-        cylinder(r=ro_cap_canister, h=h_canister_extension);
+        cylinder(r=ro_canister+th, h=h_canister_extension);
       translate([-ri_canister, 0, 0])
-        cylinder(r=ro_cap_canister, h=h_canister_extension);
+        cylinder(r=ro_canister+th, h=h_canister_extension);
     }
     hull($fn=150) {
       translate([+ri_canister, 0, -.1])
@@ -206,9 +222,11 @@ module _extension_wire_holes_cutout() {
 module _led_cutout() {
   /* z = h_cap_plug+w_wire_canister; */
   rotate([90,0,0]) {
-    translate([0,0,w_wire_canister+th])
-      cylinder(r=r_led_lens, h=h_led_cutout+h_led_lens_support_wall, $fn=100);
-    cylinder(r=r_led_star, h=h_led_cutout, $fn=100);
+    // outer lens
+    translate([0,0,h_led_star])
+      cylinder(r=r_led_lens, h=h_led_lens_support_wall+.5, $fn=100);
+    // led star
+    cylinder(r=r_led_star, h=h_led_star+.5, $fn=100);
   }
 }
 
@@ -255,8 +273,10 @@ module _v1() {
           translate([0, -ro_canister, sn*final_height - (2*sn-1)*z_led_cutout])
             rotate([90,0,0])
             cylinder(
-                r=r_led_lens+th,
-                h=w_wire_canister+th+h_led_lens_support_wall, $fn=100);
+                r2=r_led_lens+th,
+                r1=ro_canister*1.5,
+                h=h_led_star+h_led_lens_support_wall,
+                $fn=100);
       }
       translate([0, 0, h_canister-1])hull(){canister();}
       translate([0, 0, 0])hull(){canister();}
@@ -306,13 +326,13 @@ module _v1() {
 
 // Complex version
 /* translate([0, -ro_cap_canister*2-10, 0])     */
-/*   [> translate([0,0,-11]) <]                 */
-/*   rotate([0,0,180])cap_rocker_switch(); */
+translate([0,0,-12.4])
+  cap_rocker_switch();
 
-/*   canister_shell(version=1);            */
+  /* canister_shell(version=1);           */
 
-/* translate([0,ro_cap_canister*3,0])           */
-/* battery_terminal_insert();             */
+  /* translate([0,ro_cap_canister*3,0])           */
+  /* battery_terminal_insert();             */
 
-/* translate([0, ro_cap_canister*6, 0])         */
-/*   cap_plug();                           */
+  /* translate([0, ro_cap_canister*6, 0])         */
+  /*   cap_plug();                           */
