@@ -10,12 +10,14 @@ h_terminal_pos = 1.5;
 // h_18650_battery = 65;
 h_battery = 65;
 r_battery = 18.1/2;
+/* h_battery = 50.5; */
+/* r_battery = 14.5/2; */
 w_wire_canister = 2;
 _h_cap_canister = 20;
 h_cap_plug = 10;
 
 r_led_star = 17/2;
-r_led_lens = 19/2;
+r_led_lens = 23/2;
 h_led_lens_support_wall = 3;
 _h_led_star = 7;
 
@@ -23,6 +25,8 @@ l_rocker_switch = 20+1;  // +1 for waterproofing silicone sheet .5mm thick
 w_rocker_switch = 13+1;
 h_rocker_switch = 12.25;
 
+w_velcro_bar = 8;  // limited based on battery diameter
+gap_velcro = 3;
 // Derived settings
 ri_canister = r_battery + .3;
 ro_canister = ri_canister + th;
@@ -42,6 +46,7 @@ z_between_leds = max(th, h_canister-4*r_led_lens-2*th);
 h_led_star = _h_led_star+ w_wire_canister+th;
 z_led_cutout = (h_canister_extension-th)+max(
     _h_led_star+h_led_lens_support_wall, abs(xyz_between_leds[1]));
+
 
 module _canister_shell(err=0) {
   hull($fn=150) {
@@ -127,7 +132,7 @@ module cap_plug(smaller_by=.5) {  // make me
 
 
 module cap_rocker_switch(){  // make me
-  h=max(h_cap_plug,h_rocker_switch);
+  h=h_rocker_switch+h_cap_plug;
   final_cannister_shell_x = 4*ro_canister;
   final_cannister_shell_y = 2*ro_canister+ro_canister/2+th;
   xyz_scale_factor = [  // scale_factor = outer / inner
@@ -231,6 +236,32 @@ module _led_cutout() {
 }
 
 
+module _velcro_handle(h_velcro=ro_canister*2, curved_bottom=true) {
+  translate([0,-th-gap_velcro/2,0])
+    rotate([-90,0,0])
+    difference(){
+      hull(){
+        cube([h_velcro,w_velcro_bar,th], center=true);
+        for(sn=[-1,1]) for(sn2=[-1,1]){
+          translate([sn*h_velcro/2 - sn*th,0,0])
+            scale([1,.5,1])
+            translate([0,0,gap_velcro])
+            cylinder(r1=w_velcro_bar, r2=ro_canister, h=ro_cap_canister+gap_velcro/2-gap_velcro);
+        }
+      }
+      if(curved_bottom){
+        translate([0,h_canister/2,ri_canister+gap_velcro/2+2*th])
+          rotate([90,0,0])_canister_shell();
+      } else {
+        translate([(h_velcro+2*ro_canister)*-1/2,-ro_canister/2,gap_velcro-th/2])
+          cube([h_velcro+2*ro_canister,ro_canister,ro_canister+th+.1]);
+      }
+      translate([0,0,(ro_cap_canister+th-.1)/2+th])
+        cube([h_velcro,ro_canister+.1, ro_cap_canister+th+.2], center=true);
+    }
+}
+
+
 module canister_shell(version=1) {  // make me
 
   translate([0, 0, h_canister_extension-th])
@@ -244,6 +275,13 @@ module canister_shell(version=1) {  // make me
     /* translate([0,th,0]) */
     _v1();
   }
+  translate([0,-ro_canister,h_canister_extension+ro_canister/2+gap_velcro])
+    _velcro_handle();
+  translate([0,-ro_canister,h_canister+h_canister_extension-2*th-ro_canister/2-gap_velcro])
+    _velcro_handle();
+  // vertical bar down middle
+  translate([0,-ro_canister,h_canister/2+h_canister_extension-th])
+    rotate([0,90,0])_velcro_handle(curved_bottom=false);
 }
 
 
@@ -326,13 +364,23 @@ module _v1() {
 
 // Complex version
 /* translate([0, -ro_cap_canister*2-10, 0])     */
-translate([0,0,-12.4])
-  cap_rocker_switch();
+/* translate([0,0,-19.4])                       */
+/* cap_rocker_switch();                         */
 
-  /* canister_shell(version=1);           */
+/* canister_shell(version=1);                   */
 
-  /* translate([0,ro_cap_canister*3,0])           */
-  /* battery_terminal_insert();             */
+/* translate([0,ro_cap_canister*3,0])           */
+/* battery_terminal_insert();                   */
 
-  /* translate([0, ro_cap_canister*6, 0])         */
-  /*   cap_plug();                           */
+/* translate([0, ro_cap_canister*6, 0])         */
+/*   cap_plug();                                */
+
+/* cube([100,100,10]);                          */
+
+//test
+/* difference(){ */
+/* rotate([90,0,0]) */
+/* canister_shell(version=1);                   */
+/* cube([100,100,ro_canister*2+11], center=true); */
+/* #translate([-40,-ro_canister*4-100,-50])cube([100,100,100]); */
+/* } */
