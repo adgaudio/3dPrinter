@@ -16,7 +16,7 @@ w_wire_canister = 2;
 _h_cap_canister = 20;
 h_cap_plug = 10;
 
-r_led_star = 17/2;
+r_led_star = 18/2;
 r_led_lens = 23/2;
 h_led_lens_support_wall = 3;
 _h_led_star = 7;
@@ -40,12 +40,11 @@ ri_cap_canister = ro_canister+.2;
 h_cap_canister = min(h_canister/2, _h_cap_canister);
 
 xyz_between_leds = [
-0,-(ro_canister+w_wire_canister),final_height/2];
-z_between_leds = max(th, h_canister-4*r_led_lens-2*th);
+0,-(ro_canister+h_led_lens_support_wall),final_height/2];
+z_between_leds = (h_canister/2-r_led_lens*2)*2;
 
-h_led_star = _h_led_star+ w_wire_canister+th;
-z_led_cutout = (h_canister_extension-th)+max(
-    _h_led_star+h_led_lens_support_wall, abs(xyz_between_leds[1]));
+h_led_star = _h_led_star+ w_wire_canister+th/2;
+z_led_cutout = final_height/2+z_between_leds/2+r_led_star-th;
 
 
 module _canister_shell(err=0) {
@@ -367,7 +366,7 @@ module _v1() {
 /* translate([0,0,-19.4])                       */
 /* cap_rocker_switch();                         */
 
-/* canister_shell(version=1);                   */
+canister_shell(version=1);                  
 
 /* translate([0,ro_cap_canister*3,0])           */
 /* battery_terminal_insert();                   */
