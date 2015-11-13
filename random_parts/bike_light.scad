@@ -9,17 +9,17 @@ h_terminal_pos = 1.5;
 // r_18650_battery = 18/2;
 // h_18650_battery = 65;
 h_battery = 65;
-r_battery = 18.1/2;
+r_battery = 18.5/2;
 /* h_battery = 50.5; */
 /* r_battery = 14.5/2; */
 w_wire_canister = 2;
 _h_cap_canister = 20;
 h_cap_plug = 10;
 
-r_led_star = 18/2;
-r_led_lens = 23/2;
+r_led_star = 18.5/2;
+r_led_lens = 21/2;
 h_led_lens_support_wall = 3;
-_h_led_star = 7;
+_h_led_star = 8;
 
 l_rocker_switch = 20+1;  // +1 for waterproofing silicone sheet .5mm thick
 w_rocker_switch = 13+1;
@@ -135,9 +135,13 @@ module cap_rocker_switch(){  // make me
   final_cannister_shell_x = 4*ro_canister;
   final_cannister_shell_y = 2*ro_canister+ro_canister/2+th;
   xyz_scale_factor = [  // scale_factor = outer / inner
-    (final_cannister_shell_x+2*th)/final_cannister_shell_x,
-    (final_cannister_shell_y+2*th)/final_cannister_shell_y,
+    (final_cannister_shell_x+1+2*th)/final_cannister_shell_x,
+    (final_cannister_shell_y+1+2*th)/final_cannister_shell_y,
     1];
+  xyz_cutout_scale_factor = [  // scale_factor = outer / inner
+  (final_cannister_shell_x+1)/final_cannister_shell_x,
+  (final_cannister_shell_y+1)/final_cannister_shell_y,
+  1];
   // test cubes
   /* xyz_inner = [final_cannister_shell_x, final_cannister_shell_y,h];               */
   /* %translate([0,ro_canister/4-th/2,15])                                           */
@@ -154,9 +158,10 @@ module cap_rocker_switch(){  // make me
           translate([0,0,0])
             scale(xyz_scale_factor)canister_shell(version=1);
         }
-      translate([0,0,max(0,h_rocker_switch-h_cap_plug)]){
-        canister_shell(version=1);
-        _canister_shell(.1);
+      translate([0,0,max(0,h_rocker_switch-h_cap_plug)])
+        scale(xyz_cutout_scale_factor) {
+          canister_shell(version=1);
+          _canister_shell(.3);
       }
       // cut out space for rocker switch
       translate([0,0,h/2])
@@ -366,7 +371,7 @@ module _v1() {
 /* translate([0,0,-19.4])                       */
 /* cap_rocker_switch();                         */
 
-canister_shell(version=1);                  
+/* canister_shell(version=1);                   */
 
 /* translate([0,ro_cap_canister*3,0])           */
 /* battery_terminal_insert();                   */
@@ -380,6 +385,7 @@ canister_shell(version=1);
 /* difference(){ */
 /* rotate([90,0,0]) */
 /* canister_shell(version=1);                   */
-/* cube([100,100,ro_canister*2+11], center=true); */
-/* #translate([-40,-ro_canister*4-100,-50])cube([100,100,100]); */
+/* cube([100,100,ro_canister*2+0], center=true); */
+/* translate([0, 0, -10])cube([100, 100, 10], center=true); */
+/* translate([-40,-ro_canister*4-100,-50])cube([100,100,100]); */
 /* } */
