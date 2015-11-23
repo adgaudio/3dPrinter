@@ -21,8 +21,8 @@ r_led_lens = 21/2;
 h_led_lens_support_wall = 3;
 _h_led_star = 8;
 
-l_rocker_switch = 20+1;  // +1 for waterproofing silicone sheet .5mm thick
-w_rocker_switch = 13+1;
+l_rocker_switch = 19;
+w_rocker_switch = 13;
 h_rocker_switch = 12.25;
 
 w_velcro_bar = 8;  // limited based on battery diameter
@@ -46,12 +46,33 @@ z_between_leds = (h_canister/2-r_led_lens*2)*2;
 h_led_star = _h_led_star+ w_wire_canister+th/2;
 z_led_cutout = final_height/2+z_between_leds/2+r_led_star-th;
 
+// Settings for the light mount
+r_handlebar = 30/2;
+th_arm = 5;
+th_handlebar = 3;
+w_handlebar = 5;
+gap_handlebar = 5;
 
-module _canister_shell(err=0) {
+// how long to extend the mount past the ring that wraps around handlebar?
+l_arm = 20;  // TODO
+l_mount_plate = final_height;
+
+r_m3 = 3/2;
+h_m3 = 4;
+r_m3_bolt_head = 5.5/2;
+w_m3_nut = 6.1;  // max possible diameter of nut
+ro_bolt = max(r_m3_bolt_head+th, w_m3_nut/2+th);
+
+ro = r_handlebar + th_handlebar;
+h_mount_plate = 3*ro_canister;
+th_mount_plate = 3+ro_canister/3;
+
+
+module _canister_shell(err=0, h=h_canister) {
   hull($fn=150) {
     for (sn=[-1,1])
       translate([sn*ri_canister, 0, 0])
-        cylinder(r=ro_canister+err, h=h_canister);
+        cylinder(r=ro_canister+err, h=h);
   }
 }
 
@@ -139,9 +160,9 @@ module cap_rocker_switch(){  // make me
     (final_cannister_shell_y+1+2*th)/final_cannister_shell_y,
     1];
   xyz_cutout_scale_factor = [  // scale_factor = outer / inner
-  (final_cannister_shell_x+1)/final_cannister_shell_x,
-  (final_cannister_shell_y+1)/final_cannister_shell_y,
-  1];
+    (final_cannister_shell_x+1)/final_cannister_shell_x,
+    (final_cannister_shell_y+1)/final_cannister_shell_y,
+    1];
   // test cubes
   /* xyz_inner = [final_cannister_shell_x, final_cannister_shell_y,h];               */
   /* %translate([0,ro_canister/4-th/2,15])                                           */
@@ -162,7 +183,7 @@ module cap_rocker_switch(){  // make me
         scale(xyz_cutout_scale_factor) {
           canister_shell(version=1);
           _canister_shell(.3);
-      }
+        }
       // cut out space for rocker switch
       translate([0,0,h/2])
         cube([l_rocker_switch, w_rocker_switch, h+1], center=true);//h_cap_plug+1], center=true);
@@ -173,17 +194,15 @@ module cap_rocker_switch(){  // make me
 module battery_terminal_insert() {  // make me
   rotate([180,0,0]){
     difference(){
-      hull(){
-        translate([-ri_canister,0,0])cylinder(r=ri_canister,h=.5);
-        translate([ri_canister,0,0])cylinder(r=ri_canister,h=.5);
+      _canister_shell(err=-th/2, h=0.5);
+      for(sn=[0,1]) {
+        translate([(2*sn-1)*(2*ro_canister)-sn*3,-3/2,-.25])
+          cube([3,3.5,1]);
+        translate([(2*sn-1)*1.5*w_wire_canister,ro_canister-w_wire_canister/2,0])
+          cube([w_wire_canister*2,w_wire_canister,2], center=true);
       }
-      for(sn=[0,1])
-        translate([(2*sn-1)*(2*ri_canister)-sn*3,-3/2,-.25])
-          cube([3,3,1]);
-      translate([-3,ri_canister-ri_canister/2,-.25])
-        cube([ri_canister+3,ri_canister/2+.1,1]);
     }
-    translate([0,-ri_canister/4,0])cube([1, ri_canister*1.5, 1], center=true);
+    translate([0,-ro_canister/4,0])cube([1, ro_canister*1.5, 1], center=true);
   }}
 
 
@@ -279,6 +298,12 @@ module canister_shell(version=1) {  // make me
     /* translate([0,th,0]) */
     _v1();
   }
+
+  _v1_velcro_handles();
+}
+
+module _v1_velcro_handles() {
+  _v1_velcro_handles();
   translate([0,-ro_canister,h_canister_extension+ro_canister/2+gap_velcro])
     _velcro_handle();
   translate([0,-ro_canister,h_canister+h_canister_extension-2*th-ro_canister/2-gap_velcro])
@@ -340,20 +365,149 @@ module _v1() {
   }
 }
 
-// TODO: v2 using boost converter and 12v led tape
-// mounts for circuit board
-/* module _v2() { */
-/* x=20; */
-/* y=10; */
-/* z=40; */
-// mimic the circuit board
-// TODO: dimensions!
-/* translate([x/2, ro_canister, h_canister-w_wire_canister-th]) { */
-/* rotate([0, 180, 0])%cube([x, y,z]); */
-// put circuit board encasing
-/* } */
-/* } */
+module _donut(ro, ri, h) {
+  difference(){
+    cylinder(r=ro, h=h, center=true);
+    cylinder(r=ri, h=1+h, center=true);
+  }
+}
 
+module _mount_handlebar_attachment() {
+  // main ring that attaches to handlebar
+  translate([0,ro,0]){
+    translate([0, 0,0]) rotate([0,90,0])
+      difference() {
+        hull()minkowski(){
+          _donut(ro=ro-1.5, ri=r_handlebar-2, h=w_handlebar-4);
+          rotate([90,0,0])cylinder(r=2,h=2,center=true,$fn=20);
+        }
+        cylinder(r=r_handlebar,h=w_handlebar+1,center=true,$fn=150);
+        rotate([0,-90,0])translate([0,0,-(ro-th_handlebar/2)])
+          cube([1+w_handlebar, gap_handlebar,1+th_handlebar], center=true);
+        rotate([0,+90,0])translate([0,0,-(ro-th_handlebar/2)])
+          cube([1+w_handlebar, gap_handlebar,1+th_handlebar], center=true);
+      }
+    // bolt and nut to attach ring to handlebar
+    _mount_bolts_and_nuts();
+    rotate([180,0,0])
+      _mount_bolts_and_nuts();
+
+    // the mount brackets
+    minkowski(){hull(){
+      translate([0,-gap_handlebar,ro-th_handlebar/2])
+        cube([w_handlebar-.9, 1, th_handlebar-.9],center=true);
+      rotate([-(90-acos(r_handlebar / ro)),0,0])translate([0,-ro+1/2,0])
+        cube([w_handlebar, 1, 1],center=true);
+      translate([0,-ro+1/2 -l_arm, ro-th_arm/2])
+        cube([th_arm-.9, 1, th_arm-.9], center=true);
+    }
+    rotate([90,0,0])cylinder(r=.9,h=.9,center=true,$fn=20);
+    }
+  }
+  difference(){
+    translate([0,-r_handlebar,0])
+      rotate([0,90,0])_donut(ro=ro, ri=r_handlebar, h=th_arm);
+    translate([ro+.5,-ro-r_handlebar,0]){
+      rotate([0,180,0]) cube([2*ro+1,2*ro+1,2*ro+1]);
+      translate([0,-ro,ro])rotate([0,180,0]) cube([2*ro+1,2*ro+1,2*ro+1]);
+    }
+  }
+  r_stabilizer = l_arm/2+th_arm;
+  difference(){  // TODO
+    minkowski(){
+    translate([0,-(l_arm)+r_stabilizer,0])
+      rotate([0,90,0])_donut(ro=r_stabilizer-.9, ri=l_arm/2-.9, h=th_arm, $fn=10);
+    rotate([90,0,0])cylinder(r=.9,h=.9,center=true,$fn=20);
+    }
+    translate([0,r_stabilizer+th_handlebar,0])rotate([0,90,0])cylinder(r=ro, h=2*r_stabilizer+1, center=true);
+    translate([0,-r_stabilizer,-(r_stabilizer)/2-1/1])cube([l_mount_plate, 4*r_stabilizer, r_stabilizer+1], center=true);
+  }
+}
+
+
+module _mount_bolts_and_nuts() {
+  difference() {
+    // ...the solid part
+    for(sn=[-1,1]) hull() {
+      translate([0,0,-ro -ro_bolt]) {
+        translate([0,sn*(gap_handlebar/2+h_m3/2),0]) {
+          // the bolt and goes through this
+          rotate([90,0,0])
+            cylinder(r=ro_bolt, h=h_m3, center=true, $fn=50);
+          // attach bolt holder to the ring
+          translate([0,-sn*(h_m3/2 - 1/2),ro_bolt +th_handlebar-.5/2])
+            cube([w_handlebar,1,.5], center=true);
+        }
+      }
+      /* rotate([-90+sn*acos(r_handlebar / ro),0,0]) */
+      rotate([-90+sn*45,0,0])  // aesthetic... requires cutout
+        translate([0,ro-1/2,0])
+        cube([w_handlebar,1,1], center=true);
+    }
+    // cutout the center of ring again so I can make above aesthetic chng
+    rotate([0,90,0])cylinder(r=r_handlebar, h=ro_bolt*2, center=true,$fn=150);
+
+    // ...the cutout part
+    translate([0,0,-ro-ro_bolt]) {
+      // bolt hole
+      rotate([90,0,0]) cylinder(r=r_m3, h=100, center=true, $fn=80);
+      // bolt head
+      translate([0,-(gap_handlebar/2+th)-ro/2,0]) rotate([90,0,0])
+        cylinder(r=r_m3_bolt_head, h=ro, center=true, $fn=80);
+      // nut
+      translate([0,(gap_handlebar/2+th)+ro/2,0]) rotate([90,0,0])
+        cylinder(r=w_m3_nut/2, h=ro, center=true, $fn=6);
+    }
+  }
+}
+
+module bike_mount_one_piece() {
+  translate([(l_mount_plate/2-th_arm/2),0,0])
+    _mount_handlebar_attachment();
+  translate([-(l_mount_plate/2-th_arm/2),0,0])
+    _mount_handlebar_attachment();
+  translate([0,-l_arm,ro-h_mount_plate/2])
+    difference(){
+      hull()minkowski(){
+        cube([l_mount_plate-2,th_mount_plate-2,h_mount_plate-2], center=true);
+        union(){
+          cylinder(r=2, h=2,center=true,$fn=50);
+          rotate([0,90,0])cylinder(r=2, h=2,center=true, $fn=50);
+        }
+      }
+      translate([final_height/2,
+          -ro_cap_canister-gap_velcro-th+th_mount_plate-3,
+          0])rotate([0,90,180]){
+        /* canister_shell(); */
+        translate([0,-.1,h_canister_extension-th])
+          _canister_shell();
+        _v1_velcro_handles();
+        translate([0,0,-1])hull()_canister_shell(h=h_canister_extension+2, err=th+.1);
+        translate([0,0,final_height-h_canister_extension-1])
+          hull()_canister_shell(h=h_canister_extension+2, err=th+.1);
+      }
+      cube([2*ro_cap_canister,gap_velcro+th,w_velcro_bar+1], center=true);
+      for(sn=[-1,1])
+        translate([sn*(h_cap_canister+w_velcro_bar-1.5*th),0,0])
+          cube([w_velcro_bar+1,gap_velcro+th,2*ro_cap_canister], center=true);
+    }
+}
+
+module bike_mount_handle() { // make me
+  rotate([90,0,0])
+    difference(){
+      bike_mount_one_piece();
+      translate([0,-gap_handlebar/2,0])
+        cube([l_mount_plate+th_handlebar*2+th_arm*2,ro+l_arm+th_mount_plate,2*ro+4*ro_bolt],center=true);
+    }
+}
+module bike_mount_plate() { // make me
+  rotate([-90,0,0])
+    difference(){
+      bike_mount_one_piece();
+      translate([0,ro+gap_handlebar*2,0])cube([l_mount_plate+th_handlebar*2+th_arm*2,ro+gap_handlebar,2*ro+4*ro_bolt],center=true);
+    }
+}
 
 // Visualize the modules below
 
@@ -377,15 +531,18 @@ module _v1() {
 /* battery_terminal_insert();                   */
 
 /* translate([0, ro_cap_canister*6, 0])         */
-/*   cap_plug();                                */
+/* cap_plug();                                */
 
-/* cube([100,100,10]);                          */
+/* translate([ro_cap_canister*4+l_arm,0,0])          */
+/*   bike_mount_plate();                             */
+/*   translate([ro_cap_canister*4+ro*2+l_arm*2,0,0]) */
+  bike_mount_handle();                           
 
-//test
-/* difference(){ */
-/* rotate([90,0,0]) */
-/* canister_shell(version=1);                   */
-/* cube([100,100,ro_canister*2+0], center=true); */
-/* translate([0, 0, -10])cube([100, 100, 10], center=true); */
-/* translate([-40,-ro_canister*4-100,-50])cube([100,100,100]); */
-/* } */
+  //test
+  /* difference(){ */
+  /* rotate([90,0,0]) */
+  /* canister_shell(version=1);                   */
+  /* cube([100,100,ro_canister*2+0], center=true); */
+  /* translate([0, 0, -10])cube([100, 100, 10], center=true); */
+  /* translate([-40,-ro_canister*4-100,-50])cube([100,100,100]); */
+  /* } */
