@@ -3,7 +3,7 @@ th=1.6;
 
 y = 2*th + h_blind;
 x = 40;
-z = 10;
+z = 15;
 
 module U() {
 cube([x, y, th]);
