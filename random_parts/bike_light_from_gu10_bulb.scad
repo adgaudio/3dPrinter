@@ -144,7 +144,7 @@ module lamp1_cap(){ // make me
       sphere(r=3,$fn=20);
     }
     translate([0,0,xyzshell2[2]/2 +th -h_lamp1_cap/2])
-      round_cube(xyzshell2+[.4,.4,.4]);
+      round_cube(xyzshell2+[.8,.8,.8], $fn=80);
   }
 }
 
