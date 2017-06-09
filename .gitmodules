@@ -1,3 +1,9 @@
 [submodule "OpenSCAD_connectors"]
 	path = OpenSCAD_connectors
 	url = git@github.com:adgaudio/OpenSCAD_connectors.git
+[submodule "OpenSCAD-Tools"]
+	path = OpenSCAD-Tools
+	url = git@github.com:adgaudio/OpenSCAD-Tools.git
+[submodule "dlp_printer"]
+	path = dlp_printer
+	url = git@github.com:adgaudio/dlp_printer.git
