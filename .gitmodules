@@ -1,0 +1,3 @@
+[submodule "OpenSCAD_connectors"]
+	path = OpenSCAD_connectors
+	url = git@github.com:adgaudio/OpenSCAD_connectors.git
