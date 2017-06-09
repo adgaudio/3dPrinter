@@ -5,26 +5,20 @@ This repo contains a collection of openscad parts I've designed.  Some
 of them are posted on Thingiverse.
 
 
-`lib` Openscad modules that I use to facilitate designing prints.
-`external` Other people's libraries that I also depend on.
-`gears` A small collection of gears and an enclosure box for them.
-`dive_lights` Inserts and experiments with scuba lights. I proposed with these!
-`random_parts` An unorganized collection of one-off projects and small parts.
+- `random_parts` An unorganized collection of one-off projects and small parts.
+- `lib` Openscad modules that I very occassionally use to facilitate designing prints.
+- `external` Other people's libraries that I depended on once or twice.
+- `gears` A small collection of gears and an enclosure box for them.
+- `dive_lights` Inserts and experiments with scuba lights. I proposed with these!
+
+Git submodules:
+
+- OpenSCAD-Tools - contains a very useful python script called
+    openscad_exporter that I use all the time to export multiple stls from
+    a single scad file
+- OpenSCAD_connectors - a library of connectors for aluminum extrusions
+- dlp_printer - the designs for a DLP Stereolithography printer I built.
 
 
 Check out gettingStarted.sh for install notes I follow to install the
 software that I use on my reprap.
-
-
-To convert a .scad file to .STL, you can use this handy python script:
-
-```
-$ ./openscad_maker.py my_file.scad
-```
-
-You can also export one stl file for each selected function in your scad file:
-
-```
-$ ./openscad_maker my_file.scad --modules function1 function2
-
-```
