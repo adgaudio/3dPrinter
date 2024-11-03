@@ -16,11 +16,11 @@ include <BOSL2/walls.scad>
 
 /* [Part selection] */
 // The part to print
-PART = "D0"; // [B:Box, D0:Drawer 0, D1: Drawer 1, D2: Drawer 2]
+PART = "B"; // [B:Box, D0:Drawer 0, D1: Drawer 1, D2: Drawer 2, D3]
 
 /* [BOX: Basic Geometry] */
 // Height of a single drawer (mm) - this is called a "U"
-uHeight = [35, 35, 35, 35];
+uHeight = [35, 35, 35];
 // Number of U (i.e. how many single U drawers)
 uNum = len(uHeight);
 // External width of the Box (mm)
@@ -84,7 +84,7 @@ mountingNutThickness = 3;
 // Mounting screw countersink depth (mm)
 mountingScrewCountersinkDepth = 3;
 // Distance of mounting holes from box sides (mm)
-boxMountingCornerOffset = 35;
+boxMountingCornerOffset = 25;
 // Distance of mounting holes from box front/back (mm)
 boxMountingEdgeOffset = 15;
 
@@ -106,8 +106,8 @@ function drawerOuterHeight(idx) = (drawerUHeight * uHeight[idx]) - 1;
 drawerOuterDepth = boxOuterDepth - railRearOffset;
 drawerInnerWidth = drawerOuterWidth - (1 * drawerWallWidth); // FIXME: Why is this 1*drawerWallWidth, it should be 2*, but that produces the wrong output
 drawerInnerDepth = drawerOuterDepth - (1 * drawerWallWidth); // FIXME: Why is this 1*drawerWallWidth, it should be 2*, but that produces the wrong output
-drawerSkirtWidth = railSideInset - 1;
-drawerSkirtHeight = railThickness - 1;
+drawerSkirtWidth = railSideInset - .2;
+drawerSkirtHeight = railThickness - .4;
 drawerMidWidth = ((2 * drawerSkirtWidth) + drawerOuterWidth) / 2 - (drawerHandleWidth / 2);
 drawerOuterSkirtWidth = drawerOuterWidth + (2 * drawerSkirtWidth);
 drawerCompartmentWidth = (drawerInnerWidth / drawerColumns) - drawerWallWidth;
@@ -134,24 +134,25 @@ if (PART == "D2") {
 }
 
 // Model generators
-module box() {
+module box() {  // make me
     intersection() {
         union(){
                 // left wall
-                yrot(-90)rect_tube(size=[boxOuterHeight, boxOuterDepth], wall=15, h=boxFrameThickness+1, anchor=TOP+LEFT+FORWARD);
+                yrot(-90)rect_tube(size=[boxOuterHeight, boxOuterDepth], wall=15, h=boxFrameThickness+1, anchor=TOP+LEFT+FORWARD, ichamfer=40);
 
-            sparse_wall(h=boxOuterHeight, l=boxOuterDepth, thick=boxFrameThickness+1, anchor=BOTTOM+LEFT+FORWARD, strut=5, max_bridge=40);
+            sparse_wall(h=boxOuterHeight, l=boxOuterDepth, thick=boxFrameThickness+1, anchor=BOTTOM+LEFT+FORWARD, strut=5, max_bridge=40, maxang=70);
                 // right wall
-                right(boxOuterWidth)yrot(90)rect_tube(size=[boxOuterHeight, boxOuterDepth], wall=15, h=boxFrameThickness+1, anchor=TOP+RIGHT+FORWARD);
-            right(boxOuterWidth)sparse_wall(h=boxOuterHeight, l=boxOuterDepth, thick=boxFrameThickness+1, anchor=BOTTOM+RIGHT+FORWARD, strut=5, max_bridge=40);
+                right(boxOuterWidth)yrot(90)rect_tube(size=[boxOuterHeight, boxOuterDepth], wall=15, h=boxFrameThickness+1, anchor=TOP+RIGHT+FORWARD, ichamfer=40);
+            right(boxOuterWidth)sparse_wall(h=boxOuterHeight, l=boxOuterDepth, thick=boxFrameThickness+1, anchor=BOTTOM+RIGHT+FORWARD, strut=5, max_bridge=40, maxang=70);
 
                 // bottom wall
-                // yrot(90)sparse_wall(h=boxOuterWidth, l=boxOuterDepth, thick=boxFrameThickness+1, anchor=BOTTOM+RIGHT+FORWARD, strut=5, max_bridge=40);
-                rect_tube(size=[boxOuterWidth, boxOuterDepth], wall=30, h=boxFrameThickness+1, anchor=BOTTOM+LEFT+FORWARD);
+                // yrot(90)sparse_wall(h=boxOuterWidth, l=boxOuterDepth, thick=boxFrameThickness+1, anchor=BOTTOM+RIGHT+FORWARD, strut=5, max_bridge=40, maxang=70);
+                rect_tube(size=[boxOuterWidth, boxOuterDepth], wall=30, h=boxFrameThickness+1, anchor=BOTTOM+LEFT+FORWARD, ichamfer=25);
                 // top wall
                 up(boxOuterHeight)
-                rect_tube(size=[boxOuterWidth, boxOuterDepth], wall=30, h=boxFrameThickness+1, anchor=TOP+LEFT+FORWARD);
-                //up(boxOuterHeight)yrot(90)sparse_wall(h=boxOuterWidth, l=boxOuterDepth, thick=boxFrameThickness+1, anchor=BOTTOM+LEFT+FORWARD, strut=10);
+                rect_tube(size=[boxOuterWidth, boxOuterDepth], wall=30, h=boxFrameThickness+1, anchor=TOP+LEFT+FORWARD, ichamfer=25);
+                // up(boxOuterHeight)yrot(90)
+                // sparse_wall(h=boxOuterWidth, l=boxOuterDepth, thick=boxFrameThickness+1, anchor=BOTTOM+LEFT+FORWARD, strut=5, maxang=70);
 
                 // back wall
                 back(boxOuterDepth)cube([boxOuterWidth, boxFrameThickness+1, boxOuterHeight],
@@ -160,13 +161,13 @@ module box() {
                 // rails
                 for (u = [0:uNum - 1-1]) {
                     translate([(boxFrameThickness - railSideInset)-5,  -fudge, boxFrameThickness + cumsum(uHeight)[u]-5])
-                        cube([boxInnerWidth + (railSideInset * 2)+10, ((boxOuterDepth + fudge) - railRearOffset), railThickness+10]);
+                        cuboid([boxInnerWidth + (railSideInset * 2)+10, ((boxOuterDepth + fudge) - railRearOffset), railThickness+10], anchor=BOTTOM+LEFT+FORWARD, chamfer=5);
                 }
         }
         _box();
     }
 }
-module _box() {  // make me
+module _box() {
     // Create the Box
     difference() {
         // Outer box

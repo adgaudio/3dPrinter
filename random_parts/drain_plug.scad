@@ -22,19 +22,23 @@ module large_drain() {  // make me
 
 module small_drain() {  // make me
     r_drain = 5*25.4/2;
-    difference(){
-        circle(r=r_drain);
-        grid_copies([20, 20], size=[r_drain*2, r_drain*2], inside=circle(r_drain-25.4/2)) circle(r=5);
-    }
+    // linear_extrude(5){
+        difference(){
+            circle(r=r_drain);
+            grid_copies([20, 20], size=[r_drain*2, r_drain*2], inside=circle(r_drain-25.4/2)) circle(r=5);
+        }
+    // }
 }
 module medium_drain() {  // make me
     r_drain = 6*25.4/2;
+    // linear_extrude(5) {
     difference(){
         circle(r=r_drain);
         grid_copies([20, 20], size=[r_drain*2, r_drain*2], inside=circle(r_drain-25.4/2)) circle(r=5);
+    // }
     }
 }
 
 // large_drain();
-medium_drain();
-// small_drain();
+// medium_drain();
+small_drain();
