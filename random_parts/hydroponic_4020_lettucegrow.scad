@@ -6,12 +6,13 @@ th = 1;
 CM = 10;
 
 cuphole_d_o = 5.0 * CM;
-cuphole_d_i = 4.2 * CM;
+cuphole_d_i = 4.3 * CM;
 cuphole_spacing = 6.25 * CM;
 
 maxh_above_tray = 0.8 * CM;
 
-tray_w_inner = 25.25 * CM;
+// tray_w_inner = 25.25 * CM;
+tray_w_inner = 19.00 * CM;
 cupholes_per_row = floor(tray_w_inner / cuphole_spacing);
 NUM_ROWS = 1;
 
@@ -25,7 +26,7 @@ module main_part(_num_rows=NUM_ROWS) {
 tray_d_outer = _num_rows * cuphole_spacing + tray_lip*2;
 tray_d_inner = _num_rows * cuphole_spacing;
 diff("hole") {
-    cube([tray_w_outer, tray_d_outer, th]) {
+    cuboid([tray_w_outer, tray_d_outer, th], anchor=BOT+LEFT+FRONT) {
         // cupholes
         tag("hole")grid_copies(spacing=cuphole_spacing, n=[cupholes_per_row, _num_rows]) {
         cylinder(d=cuphole_d_i, h=th+.1, center=true) position(RIGHT+FRONT) {
@@ -54,8 +55,7 @@ module one_row_inner() {
     intersection(){
     main_part(_num_rows=3);
     left(th)back(tray_lip + cuphole_spacing)
-    cube([tray_w_outer+th+th, cuphole_spacing, maxh_above_tray+th + tray_lip_overhang]);
-    
+    cuboid([tray_w_outer+th+th, cuphole_spacing, maxh_above_tray+th + tray_lip_overhang], rounding=5, anchor=BOT+LEFT+FRONT);
     }
 }
 
