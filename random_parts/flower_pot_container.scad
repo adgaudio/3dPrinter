@@ -1,9 +1,12 @@
 include <BOSL2/std.scad>
 
+fa=$preview?1:.1;
+fs=$preview?1:.1;
+
 module flower_pot_container_large() {  // make me
     r=150/2;
     h=140;
-    path = circle(r=r);
+    path = circle(r=r, $fa=fa, $fs=fs);
     linear_sweep(
         path, texture="diamonds", tex_size=[20,40],
         h=h, style="concave");
@@ -11,10 +14,15 @@ module flower_pot_container_large() {  // make me
 
 module flower_pot_container_medium() {  // make me
     r=100/2;
+    // r=100/2 - 3/2; // TODO: temp hack to get 1st attempt original to fit snugly work.
     h=100;
-path = circle(r=r);
+path = circle(r=r, $fa=fa, $fs=fs);
+// texture="trunc_pyramids", tex_size=[20,40]
+// texture="trunc_pyramids", tex_size=[5,5]
+// cubes dots hex_grid
+// tri_grid
 linear_sweep(
-    path, texture="trunc_pyramids", tex_size=[20,40], tex_depth=4,
+    path, texture="trunc_pyramids", tex_size=[5,5], tex_depth=2,
     h=h, style="concave");
 }
 
@@ -26,15 +34,16 @@ module _insert_mainbody(r, h, th, h_max_water_level, w_watering_arm, is_inside) 
     // fn to get the heights of the bottom portion.  (note: it's zflipped)
     function h_z(x,y) =  5+h_max_water_level/2+h_max_water_level/2*1.5*pow(cos(360*x*.25 * 2.75),1)*pow(cos(360*y*.25 * 2.75 +0), 1);
     // inner cylinder
-    bot_of_insert = up(h_max_water_level, p=path3d(circle(r=r-(is_inside?th:0))));
-    top_of_insert = up(h, p=path3d(circle(r=r-(is_inside?th:0))));
+    bot_of_insert = up(h_max_water_level, p=path3d(circle(r=r-(is_inside?th:0), $fa=fa, $fs=fs)));
+    top_of_insert = up(h, p=path3d(circle(r=r-(is_inside?th:0), $fa=fa, $fs=fs)));
     skin(
-        [bot_of_insert, top_of_insert],
-        method="distance", slices=10, refine=10);
+        [bot_of_insert, top_of_insert], slices=10
+        );
+        // method="distance", slices=10, refine=10);
         // the "funnel" shapped bottom - more like sine waves
         intersection() {
             up(h_max_water_level)zflip()heightfield(size=[2*r, 2*r], data=function(x,y) h_z(x,y), bottom=0);
-            cylinder(h=h_max_water_level,r=r-(is_inside?th:0));
+            cylinder(h=h_max_water_level,r=r-(is_inside?th:0), $fa=fa, $fs=fs);
         }
 }
 
@@ -69,7 +78,7 @@ module _insert(r,h,th,h_max_water_level, w_watering_arm, is_inside=false) {
 // module _inner(r, h) {
 // }
 module flower_pot_insert_large() {  // make me
-    r = 142/2;
+    r = (150-5)/2;
     h = 140;
     th=2;
     h_max_water_level = 50;
@@ -80,7 +89,7 @@ module flower_pot_insert_large() {  // make me
     }
 }
 module flower_pot_insert_medium() {  // make me
-    r=(100-8)/2;
+    r=(100-5)/2;
     h=100;
     th=2;
     h_max_water_level = 40;
@@ -92,5 +101,7 @@ module flower_pot_insert_medium() {  // make me
 }
 
 
+// flower_pot_container_medium();
+// flower_pot_container_large();
 flower_pot_insert_large();
 // flower_pot_insert_medium();
