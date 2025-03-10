@@ -109,7 +109,7 @@ up(1.8/3) {
 module wallet_sleeve() {  // make me
     difference() {
         _quadlock_wallet_sleeve();
-        wallet_part1(optional_magnet=true);
+        wallet_head(optional_magnet=true);
     }
 }
 
@@ -117,8 +117,8 @@ module wallet_sleeve() {  // make me
 
 // debugging 
 // part1();
-// wallet_head1(false);
-// wallet_head1(true);
+// wallet_head(false);
+// wallet_head(true);
 
 
 // wallet_head();
