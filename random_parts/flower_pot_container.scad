@@ -1,7 +1,7 @@
 include <BOSL2/std.scad>
 
-fa=$preview?1:.1;
-fs=$preview?1:.1;
+fa=$preview?1:.5;
+fs=$preview?1:.5;
 
 module flower_pot_container_large() {  // make me
     r=150/2;
@@ -21,8 +21,27 @@ path = circle(r=r, $fa=fa, $fs=fs);
 // texture="trunc_pyramids", tex_size=[5,5]
 // cubes dots hex_grid
 // tri_grid
+// // the R+K grid:   texture=tex,  tex_size=[40,20], tex_depth=1,
+// tex = [
+//     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//     [0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
+//     [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+//     [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+//     [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+//     [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
+//     [0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0],
+//     [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+//     [0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+//     [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+//     [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
+//     [0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+// ];
+tex = texture("dimples");
 linear_sweep(
-    path, texture="trunc_pyramids", tex_size=[5,5], tex_depth=2,
+    path,
+    // texture="trunc_pyramids", tex_size=[5,5], tex_depth=2,
+    // texture="cubes", tex_size=[30,50], tex_depth=8,
+    texture=tex,  tex_size=[20,20], tex_depth=2, tex_inset=-1,
     h=h, style="concave");
 }
 
@@ -78,7 +97,7 @@ module _insert(r,h,th,h_max_water_level, w_watering_arm, is_inside=false) {
 // module _inner(r, h) {
 // }
 module flower_pot_insert_large() {  // make me
-    r = (150-5)/2;
+    r = (150-6)/2;
     h = 140;
     th=2;
     h_max_water_level = 50;
@@ -90,18 +109,50 @@ module flower_pot_insert_large() {  // make me
 }
 module flower_pot_insert_medium() {  // make me
     r=(100-5)/2;
-    h=100;
+    tex_depth = 8;
+    h=100-tex_depth/2;
     th=2;
     h_max_water_level = 40;
     w_watering_arm = 20;
-    difference(){
+    diff("remove"){
     _insert(r,h,th,h_max_water_level, w_watering_arm, false);
-    up(th+2)_insert(r,h,th,h_max_water_level, w_watering_arm, true);
+
+    // add rim on top based on tex_depth;
+    up(h)tube(or=r+tex_depth-2, ir=r-th, h=tex_depth, ochamfer1=tex_depth-2, orounding2=2, $fa=fa, $fs=fs, anchor=BOT);
+
+    tag("remove")up(th+2)_insert(r,h,th,h_max_water_level, w_watering_arm, true);
     }
 }
 
 
-// flower_pot_container_medium();
+// ECHO: "ribs", "texture_is_2d", 0, 1
+// ECHO: "trunc_ribs", "texture_is_2d", 0, 1
+// ECHO: 0.25, 0.5, 0.75, 1.25  // (...noise caused by trunc_ribs_vnf)
+// ECHO: 0.25, 0.5, 0.75, 1.25  // (...noise caused by trunc_ribs_vnf)
+// ECHO: 0.25, 0.5, 0.75, 1.25  // (...noise caused by trunc_ribs_vnf)
+// ECHO: "trunc_ribs_vnf", "texture_is_3d", 0, 1
+// ECHO: "wave_ribs", "texture_is_2d", 0, 1
+// ECHO: "diamonds", "texture_is_2d", 0, 1
+// ECHO: "diamonds_vnf", "texture_is_3d", 0, 1
+// ECHO: "pyramids", "texture_is_2d", 0, 1
+// ECHO: "pyramids_vnf", "texture_is_3d", 0, 1
+// ECHO: "trunc_pyramids", "texture_is_2d", 0, 1
+// ECHO: "trunc_pyramids_vnf", "texture_is_3d", 0, 1
+// ECHO: "hills", "texture_is_2d", 0, 1
+// ECHO: "bricks", "texture_is_2d", -0.0241379, 0.524828
+// ECHO: "bricks_vnf", "texture_is_3d", 0, 1
+// ECHO: "checkers", "texture_is_3d", 0, 1
+// ECHO: "cones", "texture_is_3d", 0, 1
+// ECHO: "cubes", "texture_is_3d", 0, 1
+// ECHO: "trunc_diamonds", "texture_is_3d", 0, 1
+// ECHO: "dimples", "texture_is_3d", -1, 1
+// ECHO: "dots", "texture_is_3d", 0, 1
+// ECHO: "tri_grid", "texture_is_3d", 0, 1
+// ECHO: "hex_grid", "texture_is_3d", 0, 1
+// ECHO: "rough", "texture_is_2d", 0.000396749, 0.199996
+
+
+flower_pot_container_medium();
 // flower_pot_container_large();
-flower_pot_insert_large();
+// flower_pot_insert_large();
 // flower_pot_insert_medium();
